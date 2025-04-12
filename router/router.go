@@ -8,6 +8,7 @@ import (
 )
 
 var wechatCtl *controller.WeChat
+var userCtl *controller.User
 
 func initController() {
 	wechatCtl = controller.NewWeChatAuthController()
@@ -19,7 +20,16 @@ func RegisterRouter(r *gin.Engine) error {
 	initController()
 
 	api := r.Group("/api/v1")
-	api.GET("/oauth/wechat", wechatCtl.WechatAuth)
+	{
+		oauth := api.Group("/oauth")
+		oauth.POST("/wechat", wechatCtl.WechatAuth)
+	}
+
+	{
+		user := api.Group("/user")
+		user.GET("/self", userCtl.LoginUser)
+		user.DELETE("/logout", userCtl.Logout)
+	}
 
 	return nil
 }

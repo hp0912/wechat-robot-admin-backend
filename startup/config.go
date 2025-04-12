@@ -24,6 +24,11 @@ func loadEnvConfig() {
 		}
 	}
 
+	vars.SessionSecret = os.Getenv("SESSION_SECRET")
+	if vars.SessionSecret == "" {
+		log.Fatal("SESSION_SECRET 环境变量未设置")
+	}
+
 	vars.WechatServerAddress = os.Getenv("WECHAT_SERVER_ADDRESS")
 	vars.WechatServerToken = os.Getenv("WECHAT_SERVER_TOKEN")
 

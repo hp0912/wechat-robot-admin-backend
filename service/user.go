@@ -3,6 +3,8 @@ package service
 import (
 	"context"
 	"wechat-robot-client/model"
+	"wechat-robot-client/repository"
+	"wechat-robot-client/vars"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -25,4 +27,14 @@ func (u *UserService) SetupLogin(ctx *gin.Context, user *model.User) error {
 	session.Set("role", user.Role)
 	session.Set("status", user.Status)
 	return session.Save()
+}
+
+func (u *UserService) Logout(ctx *gin.Context) error {
+	session := sessions.Default(ctx)
+	session.Clear()
+	return session.Save()
+}
+
+func (u *UserService) LoginUser(ctx *gin.Context, id int64) *model.User {
+	return repository.NewUserRepo(u.ctx, vars.DB).GetUserByID(id)
 }
