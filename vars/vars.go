@@ -5,3 +5,6 @@ import (
 )
 
 var DB *gorm.DB
+
+var WechatServerAddress string
+var WechatServerToken string

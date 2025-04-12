@@ -7,10 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var robotCtl *controller.Robot
+var wechatCtl *controller.WeChat
 
 func initController() {
-	robotCtl = controller.NewRobotController()
+	wechatCtl = controller.NewWeChatAuthController()
 }
 
 func RegisterRouter(r *gin.Engine) error {
@@ -19,7 +19,7 @@ func RegisterRouter(r *gin.Engine) error {
 	initController()
 
 	api := r.Group("/api/v1")
-	api.POST("/test", robotCtl.Test)
+	api.GET("/oauth/wechat", wechatCtl.WechatAuth)
 
 	return nil
 }

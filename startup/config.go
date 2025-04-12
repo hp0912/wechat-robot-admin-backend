@@ -24,14 +24,15 @@ func loadEnvConfig() {
 		}
 	}
 
+	vars.WechatServerAddress = os.Getenv("WECHAT_SERVER_ADDRESS")
+	vars.WechatServerToken = os.Getenv("WECHAT_SERVER_TOKEN")
+
 	// mysql
 	vars.MysqlSettings.Driver = os.Getenv("MYSQL_DRIVER")
 	vars.MysqlSettings.Host = os.Getenv("MYSQL_HOST")
 	vars.MysqlSettings.Port = os.Getenv("MYSQL_PORT")
 	vars.MysqlSettings.User = os.Getenv("MYSQL_USER")
 	vars.MysqlSettings.Password = os.Getenv("MYSQL_PASSWORD")
-	// 机器人ID就是数据库名
-	vars.MysqlSettings.Db = os.Getenv("ROBOT_ID")
-	vars.MysqlSettings.AdminDb = os.Getenv("MYSQL_ADMIN_DB")
+	vars.MysqlSettings.Db = os.Getenv("MYSQL_DB")
 	vars.MysqlSettings.Schema = os.Getenv("MYSQL_SCHEMA")
 }
