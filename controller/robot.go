@@ -2,6 +2,7 @@ package controller
 
 import (
 	"errors"
+	"regexp"
 	"wechat-robot-client/dto"
 	"wechat-robot-client/pkg/appx"
 	"wechat-robot-client/service"
@@ -38,4 +39,26 @@ func (r *Robot) RobotList(c *gin.Context) {
 		return
 	}
 	resp.ToResponseList(list, total)
+}
+
+func (r *Robot) RobotCreate(c *gin.Context) {
+	var req dto.RobotCreateRequest
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	// 编译正则表达式
+	re := regexp.MustCompile(`^[a-zA-Z][a-zA-Z0-9_]+$`)
+	// 使用正则表达式匹配字符串
+	if !re.MatchString(req.RobotCode) {
+		resp.ToErrorResponse(errors.New("机器人编码只能包含字母、数字和下划线，并且必须以字母开头"))
+		return
+	}
+	err := service.NewRobotService(c.Request.Context()).RobotCreate(c, req)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
 }

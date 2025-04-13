@@ -40,4 +40,9 @@ func loadEnvConfig() {
 	vars.MysqlSettings.Password = os.Getenv("MYSQL_PASSWORD")
 	vars.MysqlSettings.Db = os.Getenv("MYSQL_DB")
 	vars.MysqlSettings.Schema = os.Getenv("MYSQL_SCHEMA")
+
+	//redis
+	vars.RedisSettings.Host = os.Getenv("REDIS_HOST")
+	vars.RedisSettings.Port = os.Getenv("REDIS_PORT")
+	vars.RedisSettings.Password = os.Getenv("REDIS_PASSWORD")
 }

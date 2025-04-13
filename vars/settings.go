@@ -7,8 +7,14 @@ type MysqlSettingS struct {
 	User     string
 	Password string
 	Db       string
-	AdminDb  string // 管理后台数据库
 	Schema   string // postgres 专用
 }
 
+type RedisSettingS struct {
+	Host     string
+	Port     string
+	Password string
+}
+
 var MysqlSettings = &MysqlSettingS{}
+var RedisSettings = &RedisSettingS{}
