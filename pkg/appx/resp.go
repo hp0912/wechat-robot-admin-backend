@@ -33,7 +33,7 @@ func (r *Response) ToResponseData(data interface{}) {
 
 func (r *Response) ToResponseList(list interface{}, totalRows int64) {
 	r.Ctx.JSON(http.StatusOK, gin.H{
-		"code":    0,
+		"code":    200,
 		"message": "请求成功",
 		"data": gin.H{
 			"items": list,
