@@ -153,7 +153,7 @@ func (r *RobotService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest)
 	}
 	// 创建目标文件
 	outputFilePath := filepath.Join(projectRoot, "docker-compose", fmt.Sprintf("docker-compose-%s.yml", robot.RobotCode))
-	outputFile, err := os.Create(outputFilePath)
+	outputFile, err := os.OpenFile(outputFilePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
 		return err
 	}
