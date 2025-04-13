@@ -6,7 +6,7 @@ import (
 
 var DB *gorm.DB
 
-var WechatServerAddress string
-var WechatServerToken string
+var WeChatServerAddress string
+var WeChatServerToken string
 
 var SessionSecret string

@@ -1,7 +1,8 @@
 package controller
 
 import (
-	"net/http"
+	"errors"
+	"wechat-robot-client/pkg/appx"
 	"wechat-robot-client/service"
 
 	"github.com/gin-contrib/sessions"
@@ -16,44 +17,30 @@ func NewUserController() *User {
 }
 
 func (w *User) LoginUser(c *gin.Context) {
+	resp := appx.NewResponse(c)
 	session := sessions.Default(c)
 	id := session.Get("id")
 	if value, ok := id.(int64); ok {
 		user := service.NewUserService(c.Request.Context()).LoginUser(c, value)
 		if user == nil {
-			c.JSON(http.StatusOK, gin.H{
-				"code":    401,
-				"message": "用户不存在",
-			})
+			resp.ToErrorResponse(errors.New("用户不存在"))
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{
-			"code":    200,
-			"message": "",
-			"data":    user,
-		})
+		resp.ToResponse(user)
 		return
 	} else {
-		c.JSON(http.StatusOK, gin.H{
-			"code":    401,
-			"message": "登陆信息已失效",
-		})
+		resp.To401Response(errors.New("登陆信息已失效"))
 		return
 	}
 }
 
 func (w *User) Logout(c *gin.Context) {
+	resp := appx.NewResponse(c)
 	err := service.NewUserService(c.Request.Context()).Logout(c)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"code":    500,
-			"message": err.Error(),
-		})
+		resp.ToErrorResponse(err)
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"code":    200,
-		"message": "",
-	})
+	resp.ToResponse(nil)
 	return
 }

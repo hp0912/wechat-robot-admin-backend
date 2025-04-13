@@ -29,8 +29,8 @@ func loadEnvConfig() {
 		log.Fatal("SESSION_SECRET 环境变量未设置")
 	}
 
-	vars.WechatServerAddress = os.Getenv("WECHAT_SERVER_ADDRESS")
-	vars.WechatServerToken = os.Getenv("WECHAT_SERVER_TOKEN")
+	vars.WeChatServerAddress = os.Getenv("WECHAT_SERVER_ADDRESS")
+	vars.WeChatServerToken = os.Getenv("WECHAT_SERVER_TOKEN")
 
 	// mysql
 	vars.MysqlSettings.Driver = os.Getenv("MYSQL_DRIVER")

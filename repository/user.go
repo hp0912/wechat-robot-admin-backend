@@ -19,14 +19,14 @@ func NewUserRepo(ctx context.Context, db *gorm.DB) *User {
 		}}
 }
 
-func (r *User) GetUserByID(id int64, preloads ...string) *model.User {
-	return r.takeOne(preloads, func(g *gorm.DB) *gorm.DB {
+func (u *User) GetUserByID(id int64, preloads ...string) *model.User {
+	return u.takeOne(preloads, func(g *gorm.DB) *gorm.DB {
 		return g.Where("id = ?", id)
 	})
 }
 
-func (r *User) GetUserByWechatID(WxID string, preloads ...string) *model.User {
-	return r.takeOne(preloads, func(g *gorm.DB) *gorm.DB {
+func (u *User) GetUserByWeChatID(WxID string, preloads ...string) *model.User {
+	return u.takeOne(preloads, func(g *gorm.DB) *gorm.DB {
 		return g.Where("wechat_id = ?", WxID)
 	})
 }

@@ -13,31 +13,31 @@ import (
 	"wechat-robot-client/vars"
 )
 
-type WechatService struct {
+type WeChatService struct {
 	ctx context.Context
 }
 
-type WechatServerResponse struct {
+type WeChatServerResponse struct {
 	Success bool   `json:"success"`
 	Message string `json:"message"`
 	Data    string `json:"data"`
 }
 
-func NewWechatService(ctx context.Context) *WechatService {
-	return &WechatService{
+func NewWeChatService(ctx context.Context) *WeChatService {
+	return &WeChatService{
 		ctx: ctx,
 	}
 }
 
-func (w *WechatService) GetWeChatIdByCode(code string) (string, error) {
+func (w *WeChatService) GetWeChatIdByCode(code string) (string, error) {
 	if code == "" {
 		return "", errors.New("无效的参数")
 	}
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/wechat/user?code=%s", vars.WechatServerAddress, code), nil)
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/wechat/user?code=%s", vars.WeChatServerAddress, code), nil)
 	if err != nil {
 		return "", err
 	}
-	req.Header.Set("Authorization", vars.WechatServerToken)
+	req.Header.Set("Authorization", vars.WeChatServerToken)
 	client := http.Client{
 		Timeout: 5 * time.Second,
 	}
@@ -46,7 +46,7 @@ func (w *WechatService) GetWeChatIdByCode(code string) (string, error) {
 		return "", err
 	}
 	defer httpResponse.Body.Close()
-	var resp WechatServerResponse
+	var resp WeChatServerResponse
 	err = json.NewDecoder(httpResponse.Body).Decode(&resp)
 	if err != nil {
 		return "", err
@@ -60,25 +60,25 @@ func (w *WechatService) GetWeChatIdByCode(code string) (string, error) {
 	return resp.Data, nil
 }
 
-func (w *WechatService) WechatAuth(ctx context.Context, code string) (*model.User, error) {
+func (w *WeChatService) WeChatAuth(ctx context.Context, code string) (*model.User, error) {
 	wechatId, err := w.GetWeChatIdByCode(code)
 	if err != nil {
 		return nil, err
 	}
-	user := repository.NewUserRepo(ctx, vars.DB).GetUserByWechatID(wechatId)
+	user := repository.NewUserRepo(ctx, vars.DB).GetUserByWeChatID(wechatId)
 	if user == nil {
 		user = &model.User{
-			WeChatId:      wechatId,
-			DisplayName:   fmt.Sprintf("微信用户-%s", utils.GetRandomString(4)),
-			Role:          vars.RoleCommonUser,
-			Status:        vars.UserStatusEnabled,
-			AvatarUrl:     vars.UserDefaultAvatar,
-			LastLoginTime: time.Now().Unix(),
-			CreatedTime:   time.Now().Unix(),
+			WeChatId:    wechatId,
+			DisplayName: fmt.Sprintf("微信用户-%s", utils.GetRandomString(4)),
+			Role:        vars.RoleCommonUser,
+			Status:      vars.UserStatusEnabled,
+			AvatarUrl:   vars.UserDefaultAvatar,
+			LastLoginAt: time.Now().Unix(),
+			CreatedAt:   time.Now().Unix(),
 		}
 		repository.NewUserRepo(ctx, vars.DB).Create(user)
 	} else {
-		user.LastLoginTime = time.Now().Unix()
+		user.LastLoginAt = time.Now().Unix()
 		repository.NewUserRepo(ctx, vars.DB).Update(user)
 	}
 	return user, nil
