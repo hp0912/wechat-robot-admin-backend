@@ -29,6 +29,9 @@ func loadEnvConfig() {
 		log.Fatal("SESSION_SECRET 环境变量未设置")
 	}
 
+	vars.DockerNetwork = os.Getenv("DOCKER_NETWORK")
+	vars.DockerComposeCmd = os.Getenv("DOCKER_COMPOSE_CMD")
+
 	vars.WeChatServerAddress = os.Getenv("WECHAT_SERVER_ADDRESS")
 	vars.WeChatServerToken = os.Getenv("WECHAT_SERVER_TOKEN")
 

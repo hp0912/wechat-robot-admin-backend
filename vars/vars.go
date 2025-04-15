@@ -6,6 +6,9 @@ import (
 
 var DB *gorm.DB
 
+var DockerNetwork string
+var DockerComposeCmd string
+
 var WeChatServerAddress string
 var WeChatServerToken string
 

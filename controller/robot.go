@@ -62,3 +62,33 @@ func (r *Robot) RobotCreate(c *gin.Context) {
 	}
 	resp.ToResponse(nil)
 }
+
+func (r *Robot) RobotView(c *gin.Context) {
+	var req dto.RobotCommonRequest
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot := service.NewRobotService(c.Request.Context()).RobotView(c, req.ID)
+	if robot == nil {
+		resp.ToErrorResponse(errors.New("机器人不存在"))
+		return
+	}
+	resp.ToResponse(robot)
+}
+
+func (r *Robot) RobotRemove(c *gin.Context) {
+	var req dto.RobotCommonRequest
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	err := service.NewRobotService(c.Request.Context()).RobotRemove(c, req.ID)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}

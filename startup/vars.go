@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"wechat-robot-client/utils/docker"
 	"wechat-robot-client/vars"
 
 	"gorm.io/driver/mysql"
@@ -17,6 +18,10 @@ func SetupVars() error {
 		return err
 	}
 	log.Println("MySQL连接成功")
+	if err := InitDockerNetwork(); err != nil {
+		return err
+	}
+	log.Println("Docker网络连接成功")
 	return nil
 }
 
@@ -36,4 +41,18 @@ func InitMySQLClient() (err error) {
 	}
 	vars.DB, err = gorm.Open(mysql.New(mysqlConfig), &gormConfig)
 	return err
+}
+
+func InitDockerNetwork() error {
+	networkName := vars.DockerNetwork
+	if networkName == "" {
+		return fmt.Errorf("Docker network name is not set")
+	}
+	if !docker.NetworkExists(networkName) {
+		err := docker.CreateNetwork(networkName)
+		if err != nil {
+			return fmt.Errorf("failed to create Docker network: %v", err)
+		}
+	}
+	return nil
 }

@@ -38,6 +38,8 @@ func RegisterRouter(r *gin.Engine) error {
 
 		robot.GET("/list", robotCtl.RobotList)
 		robot.POST("/create", robotCtl.RobotCreate)
+		robot.POST("/view", middleware.UserOwnerAuth(), robotCtl.RobotView)
+		robot.POST("/remove", middleware.UserOwnerAuth(), robotCtl.RobotRemove)
 	}
 
 	return nil

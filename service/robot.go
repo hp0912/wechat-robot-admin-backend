@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"html/template"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"runtime"
 	"time"
@@ -88,7 +89,7 @@ func (r *RobotService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest)
 		return errors.New("无法获取运行时信息")
 	}
 	projectRoot := filepath.Join(filepath.Dir(filename), "..") // 上一级为项目根目录
-	sqlFilePath := filepath.Join(projectRoot, "admin.sql")
+	sqlFilePath := filepath.Join(projectRoot, "admin.sql")     // TODO admin.sql
 	// 检查文件是否存在
 	if _, err := os.Stat(sqlFilePath); os.IsNotExist(err) {
 		return errors.New("建表模版不存在")
@@ -133,6 +134,7 @@ func (r *RobotService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest)
 		MYSQL_ADMIN_DB      string
 		MYSQL_DB            string
 		MYSQL_SCHEMA        string
+		DOCKER_NETWORK      string
 	}{
 		WECHAT_PORT:         "9000",
 		REDIS_HOST:          vars.RedisSettings.Host,
@@ -150,6 +152,7 @@ func (r *RobotService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest)
 		MYSQL_ADMIN_DB:      vars.MysqlSettings.Db,
 		MYSQL_DB:            robot.RobotCode,
 		MYSQL_SCHEMA:        vars.MysqlSettings.Schema,
+		DOCKER_NETWORK:      vars.DockerNetwork,
 	}
 	// 创建目标文件
 	outputFilePath := filepath.Join(projectRoot, "docker-compose", fmt.Sprintf("docker-compose-%s.yml", robot.RobotCode))
@@ -162,7 +165,71 @@ func (r *RobotService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest)
 	if err := tmpl.Execute(outputFile, data); err != nil {
 		return err
 	}
-	// 启动微信客户端和服务端
-	// TODO
+	// 通过 docker-compose 启动微信客户端和服务端
+	cmd := exec.Command(vars.DockerComposeCmd, "-f", outputFilePath, "up", "-d")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err = cmd.Run()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// RobotView 查看机器人元数据
+func (r *RobotService) RobotView(ctx *gin.Context, robotID int64) *model.Robot {
+	respo := repository.NewRobotRepo(r.ctx, vars.DB)
+	return respo.GetByID(robotID)
+}
+
+// RobotRemove 删除机器人
+func (r *RobotService) RobotRemove(ctx *gin.Context, robotID int64) error {
+	respo := repository.NewRobotRepo(r.ctx, vars.DB)
+	robot := respo.GetByID(robotID)
+	if robot == nil {
+		return errors.New("机器人不存在")
+	}
+	// 删除机器人实例数据
+	respo.DeleteById(robotID)
+	// 删除机器人数据库
+	err := vars.DB.Exec(fmt.Sprintf("DROP DATABASE IF EXISTS `%s`;", robot.RobotCode)).Error
+	if err != nil {
+		return err
+	}
+	_, filename, _, ok := runtime.Caller(0)
+	if !ok {
+		return errors.New("无法获取运行时信息")
+	}
+	projectRoot := filepath.Join(filepath.Dir(filename), "..") // 上一级为项目根目录
+	dockerComposeFile := filepath.Join(projectRoot, "docker-compose", fmt.Sprintf("docker-compose-%s.yml", robot.RobotCode))
+	// 判断docker-compose文件是否存在
+	_, err = os.Stat(dockerComposeFile)
+	if os.IsNotExist(err) {
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	// 通过docker-compose停止微信客户端和服务端
+	cmd := exec.Command(vars.DockerComposeCmd, "-f", dockerComposeFile, "down")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err = cmd.Run()
+	if err != nil {
+		return err
+	}
+	// 通过docker-compose删除微信客户端和服务端
+	cmd = exec.Command(vars.DockerComposeCmd, "-f", dockerComposeFile, "rm", "-f")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err = cmd.Run()
+	if err != nil {
+		return err
+	}
+	// 删除docker-compose文件
+	err = os.Remove(dockerComposeFile)
+	if err != nil {
+		return nil
+	}
 	return nil
 }
