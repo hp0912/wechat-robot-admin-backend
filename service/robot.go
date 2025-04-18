@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"time"
 	"wechat-robot-client/dto"
 	"wechat-robot-client/model"
@@ -22,6 +23,26 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
+
+type DockerComposeFileContext struct {
+	WECHAT_PORT         string
+	REDIS_HOST          string
+	REDIS_PORT          string
+	REDIS_PASSWORD      string
+	REDIS_DB            string
+	GIN_MODE            string
+	ROBOT_CODE          string
+	ROBOT_START_TIMEOUT string
+	MYSQL_DRIVER        string
+	MYSQL_HOST          string
+	MYSQL_PORT          string
+	MYSQL_USER          string
+	MYSQL_PASSWORD      string
+	MYSQL_ADMIN_DB      string
+	MYSQL_DB            string
+	MYSQL_SCHEMA        string
+	DOCKER_NETWORK      string
+}
 
 type RobotService struct {
 	ctx context.Context
@@ -99,7 +120,6 @@ func (r *RobotService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest)
 	if err != nil {
 		return err
 	}
-	fmt.Println(fmt.Sprintf("USE `%s`;\n%s", robot.RobotCode, string(content)))
 	// 开始建表
 	err = newDB.Exec(fmt.Sprintf("USE `%s`;\n%s", robot.RobotCode, string(content))).Error
 	if err != nil {
@@ -117,25 +137,7 @@ func (r *RobotService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest)
 	if err != nil {
 		return err
 	}
-	data := struct {
-		WECHAT_PORT         string
-		REDIS_HOST          string
-		REDIS_PORT          string
-		REDIS_PASSWORD      string
-		REDIS_DB            string
-		GIN_MODE            string
-		ROBOT_CODE          string
-		ROBOT_START_TIMEOUT string
-		MYSQL_DRIVER        string
-		MYSQL_HOST          string
-		MYSQL_PORT          string
-		MYSQL_USER          string
-		MYSQL_PASSWORD      string
-		MYSQL_ADMIN_DB      string
-		MYSQL_DB            string
-		MYSQL_SCHEMA        string
-		DOCKER_NETWORK      string
-	}{
+	data := DockerComposeFileContext{
 		WECHAT_PORT:         "9000",
 		REDIS_HOST:          vars.RedisSettings.Host,
 		REDIS_PORT:          vars.RedisSettings.Port,
@@ -156,17 +158,14 @@ func (r *RobotService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest)
 	}
 	// 创建目标文件
 	outputFilePath := filepath.Join(projectRoot, "docker-compose", fmt.Sprintf("docker-compose-%s.yml", robot.RobotCode))
-	outputFile, err := os.OpenFile(outputFilePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	err = r.CreateDockerComposeFile(tmpl, outputFilePath, data)
 	if err != nil {
 		return err
 	}
-	defer outputFile.Close()
-	// 渲染模板并写入目标文件
-	if err := tmpl.Execute(outputFile, data); err != nil {
-		return err
-	}
 	// 通过 docker-compose 启动微信客户端和服务端
-	cmd := exec.Command(vars.DockerComposeCmd, "-f", outputFilePath, "up", "-d")
+	cmdParts := strings.Fields(vars.DockerComposeCmd)
+	cmdArgs := append(cmdParts[1:], "-f", outputFilePath, "up", "-d")
+	cmd := exec.Command(cmdParts[0], cmdArgs...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err = cmd.Run()
@@ -211,15 +210,9 @@ func (r *RobotService) RobotRemove(ctx *gin.Context, robotID int64) error {
 		return err
 	}
 	// 通过docker-compose停止微信客户端和服务端
-	cmd := exec.Command(vars.DockerComposeCmd, "-f", dockerComposeFile, "down")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	err = cmd.Run()
-	if err != nil {
-		return err
-	}
-	// 通过docker-compose删除微信客户端和服务端
-	cmd = exec.Command(vars.DockerComposeCmd, "-f", dockerComposeFile, "rm", "-f")
+	cmdParts := strings.Fields(vars.DockerComposeCmd)
+	cmdArgs := append(cmdParts[1:], "-f", dockerComposeFile, "down")
+	cmd := exec.Command(cmdParts[0], cmdArgs...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err = cmd.Run()
@@ -230,6 +223,19 @@ func (r *RobotService) RobotRemove(ctx *gin.Context, robotID int64) error {
 	err = os.Remove(dockerComposeFile)
 	if err != nil {
 		return nil
+	}
+	return nil
+}
+
+func (r *RobotService) CreateDockerComposeFile(tmpl *template.Template, outputFilePath string, data DockerComposeFileContext) error {
+	outputFile, err := os.OpenFile(outputFilePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	if err != nil {
+		return err
+	}
+	defer outputFile.Close()
+	// 渲染模板并写入目标文件
+	if err := tmpl.Execute(outputFile, data); err != nil {
+		return err
 	}
 	return nil
 }

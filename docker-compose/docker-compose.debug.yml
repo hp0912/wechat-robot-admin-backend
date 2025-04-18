@@ -1,0 +1,22 @@
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql_debug
+    restart: always
+    networks:
+      - wechat-robot
+    environment:
+      TZ: Asia/Shanghai # 设置时区
+      MYSQL_ROOT_PASSWORD: houhou
+
+  redis:
+    image: redis:latest
+    container_name: redis_debug
+    restart: always
+    networks:
+      - wechat-robot
+    environment:
+      REDIS_PASSWORD: houhou
+networks:
+  wechat-robot:
+    external: true

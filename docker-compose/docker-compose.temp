@@ -1,5 +1,3 @@
-version: '3.4'
-
 services:
   server_{{.ROBOT_CODE}}:
     image: registry.cn-shenzhen.aliyuncs.com/houhou/wechat-robot-server:latest

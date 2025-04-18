@@ -47,7 +47,7 @@ func (r *Robot) RobotList(ctx *gin.Context, req dto.RobotListRequest, pager appx
 
 func (r *Robot) GetMaxRedisDB() (uint, error) {
 	var maxDB uint
-	if err := vars.DB.Model(&model.Robot{}).Select("COALESCE(MAX(redis_db), 0)").Scan(&maxDB).Error; err != nil {
+	if err := vars.DB.Model(&model.Robot{}).Unscoped().Select("COALESCE(MAX(redis_db), 0)").Scan(&maxDB).Error; err != nil {
 		return 0, err
 	}
 	return maxDB, nil
