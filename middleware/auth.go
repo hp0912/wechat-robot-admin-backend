@@ -2,10 +2,10 @@ package middleware
 
 import (
 	"net/http"
-	"wechat-robot-client/dto"
-	"wechat-robot-client/pkg/appx"
-	"wechat-robot-client/repository"
-	"wechat-robot-client/vars"
+	"wechat-robot-admin-backend/dto"
+	"wechat-robot-admin-backend/pkg/appx"
+	"wechat-robot-admin-backend/repository"
+	"wechat-robot-admin-backend/vars"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"

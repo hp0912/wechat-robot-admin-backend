@@ -3,9 +3,9 @@ package main
 import (
 	"log"
 	"os"
-	"wechat-robot-client/router"
-	"wechat-robot-client/startup"
-	"wechat-robot-client/vars"
+	"wechat-robot-admin-backend/router"
+	"wechat-robot-admin-backend/startup"
+	"wechat-robot-admin-backend/vars"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"

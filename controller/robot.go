@@ -3,10 +3,10 @@ package controller
 import (
 	"errors"
 	"regexp"
-	"wechat-robot-client/dto"
-	"wechat-robot-client/pkg/appx"
-	"wechat-robot-client/service"
-	"wechat-robot-client/vars"
+	"wechat-robot-admin-backend/dto"
+	"wechat-robot-admin-backend/pkg/appx"
+	"wechat-robot-admin-backend/service"
+	"wechat-robot-admin-backend/vars"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"

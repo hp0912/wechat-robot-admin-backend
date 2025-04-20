@@ -2,10 +2,10 @@ package repository
 
 import (
 	"context"
-	"wechat-robot-client/dto"
-	"wechat-robot-client/model"
-	"wechat-robot-client/pkg/appx"
-	"wechat-robot-client/vars"
+	"wechat-robot-admin-backend/dto"
+	"wechat-robot-admin-backend/model"
+	"wechat-robot-admin-backend/pkg/appx"
+	"wechat-robot-admin-backend/vars"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

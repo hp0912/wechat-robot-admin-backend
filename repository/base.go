@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"errors"
 	"log"
-	"wechat-robot-client/pkg/gormx"
-	"wechat-robot-client/pkg/gtool"
+	"wechat-robot-admin-backend/pkg/gormx"
+	"wechat-robot-admin-backend/pkg/gtool"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"

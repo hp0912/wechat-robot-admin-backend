@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 	"strconv"
-	"wechat-robot-client/utils/docker"
-	"wechat-robot-client/vars"
+	"wechat-robot-admin-backend/utils/docker"
+	"wechat-robot-admin-backend/vars"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

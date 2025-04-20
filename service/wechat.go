@@ -7,10 +7,10 @@ import (
 	"fmt"
 	"net/http"
 	"time"
-	"wechat-robot-client/model"
-	"wechat-robot-client/repository"
-	"wechat-robot-client/utils"
-	"wechat-robot-client/vars"
+	"wechat-robot-admin-backend/model"
+	"wechat-robot-admin-backend/repository"
+	"wechat-robot-admin-backend/utils"
+	"wechat-robot-admin-backend/vars"
 )
 
 type WeChatService struct {

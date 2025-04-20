@@ -18,7 +18,7 @@ type Robot struct {
 	ID           int64          `gorm:"primarykey" json:"id"`
 	RobotCode    string         `gorm:"column:robot_code;index;unique,length:64" json:"robot_code"` // 当前机器人的唯一标识
 	Owner        string         `gorm:"column:owner;index;length:64" json:"owner"`                  // 当前机器人的拥有者
-	DeviceId     string         `gorm:"column:device_id;" json:"device_id"`                         // 当前机器人登陆的设备Id
+	DeviceID     string         `gorm:"column:device_id;" json:"device_id"`                         // 当前机器人登陆的设备Id
 	DeviceName   string         `gorm:"column:device_name" json:"device_name"`                      // 当前机器人登陆的设备名称
 	WeChatID     string         `gorm:"column:wechat_id;index;length:64" json:"wechat_id"`          // 当前机器人登陆的微信id
 	Nickname     string         `gorm:"column:nickname" json:"nickname"`                            // 当前机器人登陆的微信昵称

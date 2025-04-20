@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"wechat-robot-client/model"
+	"wechat-robot-admin-backend/model"
 
 	"gorm.io/gorm"
 )

@@ -1,8 +1,8 @@
 package router
 
 import (
-	"wechat-robot-client/controller"
-	"wechat-robot-client/middleware"
+	"wechat-robot-admin-backend/controller"
+	"wechat-robot-admin-backend/middleware"
 
 	"github.com/gin-gonic/gin"
 )

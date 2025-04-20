@@ -2,9 +2,9 @@ package service
 
 import (
 	"context"
-	"wechat-robot-client/model"
-	"wechat-robot-client/repository"
-	"wechat-robot-client/vars"
+	"wechat-robot-admin-backend/model"
+	"wechat-robot-admin-backend/repository"
+	"wechat-robot-admin-backend/vars"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"

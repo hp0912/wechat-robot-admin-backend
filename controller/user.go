@@ -2,8 +2,8 @@ package controller
 
 import (
 	"errors"
-	"wechat-robot-client/pkg/appx"
-	"wechat-robot-client/service"
+	"wechat-robot-admin-backend/pkg/appx"
+	"wechat-robot-admin-backend/service"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"

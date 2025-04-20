@@ -11,12 +11,12 @@ import (
 	"runtime"
 	"strings"
 	"time"
-	"wechat-robot-client/dto"
-	"wechat-robot-client/model"
-	"wechat-robot-client/pkg/appx"
-	"wechat-robot-client/repository"
-	"wechat-robot-client/utils"
-	"wechat-robot-client/vars"
+	"wechat-robot-admin-backend/dto"
+	"wechat-robot-admin-backend/model"
+	"wechat-robot-admin-backend/pkg/appx"
+	"wechat-robot-admin-backend/repository"
+	"wechat-robot-admin-backend/utils"
+	"wechat-robot-admin-backend/vars"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -92,7 +92,7 @@ func (r *RobotService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest)
 	robot := &model.Robot{
 		RobotCode:    req.RobotCode,
 		Owner:        wechatId.(string),
-		DeviceId:     utils.CreateDeviceID(""),
+		DeviceID:     utils.CreateDeviceID(""),
 		DeviceName:   utils.CreateDeviceName(),
 		WeChatID:     "", // 登陆后才会有
 		Nickname:     "",

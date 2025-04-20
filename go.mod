@@ -1,4 +1,4 @@
-module wechat-robot-client
+module wechat-robot-admin-backend
 
 go 1.23.0
 

@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 	"strings"
-	"wechat-robot-client/vars"
+	"wechat-robot-admin-backend/vars"
 
 	"github.com/joho/godotenv"
 )
