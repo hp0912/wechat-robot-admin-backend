@@ -58,6 +58,29 @@ func (r *RobotService) RobotList(ctx *gin.Context, req dto.RobotListRequest, pag
 	return repository.NewRobotRepo(r.ctx, vars.DB).RobotList(ctx, req, pager)
 }
 
+func (r *RobotService) GetProjectRoot() (string, error) {
+	_, filename, _, ok := runtime.Caller(0)
+	if !ok {
+		return "", errors.New("无法获取运行时信息")
+	}
+	projectRoot := filepath.Join(filepath.Dir(filename), "..") // 上一级为项目根目录
+	return projectRoot, nil
+}
+
+func (r *RobotService) DockerComposeCommand(dockerComposeFilePath string, extraArgs ...string) error {
+	cmdParts := strings.Fields(vars.DockerComposeCmd)
+	cmdArgs := append(cmdParts[1:], "-f", dockerComposeFilePath)
+	cmdArgs = append(cmdArgs, extraArgs...)
+	cmd := exec.Command(cmdParts[0], cmdArgs...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err := cmd.Run()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (r *RobotService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest) error {
 	session := sessions.Default(ctx)
 	wechatId := session.Get("wechat_id")
@@ -105,12 +128,11 @@ func (r *RobotService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest)
 	}
 	defer db.Close()
 	// 读取建表模版
-	_, filename, _, ok := runtime.Caller(0)
-	if !ok {
-		return errors.New("无法获取运行时信息")
+	projectRoot, err := r.GetProjectRoot()
+	if err != nil {
+		return err
 	}
-	projectRoot := filepath.Join(filepath.Dir(filename), "..") // 上一级为项目根目录
-	sqlFilePath := filepath.Join(projectRoot, "admin.sql")     // TODO admin.sql
+	sqlFilePath := filepath.Join(projectRoot, "admin.sql") // TODO admin.sql
 	// 检查文件是否存在
 	if _, err := os.Stat(sqlFilePath); os.IsNotExist(err) {
 		return errors.New("建表模版不存在")
@@ -163,12 +185,7 @@ func (r *RobotService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest)
 		return err
 	}
 	// 通过 docker-compose 启动微信客户端和服务端
-	cmdParts := strings.Fields(vars.DockerComposeCmd)
-	cmdArgs := append(cmdParts[1:], "-f", outputFilePath, "up", "-d")
-	cmd := exec.Command(cmdParts[0], cmdArgs...)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	err = cmd.Run()
+	err = r.DockerComposeCommand(outputFilePath, "up", "-d")
 	if err != nil {
 		return err
 	}
@@ -195,11 +212,10 @@ func (r *RobotService) RobotRemove(ctx *gin.Context, robotID int64) error {
 	if err != nil {
 		return err
 	}
-	_, filename, _, ok := runtime.Caller(0)
-	if !ok {
-		return errors.New("无法获取运行时信息")
+	projectRoot, err := r.GetProjectRoot()
+	if err != nil {
+		return err
 	}
-	projectRoot := filepath.Join(filepath.Dir(filename), "..") // 上一级为项目根目录
 	dockerComposeFile := filepath.Join(projectRoot, "docker-compose", fmt.Sprintf("docker-compose-%s.yml", robot.RobotCode))
 	// 判断docker-compose文件是否存在
 	_, err = os.Stat(dockerComposeFile)
@@ -210,12 +226,7 @@ func (r *RobotService) RobotRemove(ctx *gin.Context, robotID int64) error {
 		return err
 	}
 	// 通过docker-compose停止微信客户端和服务端
-	cmdParts := strings.Fields(vars.DockerComposeCmd)
-	cmdArgs := append(cmdParts[1:], "-f", dockerComposeFile, "down")
-	cmd := exec.Command(cmdParts[0], cmdArgs...)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	err = cmd.Run()
+	err = r.DockerComposeCommand(dockerComposeFile, "down")
 	if err != nil {
 		return err
 	}
@@ -237,5 +248,46 @@ func (r *RobotService) CreateDockerComposeFile(tmpl *template.Template, outputFi
 	if err := tmpl.Execute(outputFile, data); err != nil {
 		return err
 	}
+	return nil
+}
+
+func (r *RobotService) RobotRestart(ctx *gin.Context, robotID int64, restartType string) error {
+	respo := repository.NewRobotRepo(r.ctx, vars.DB)
+	robot := respo.GetByID(robotID)
+	if robot == nil {
+		return errors.New("机器人不存在")
+	}
+	projectRoot, err := r.GetProjectRoot()
+	if err != nil {
+		return err
+	}
+	dockerComposeFile := filepath.Join(projectRoot, "docker-compose", fmt.Sprintf("docker-compose-%s.yml", robot.RobotCode))
+	// 判断docker-compose文件是否存在
+	_, err = os.Stat(dockerComposeFile)
+	if err != nil {
+		return err
+	}
+	err = r.DockerComposeCommand(dockerComposeFile, "restart", fmt.Sprintf("%s_%s", restartType, robot.RobotCode))
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *RobotService) RobotRestartClient(ctx *gin.Context, robotID int64) error {
+	return r.RobotRestart(ctx, robotID, "client")
+}
+
+func (r *RobotService) RobotRestartServer(ctx *gin.Context, robotID int64) error {
+	err := r.RobotRestart(ctx, robotID, "server")
+	if err != nil {
+		return err
+	}
+	respo := repository.NewRobotRepo(r.ctx, vars.DB)
+	robot := model.Robot{
+		ID:     robotID,
+		Status: model.RobotStatusOffline,
+	}
+	respo.Update(&robot)
 	return nil
 }

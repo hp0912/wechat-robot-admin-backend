@@ -93,6 +93,8 @@ func UserOwnerAuth() func(c *gin.Context) {
 			c.Abort()
 			return
 		}
+		c.Set("req", req)
+
 		robot := repository.NewRobotRepo(c.Request.Context(), vars.DB).GetByID(req.ID)
 		if robot == nil {
 			c.JSON(http.StatusOK, gin.H{

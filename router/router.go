@@ -39,6 +39,8 @@ func RegisterRouter(r *gin.Engine) error {
 		robot.GET("/list", robotCtl.RobotList)
 		robot.POST("/create", robotCtl.RobotCreate)
 		robot.GET("/view", middleware.UserOwnerAuth(), robotCtl.RobotView)
+		robot.POST("/restart-client", middleware.UserOwnerAuth(), robotCtl.RobotRestartClient)
+		robot.POST("/restart-server", middleware.UserOwnerAuth(), robotCtl.RobotRestartServer)
 		robot.GET("/state", middleware.UserOwnerAuth(), robotCtl.RobotView)
 		robot.DELETE("/remove", middleware.UserOwnerAuth(), robotCtl.RobotRemove)
 	}

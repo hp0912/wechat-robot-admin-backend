@@ -79,13 +79,58 @@ func (r *Robot) RobotView(c *gin.Context) {
 }
 
 func (r *Robot) RobotRemove(c *gin.Context) {
-	var req dto.RobotCommonRequest
 	resp := appx.NewResponse(c)
-	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+	_req, exists := c.Get("req")
+	if !exists {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	req, ok := _req.(dto.RobotCommonRequest)
+	if !ok {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
 	err := service.NewRobotService(c.Request.Context()).RobotRemove(c, req.ID)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
+
+func (r *Robot) RobotRestartClient(c *gin.Context) {
+	resp := appx.NewResponse(c)
+	_req, exists := c.Get("req")
+	if !exists {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	req, ok := _req.(dto.RobotCommonRequest)
+	if !ok {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	err := service.NewRobotService(c.Request.Context()).RobotRestartClient(c, req.ID)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
+
+func (r *Robot) RobotRestartServer(c *gin.Context) {
+	resp := appx.NewResponse(c)
+	_req, exists := c.Get("req")
+	if !exists {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	req, ok := _req.(dto.RobotCommonRequest)
+	if !ok {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	err := service.NewRobotService(c.Request.Context()).RobotRestartServer(c, req.ID)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
