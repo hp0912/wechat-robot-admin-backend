@@ -298,20 +298,23 @@ func (r *RobotService) RobotLogin(ctx *gin.Context, robot *model.Robot) (dto.Rob
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetResult(&result).
-		Post(fmt.Sprintf("http://%s:%d/api/v1/robot/login", robot.RobotCode, 9001)) // TODO
-	if err != nil {
+		Post(fmt.Sprintf("http://%s:%d/api/v1/robot/login", robot.RobotCode, 9002)) // TODO
+	if err = result.CheckError(err); err != nil {
 		return dto.RobotLoginResponse{}, err
 	}
 	return result.Data, nil
 }
 
-func (r *RobotService) RobotLoginCheck(ctx *gin.Context, robot *model.Robot) (dto.RobotLoginCheckResponse, error) {
+func (r *RobotService) RobotLoginCheck(ctx *gin.Context, robot *model.Robot, uuid string) (dto.RobotLoginCheckResponse, error) {
 	var result dto.Response[dto.RobotLoginCheckResponse]
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]string{
+			"uuid": uuid,
+		}).
 		SetResult(&result).
-		Post(fmt.Sprintf("http://%s:%d/api/v1/robot/login-check", robot.RobotCode, 9001)) // TODO
-	if err != nil {
+		Post(fmt.Sprintf("http://%s:%d/api/v1/robot/login-check", robot.RobotCode, 9002)) // TODO
+	if err = result.CheckError(err); err != nil {
 		return dto.RobotLoginCheckResponse{}, err
 	}
 	return result.Data, nil
@@ -322,7 +325,10 @@ func (r *RobotService) RobotLogout(ctx *gin.Context, robot *model.Robot) (err er
 	_, err = resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetResult(&resp).
-		Post(fmt.Sprintf("http://%s:%d/api/v1/robot/logout", robot.RobotCode, 9001)) // TODO
+		Delete(fmt.Sprintf("http://%s:%d/api/v1/robot/logout", robot.RobotCode, 9002)) // TODO
+	if err = resp.CheckError(err); err != nil {
+		return
+	}
 	return
 }
 
@@ -332,15 +338,15 @@ func (r *RobotService) RobotState(ctx *gin.Context, robot *model.Robot) (err err
 	_, err = resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetResult(&isRunningResp).
-		Post(fmt.Sprintf("http://%s:%d/api/v1/robot/is-running", robot.RobotCode, 9001)) // TODO
-	if err != nil {
+		Get(fmt.Sprintf("http://%s:%d/api/v1/robot/is-running", robot.RobotCode, 9002)) // TODO
+	if err = isRunningResp.CheckError(err); err != nil {
 		return
 	}
 	_, err = resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetResult(&isLoggedInResp).
-		Post(fmt.Sprintf("http://%s:%d/api/v1/robot/is-loggedin", robot.RobotCode, 9001)) // TODO
-	if err != nil {
+		Get(fmt.Sprintf("http://%s:%d/api/v1/robot/is-loggedin", robot.RobotCode, 9002)) // TODO
+	if err = isLoggedInResp.CheckError(err); err != nil {
 		return
 	}
 	respo := repository.NewRobotRepo(r.ctx, vars.DB)

@@ -161,6 +161,16 @@ func (r *Robot) RobotLogin(c *gin.Context) {
 
 func (r *Robot) RobotLoginCheck(c *gin.Context) {
 	resp := appx.NewResponse(c)
+	_req, exists := c.Get("req")
+	if !exists {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	req, ok := _req.(dto.RobotCommonRequest)
+	if !ok {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
 	_robot, exists := c.Get("robot")
 	if !exists {
 		resp.ToErrorResponse(errors.New("参数错误"))
@@ -171,7 +181,7 @@ func (r *Robot) RobotLoginCheck(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	data, err := service.NewRobotService(c.Request.Context()).RobotLoginCheck(c, robot)
+	data, err := service.NewRobotService(c.Request.Context()).RobotLoginCheck(c, robot, req.Uuid)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return

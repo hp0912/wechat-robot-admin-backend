@@ -1,22 +1,31 @@
 services:
-  mysql:
-    image: mysql:latest
-    container_name: mysql_debug
-    restart: always
-    networks:
-      - wechat-robot
-    environment:
-      TZ: Asia/Shanghai # 设置时区
-      MYSQL_ROOT_PASSWORD: houhou
-
   redis:
     image: redis:latest
     container_name: redis_debug
     restart: always
     networks:
       - wechat-robot
+    ports:
+      - '6379:6379'
     environment:
       REDIS_PASSWORD: houhou
+    command: [ "redis-server", "--requirepass", "houhou" ]
+
+  server:
+    image: registry.cn-shenzhen.aliyuncs.com/houhou/wechat-robot-server:latest
+    container_name: server
+    restart: always
+    networks:
+      - wechat-robot
+    ports:
+      - '9001:9001'
+    environment:
+      WECHAT_PORT: 9001
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: houhou
+      REDIS_DB: 5
+
 networks:
   wechat-robot:
     external: true

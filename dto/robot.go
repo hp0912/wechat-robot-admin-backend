@@ -11,14 +11,29 @@ type RobotCreateRequest struct {
 }
 
 type RobotCommonRequest struct {
-	ID int64 `form:"id" json:"id" binding:"required"`
+	ID   int64  `form:"id" json:"id" binding:"required"`
+	Uuid string `form:"uuid" json:"uuid"`
 }
 
 type RobotLoginResponse struct {
-	Qrcode string `json:"qrcode"`
-	Uuid   string `json:"uuid"`
+	Awken bool   `json:"awken"` // 微信登录凭证
+	Uuid  string `json:"uuid"`
+}
+
+type AcctSectRespData struct {
+	Username   string `json:"userName"`   // 原始微信Id
+	Alias      string `json:"alias"`      // 自定义的微信号
+	BindMobile string `json:"bindMobile"` // 绑定的手机号
+	FsUrl      string `json:"fsurl"`      // 可能是头像地址
+	Nickname   string `json:"nickName"`   // 昵称
 }
 
 type RobotLoginCheckResponse struct {
-	LoggedIn string `json:"logged_in"`
+	Uuid                    string           `json:"uuid"`
+	Status                  int              `json:"status"` // 状态
+	PushLoginUrlexpiredTime int              `json:"pushLoginUrlexpiredTime"`
+	ExpiredTime             int              `json:"expiredTime"`  // 过期时间(秒)
+	HeadImgUrl              string           `json:"headImgUrl"`   // 头像
+	NickName                string           `json:"nickName"`     // 昵称
+	AcctSectResp            AcctSectRespData `json:"acctSectResp"` // 账号信息-登录成功之后才有
 }
