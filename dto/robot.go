@@ -13,3 +13,12 @@ type RobotCreateRequest struct {
 type RobotCommonRequest struct {
 	ID int64 `form:"id" json:"id" binding:"required"`
 }
+
+type RobotLoginResponse struct {
+	Qrcode string `json:"qrcode"`
+	Uuid   string `json:"uuid"`
+}
+
+type RobotLoginCheckResponse struct {
+	LoggedIn string `json:"logged_in"`
+}

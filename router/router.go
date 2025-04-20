@@ -41,8 +41,12 @@ func RegisterRouter(r *gin.Engine) error {
 		robot.GET("/view", middleware.UserOwnerAuth(), robotCtl.RobotView)
 		robot.POST("/restart-client", middleware.UserOwnerAuth(), robotCtl.RobotRestartClient)
 		robot.POST("/restart-server", middleware.UserOwnerAuth(), robotCtl.RobotRestartServer)
-		robot.GET("/state", middleware.UserOwnerAuth(), robotCtl.RobotView)
 		robot.DELETE("/remove", middleware.UserOwnerAuth(), robotCtl.RobotRemove)
+		// 机器人登陆、登出
+		robot.POST("/login", middleware.UserOwnerAuth(), robotCtl.RobotLogin)
+		robot.POST("/login-check", middleware.UserOwnerAuth(), robotCtl.RobotLoginCheck)
+		robot.POST("/logout", middleware.UserOwnerAuth(), robotCtl.RobotLogout)
+		robot.GET("/state", middleware.UserOwnerAuth(), robotCtl.RobotState)
 	}
 
 	return nil

@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS `robot` (
   `device_id` VARCHAR(255) DEFAULT NULL,
   `device_name` VARCHAR(255) DEFAULT NULL,
   `wechat_id` VARCHAR(64) DEFAULT NULL,
+  `bind_mobile` VARCHAR(15) DEFAULT NULL,
   `nickname` VARCHAR(255) DEFAULT NULL,
   `avatar` VARCHAR(255) DEFAULT NULL,
   `status` ENUM('online', 'offline', 'error') NOT NULL DEFAULT 'offline',

@@ -20,6 +20,7 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/go-resty/resty/v2"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -290,4 +291,71 @@ func (r *RobotService) RobotRestartServer(ctx *gin.Context, robotID int64) error
 	}
 	respo.Update(&robot)
 	return nil
+}
+
+func (r *RobotService) RobotLogin(ctx *gin.Context, robot *model.Robot) (dto.RobotLoginResponse, error) {
+	var result dto.Response[dto.RobotLoginResponse]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetResult(&result).
+		Post(fmt.Sprintf("http://%s:%d/api/v1/robot/login", robot.RobotCode, 9001)) // TODO
+	if err != nil {
+		return dto.RobotLoginResponse{}, err
+	}
+	return result.Data, nil
+}
+
+func (r *RobotService) RobotLoginCheck(ctx *gin.Context, robot *model.Robot) (dto.RobotLoginCheckResponse, error) {
+	var result dto.Response[dto.RobotLoginCheckResponse]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetResult(&result).
+		Post(fmt.Sprintf("http://%s:%d/api/v1/robot/login-check", robot.RobotCode, 9001)) // TODO
+	if err != nil {
+		return dto.RobotLoginCheckResponse{}, err
+	}
+	return result.Data, nil
+}
+
+func (r *RobotService) RobotLogout(ctx *gin.Context, robot *model.Robot) (err error) {
+	var resp dto.Response[struct{}]
+	_, err = resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetResult(&resp).
+		Post(fmt.Sprintf("http://%s:%d/api/v1/robot/logout", robot.RobotCode, 9001)) // TODO
+	return
+}
+
+func (r *RobotService) RobotState(ctx *gin.Context, robot *model.Robot) (err error) {
+	var isRunningResp dto.Response[bool]
+	var isLoggedInResp dto.Response[bool]
+	_, err = resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetResult(&isRunningResp).
+		Post(fmt.Sprintf("http://%s:%d/api/v1/robot/is-running", robot.RobotCode, 9001)) // TODO
+	if err != nil {
+		return
+	}
+	_, err = resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetResult(&isLoggedInResp).
+		Post(fmt.Sprintf("http://%s:%d/api/v1/robot/is-loggedin", robot.RobotCode, 9001)) // TODO
+	if err != nil {
+		return
+	}
+	respo := repository.NewRobotRepo(r.ctx, vars.DB)
+	if isRunningResp.Data && isLoggedInResp.Data {
+		newRobot := model.Robot{
+			ID:     robot.ID,
+			Status: model.RobotStatusOnline,
+		}
+		respo.Update(&newRobot)
+	} else {
+		newRobot := model.Robot{
+			ID:     robot.ID,
+			Status: model.RobotStatusOffline,
+		}
+		respo.Update(&newRobot)
+	}
+	return
 }

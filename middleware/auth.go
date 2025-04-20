@@ -114,6 +114,8 @@ func UserOwnerAuth() func(c *gin.Context) {
 			c.Abort()
 			return
 		}
+
+		c.Set("robot", robot)
 		c.Next()
 	}
 }

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"regexp"
 	"wechat-robot-admin-backend/dto"
+	"wechat-robot-admin-backend/model"
 	"wechat-robot-admin-backend/pkg/appx"
 	"wechat-robot-admin-backend/service"
 	"wechat-robot-admin-backend/vars"
@@ -131,6 +132,86 @@ func (r *Robot) RobotRestartServer(c *gin.Context) {
 		return
 	}
 	err := service.NewRobotService(c.Request.Context()).RobotRestartServer(c, req.ID)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
+
+func (r *Robot) RobotLogin(c *gin.Context) {
+	resp := appx.NewResponse(c)
+	_robot, exists := c.Get("robot")
+	if !exists {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, ok := _robot.(*model.Robot)
+	if !ok {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	data, err := service.NewRobotService(c.Request.Context()).RobotLogin(c, robot)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(data)
+}
+
+func (r *Robot) RobotLoginCheck(c *gin.Context) {
+	resp := appx.NewResponse(c)
+	_robot, exists := c.Get("robot")
+	if !exists {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, ok := _robot.(*model.Robot)
+	if !ok {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	data, err := service.NewRobotService(c.Request.Context()).RobotLoginCheck(c, robot)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(data)
+}
+
+func (r *Robot) RobotLogout(c *gin.Context) {
+	resp := appx.NewResponse(c)
+	_robot, exists := c.Get("robot")
+	if !exists {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, ok := _robot.(*model.Robot)
+	if !ok {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	err := service.NewRobotService(c.Request.Context()).RobotLogout(c, robot)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
+
+func (r *Robot) RobotState(c *gin.Context) {
+	resp := appx.NewResponse(c)
+	_robot, exists := c.Get("robot")
+	if !exists {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, ok := _robot.(*model.Robot)
+	if !ok {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	err := service.NewRobotService(c.Request.Context()).RobotState(c, robot)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
