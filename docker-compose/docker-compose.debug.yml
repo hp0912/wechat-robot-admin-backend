@@ -1,7 +1,7 @@
 services:
   redis:
     image: redis:latest
-    container_name: redis_debug
+    container_name: redis
     restart: always
     networks:
       - wechat-robot
@@ -11,20 +11,15 @@ services:
       REDIS_PASSWORD: houhou
     command: [ "redis-server", "--requirepass", "houhou" ]
 
-  server:
-    image: registry.cn-shenzhen.aliyuncs.com/houhou/wechat-robot-server:latest
-    container_name: server
+  mysql:
+    image: "${REGISTRY:-docker.io}/mysql:latest"
     restart: always
-    networks:
-      - wechat-robot
+    container_name: mysql
     ports:
-      - '9001:9001'
+      - '3306:3306'
     environment:
-      WECHAT_PORT: 9001
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      REDIS_PASSWORD: houhou
-      REDIS_DB: 5
+      TZ: Asia/Shanghai # 设置时区
+      MYSQL_ROOT_PASSWORD: 'houhou'
 
 networks:
   wechat-robot:
