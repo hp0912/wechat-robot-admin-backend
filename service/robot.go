@@ -140,7 +140,7 @@ func (r *RobotService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest)
 	if err != nil {
 		return err
 	}
-	sqlFilePath := filepath.Join(projectRoot, "admin.sql") // TODO admin.sql
+	sqlFilePath := filepath.Join(projectRoot, "robot.sql")
 	// 检查文件是否存在
 	if _, err := os.Stat(sqlFilePath); os.IsNotExist(err) {
 		return errors.New("建表模版不存在")
@@ -152,6 +152,13 @@ func (r *RobotService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest)
 	}
 	// 开始建表
 	err = newDB.Exec(fmt.Sprintf("USE `%s`;\n%s", robot.RobotCode, string(content))).Error
+	if err != nil {
+		return err
+	}
+	// 插入一条公共配置记录
+	commonConf := fmt.Sprintf("INSERT INTO `%s`.`%s` (`ai_enabled`, `chat_url`, `chat_key`, `chat_model`, `chat_persona`) VALUES (1, '%s', '%s', '%s', '%s');",
+		robot.RobotCode, "common-configs", "https://ai-api.houhoukang.com/", vars.OpenAIApiKey, "gpt-4o-mini", "我是一个聊天机器人。")
+	err = newDB.Exec(commonConf).Error
 	if err != nil {
 		return err
 	}

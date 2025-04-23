@@ -13,3 +13,5 @@ var WeChatServerAddress string
 var WeChatServerToken string
 
 var SessionSecret string
+
+var OpenAIApiKey string

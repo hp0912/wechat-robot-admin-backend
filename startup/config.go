@@ -35,6 +35,8 @@ func loadEnvConfig() {
 	vars.WeChatServerAddress = os.Getenv("WECHAT_SERVER_ADDRESS")
 	vars.WeChatServerToken = os.Getenv("WECHAT_SERVER_TOKEN")
 
+	vars.OpenAIApiKey = os.Getenv("OPENAI_API_KEY")
+
 	// mysql
 	vars.MysqlSettings.Driver = os.Getenv("MYSQL_DRIVER")
 	vars.MysqlSettings.Host = os.Getenv("MYSQL_HOST")
