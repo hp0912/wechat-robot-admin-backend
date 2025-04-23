@@ -7,7 +7,6 @@ import (
 	"wechat-robot-admin-backend/pkg/appx"
 	"wechat-robot-admin-backend/vars"
 
-	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
@@ -23,13 +22,15 @@ func NewRobotRepo(ctx context.Context, db *gorm.DB) *Robot {
 		}}
 }
 
-func (r *Robot) RobotList(ctx *gin.Context, req dto.RobotListRequest, pager appx.Pager) ([]*model.Robot, int64, error) {
+func (r *Robot) RobotList(req dto.RobotListRequest, pager appx.Pager) ([]*model.Robot, int64, error) {
 	query := vars.DB.Model(&model.Robot{})
 	if req.Owner != "" {
 		query = query.Where("owner = ?", req.Owner)
 	}
 	if req.Keyword != "" {
-		query = query.Where("nickname LIKE ?", "%"+req.Keyword)
+		query = query.Where("nickname LIKE ?", req.Keyword+"%").
+			Or("robot_code LIKE ?", req.Keyword+"%").
+			Or("wechat_id LIKE ?", req.Keyword+"%")
 	}
 	if req.Status != "" {
 		query = query.Where("status = ?", req.Status)
@@ -43,6 +44,17 @@ func (r *Robot) RobotList(ctx *gin.Context, req dto.RobotListRequest, pager appx
 		return nil, 0, err
 	}
 	return robots, total, nil
+}
+
+func (r *Robot) GetByOwner(owner string, unscoped bool, preloads ...string) []*model.Robot {
+	filter := func(tx *gorm.DB) *gorm.DB {
+		query := tx.Where("owner = ?", owner)
+		if unscoped {
+			query = query.Unscoped()
+		}
+		return query
+	}
+	return r.List(preloads, filter)
 }
 
 func (r *Robot) GetMaxRedisDB() (uint, error) {

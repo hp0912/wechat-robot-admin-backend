@@ -56,7 +56,7 @@ func NewRobotService(ctx context.Context) *RobotService {
 }
 
 func (r *RobotService) RobotList(ctx *gin.Context, req dto.RobotListRequest, pager appx.Pager) ([]*model.Robot, int64, error) {
-	return repository.NewRobotRepo(r.ctx, vars.DB).RobotList(ctx, req, pager)
+	return repository.NewRobotRepo(r.ctx, vars.DB).RobotList(req, pager)
 }
 
 func (r *RobotService) GetProjectRoot() (string, error) {
@@ -85,11 +85,18 @@ func (r *RobotService) DockerComposeCommand(dockerComposeFilePath string, extraA
 func (r *RobotService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest) error {
 	session := sessions.Default(ctx)
 	wechatId := session.Get("wechat_id")
+	role := session.Get("role")
 	respo := repository.NewRobotRepo(r.ctx, vars.DB)
 	redisDb, err := respo.GetMaxRedisDB()
 	if err != nil {
 		return err
 	}
+	// 一个账号最多创建5个机器人
+	robots := respo.GetByOwner(wechatId.(string), true)
+	if len(robots) >= 2 && role.(int) != vars.RoleRootUser {
+		return errors.New("一个账号最多创建2个机器人")
+	}
+
 	robot := &model.Robot{
 		RobotCode:    req.RobotCode,
 		Owner:        wechatId.(string),
