@@ -27,6 +27,8 @@ CREATE TABLE IF NOT EXISTS `robot` (
   `status` ENUM('online', 'offline', 'error') NOT NULL DEFAULT 'offline',
   `redis_db` BIGINT UNSIGNED NOT NULL DEFAULT '1',
   `error_message` TEXT DEFAULT NULL,
+  `profile` JSON,
+  `profile_ext` JSON,
   `last_login_at` BIGINT DEFAULT NULL,
   `created_at` BIGINT DEFAULT NULL,
   `updated_at` BIGINT DEFAULT NULL,
