@@ -1,3 +1,4 @@
+-- TODO AI 自定义请求头、请求体
 CREATE TABLE IF NOT EXISTS `common-configs` (
   id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '公共配置表主键ID',
   ai_enabled BOOLEAN DEFAULT FALSE COMMENT '是否启用AI聊天功能',
@@ -23,4 +24,54 @@ CREATE TABLE IF NOT EXISTS `common-configs` (
   morning_enabled BOOLEAN DEFAULT FALSE COMMENT '是否启用早安问候功能',
   morning_cron VARCHAR(100) DEFAULT '' COMMENT '早安问候的定时任务表达式',
   ranking_cron VARCHAR(100) DEFAULT '' COMMENT '群聊排行榜的定时任务表达式'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE IF NOT EXISTS `messages` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `msg_id` BIGINT NOT NULL,
+  `client_msg_id` BIGINT NOT NULL,
+  `type` INT NOT NULL,
+  `is_group` BOOLEAN DEFAULT FALSE COMMENT '是否为群聊消息',
+  `is_atme` BOOLEAN DEFAULT FALSE COMMENT '消息是否@我',
+  `is_recalled` BOOLEAN DEFAULT FALSE COMMENT '消息是否已经撤回',
+  `content` TEXT,
+  `display_full_content` TEXT,
+  `message_source` TEXT,
+  `from_wxid` VARCHAR(255),
+  `sender_wxid` VARCHAR(255),
+  `to_wxid` VARCHAR(255),
+  `attachment_url` VARCHAR(512),
+  `created_at` BIGINT NOT NULL,
+  `updated_at` BIGINT NOT NULL,
+  `deleted_at` DATETIME DEFAULT NULL,
+  UNIQUE KEY `uniq_msg_id` (`msg_id`),
+  UNIQUE KEY `uniq_client_msg_id` (`client_msg_id`),
+  KEY `idx_from_wxid` (`from_wxid`),
+  KEY `idx_sender_wxid` (`sender_wxid`),
+  KEY `idx_created_at` (`created_at`),
+  KEY `idx_deleted_at` (`deleted_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE IF NOT EXISTS `contacts` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `wechat_id` VARCHAR(64) NOT NULL COMMENT '微信ID',
+  `alias` VARCHAR(64) DEFAULT NULL COMMENT '微信号',
+  `nickname` VARCHAR(64) DEFAULT NULL COMMENT '昵称',
+  `avatar` VARCHAR(255) DEFAULT NULL COMMENT '头像',
+  `type` ENUM('friend','group') NOT NULL COMMENT '联系人类型：friend-好友，group-群组',
+  `remark` VARCHAR(255) DEFAULT NULL COMMENT '备注',
+  `pyinitial` VARCHAR(64) DEFAULT NULL COMMENT '昵称拼音首字母大写',
+  `quan_pin` VARCHAR(255) DEFAULT NULL COMMENT '昵称拼音全拼小写',
+  `sex` TINYINT DEFAULT 0 COMMENT '性别 0：未知 1：男 2：女',
+  `country` VARCHAR(64) DEFAULT NULL COMMENT '国家',
+  `province` VARCHAR(64) DEFAULT NULL COMMENT '省份',
+  `city` VARCHAR(64) DEFAULT NULL COMMENT '城市',
+  `signature` VARCHAR(255) DEFAULT NULL COMMENT '个性签名',
+  `sns_background` VARCHAR(255) DEFAULT NULL COMMENT '朋友圈背景图',
+  `created_at` BIGINT NOT NULL COMMENT '创建时间',
+  `updated_at` BIGINT NOT NULL COMMENT '更新时间',
+  `deleted_at` DATETIME DEFAULT NULL COMMENT '软删除时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_wechat_id` (`wechat_id`),
+  KEY `idx_deleted_at` (`deleted_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
