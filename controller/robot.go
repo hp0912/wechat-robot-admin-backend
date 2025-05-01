@@ -145,7 +145,7 @@ func (r *Robot) RobotLogin(c *gin.Context) {
 }
 
 func (r *Robot) RobotLoginCheck(c *gin.Context) {
-	var req dto.RobotCommonRequest
+	var req dto.RobotLoginCheckRequest
 	resp := appx.NewResponse(c)
 	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
 		resp.ToErrorResponse(errors.New("参数错误"))

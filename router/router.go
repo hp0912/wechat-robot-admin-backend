@@ -10,12 +10,14 @@ import (
 var wechatCtl *controller.WeChat
 var userCtl *controller.User
 var robotCtl *controller.Robot
+var contactCtl *controller.Contact
 var systemCtl *controller.System
 
 func initController() {
 	wechatCtl = controller.NewWeChatAuthController()
 	userCtl = controller.NewUserController()
 	robotCtl = controller.NewRobotController()
+	contactCtl = controller.NewContactController()
 	systemCtl = controller.NewSystemController()
 }
 
@@ -41,6 +43,12 @@ func RegisterRouter(r *gin.Engine) error {
 		system.Use(middleware.UserAuth())
 		system.GET("/robot-container-stats", middleware.UserOwnerAuth(), systemCtl.RobotContainerStats)
 		system.GET("/robot-container-logs", middleware.UserOwnerAuth(), systemCtl.GetRobotContainerLogs)
+	}
+
+	{
+		contact := api.Group("/contact")
+		contact.Use(middleware.UserAuth())
+		contact.GET("/list", middleware.UserOwnerAuth(), contactCtl.GetContacts)
 	}
 
 	{

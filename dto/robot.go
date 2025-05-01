@@ -11,8 +11,11 @@ type RobotCreateRequest struct {
 }
 
 type RobotCommonRequest struct {
-	ID   int64  `form:"id" json:"id" binding:"required"`
-	Uuid string `form:"uuid" json:"uuid"`
+	ID int64 `form:"id" json:"id" binding:"required"`
+}
+
+type RobotLoginCheckRequest struct {
+	Uuid string `form:"uuid" json:"uuid" binding:"required"`
 }
 
 type RobotLoginResponse struct {
