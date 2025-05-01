@@ -4,12 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"html/template"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
-	"strings"
 	"time"
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/model"
@@ -18,32 +15,16 @@ import (
 	"wechat-robot-admin-backend/utils"
 	"wechat-robot-admin-backend/vars"
 
+	"github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/api/types/filters"
+	"github.com/docker/docker/api/types/network"
+	"github.com/docker/docker/client"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/go-resty/resty/v2"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
-
-type DockerComposeFileContext struct {
-	WECHAT_PORT         string
-	REDIS_HOST          string
-	REDIS_PORT          string
-	REDIS_PASSWORD      string
-	REDIS_DB            string
-	GIN_MODE            string
-	ROBOT_CODE          string
-	ROBOT_START_TIMEOUT string
-	MYSQL_DRIVER        string
-	MYSQL_HOST          string
-	MYSQL_PORT          string
-	MYSQL_USER          string
-	MYSQL_PASSWORD      string
-	MYSQL_ADMIN_DB      string
-	MYSQL_DB            string
-	MYSQL_SCHEMA        string
-	DOCKER_NETWORK      string
-}
 
 type RobotService struct {
 	ctx context.Context
@@ -55,7 +36,7 @@ func NewRobotService(ctx context.Context) *RobotService {
 	}
 }
 
-func (r *RobotService) RobotList(ctx *gin.Context, req dto.RobotListRequest, pager appx.Pager) ([]*model.Robot, int64, error) {
+func (r *RobotService) RobotList(req dto.RobotListRequest, pager appx.Pager) ([]*model.Robot, int64, error) {
 	return repository.NewRobotRepo(r.ctx, vars.DB).RobotList(req, pager)
 }
 
@@ -68,18 +49,13 @@ func (r *RobotService) GetProjectRoot() (string, error) {
 	return projectRoot, nil
 }
 
-func (r *RobotService) DockerComposeCommand(dockerComposeFilePath string, extraArgs ...string) error {
-	cmdParts := strings.Fields(vars.DockerComposeCmd)
-	cmdArgs := append(cmdParts[1:], "-f", dockerComposeFilePath)
-	cmdArgs = append(cmdArgs, extraArgs...)
-	cmd := exec.Command(cmdParts[0], cmdArgs...)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	err := cmd.Run()
+// 辅助方法：获取Docker客户端
+func (r *RobotService) getDockerClient() (*client.Client, error) {
+	dockerClient, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
-		return err
+		return nil, fmt.Errorf("创建Docker客户端失败: %v", err)
 	}
-	return nil
+	return dockerClient, nil
 }
 
 func (r *RobotService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest) error {
@@ -162,59 +138,127 @@ func (r *RobotService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest)
 	if err != nil {
 		return err
 	}
-	// 生成docker-compose.yml
-	// 读取模板文件
-	templateFile := filepath.Join(projectRoot, "docker-compose", "docker-compose.temp")
-	tmplContent, err := os.ReadFile(templateFile)
+
+	// 创建Docker客户端
+	dockerClient, err := r.getDockerClient()
 	if err != nil {
 		return err
 	}
-	// 解析模板
-	tmpl, err := template.New("docker-compose").Parse(string(tmplContent))
+	defer dockerClient.Close()
+
+	// 服务端容器配置
+	serverContainerName := fmt.Sprintf("server_%s", robot.RobotCode)
+	serverConfig := &container.Config{
+		Image: "registry.cn-shenzhen.aliyuncs.com/houhou/wechat-robot-server:latest",
+		Env: []string{
+			fmt.Sprintf("WECHAT_PORT=%s", "9000"),
+			fmt.Sprintf("REDIS_HOST=%s", vars.RedisSettings.Host),
+			fmt.Sprintf("REDIS_PORT=%s", vars.RedisSettings.Port),
+			fmt.Sprintf("REDIS_PASSWORD=%s", vars.RedisSettings.Password),
+			fmt.Sprintf("REDIS_DB=%d", robot.RedisDB),
+		},
+	}
+
+	serverHostConfig := &container.HostConfig{
+		RestartPolicy: container.RestartPolicy{
+			Name: "always",
+		},
+	}
+
+	// 服务端网络配置
+	serverNetworkConfig := &network.NetworkingConfig{
+		EndpointsConfig: map[string]*network.EndpointSettings{
+			vars.DockerNetwork: {},
+		},
+	}
+
+	// 创建服务端容器
+	serverResp, err := dockerClient.ContainerCreate(
+		r.ctx,
+		serverConfig,
+		serverHostConfig,
+		serverNetworkConfig,
+		nil,
+		serverContainerName,
+	)
 	if err != nil {
-		return err
+		return fmt.Errorf("创建服务端容器失败: %v", err)
 	}
-	data := DockerComposeFileContext{
-		WECHAT_PORT:         "9000",
-		REDIS_HOST:          vars.RedisSettings.Host,
-		REDIS_PORT:          vars.RedisSettings.Port,
-		REDIS_PASSWORD:      vars.RedisSettings.Password,
-		REDIS_DB:            fmt.Sprintf("%d", robot.RedisDB),
-		GIN_MODE:            "release",
-		ROBOT_CODE:          robot.RobotCode,
-		ROBOT_START_TIMEOUT: "60",
-		MYSQL_DRIVER:        vars.MysqlSettings.Driver,
-		MYSQL_HOST:          vars.MysqlSettings.Host,
-		MYSQL_PORT:          vars.MysqlSettings.Port,
-		MYSQL_USER:          vars.MysqlSettings.User,
-		MYSQL_PASSWORD:      vars.MysqlSettings.Password,
-		MYSQL_ADMIN_DB:      vars.MysqlSettings.Db,
-		MYSQL_DB:            robot.RobotCode,
-		MYSQL_SCHEMA:        vars.MysqlSettings.Schema,
-		DOCKER_NETWORK:      vars.DockerNetwork,
-	}
-	// 创建目标文件
-	outputFilePath := filepath.Join(projectRoot, "docker-compose", fmt.Sprintf("docker-compose-%s.yml", robot.RobotCode))
-	err = r.CreateDockerComposeFile(tmpl, outputFilePath, data)
+
+	// 启动服务端容器
+	err = dockerClient.ContainerStart(r.ctx, serverResp.ID, container.StartOptions{})
 	if err != nil {
-		return err
+		return fmt.Errorf("启动服务端容器失败: %v", err)
 	}
-	// 通过 docker-compose 启动微信客户端和服务端
-	err = r.DockerComposeCommand(outputFilePath, "up", "-d")
+
+	// 客户端容器配置
+	clientContainerName := fmt.Sprintf("client_%s", robot.RobotCode)
+	clientConfig := &container.Config{
+		Image: "registry.cn-shenzhen.aliyuncs.com/houhou/wechat-robot-client:latest",
+		Env: []string{
+			fmt.Sprintf("GIN_MODE=%s", "release"),
+			fmt.Sprintf("ROBOT_CODE=%s", robot.RobotCode),
+			fmt.Sprintf("ROBOT_START_TIMEOUT=%s", "60"),
+			fmt.Sprintf("MYSQL_DRIVER=%s", vars.MysqlSettings.Driver),
+			fmt.Sprintf("MYSQL_HOST=%s", vars.MysqlSettings.Host),
+			fmt.Sprintf("MYSQL_PORT=%s", vars.MysqlSettings.Port),
+			fmt.Sprintf("MYSQL_USER=%s", vars.MysqlSettings.User),
+			fmt.Sprintf("MYSQL_PASSWORD=%s", vars.MysqlSettings.Password),
+			fmt.Sprintf("MYSQL_ADMIN_DB=%s", vars.MysqlSettings.Db),
+			fmt.Sprintf("MYSQL_DB=%s", robot.RobotCode),
+			fmt.Sprintf("MYSQL_SCHEMA=%s", vars.MysqlSettings.Schema),
+		},
+		Healthcheck: &container.HealthConfig{
+			Test:     []string{"CMD-SHELL", "wget -q -O - http://localhost:3000/api/v1/probe | grep -o '\"success\":\\s*true' | awk -F: '{print $2}'"},
+			Interval: 30 * time.Second,
+			Timeout:  10 * time.Second,
+			Retries:  3,
+		},
+	}
+
+	clientHostConfig := &container.HostConfig{
+		RestartPolicy: container.RestartPolicy{
+			Name: "always",
+		},
+	}
+
+	// 客户端网络配置
+	clientNetworkConfig := &network.NetworkingConfig{
+		EndpointsConfig: map[string]*network.EndpointSettings{
+			vars.DockerNetwork: {},
+		},
+	}
+
+	// 创建客户端容器
+	clientResp, err := dockerClient.ContainerCreate(
+		r.ctx,
+		clientConfig,
+		clientHostConfig,
+		clientNetworkConfig,
+		nil,
+		clientContainerName,
+	)
 	if err != nil {
-		return err
+		return fmt.Errorf("创建客户端容器失败: %v", err)
 	}
+
+	// 启动客户端容器
+	err = dockerClient.ContainerStart(r.ctx, clientResp.ID, container.StartOptions{})
+	if err != nil {
+		return fmt.Errorf("启动客户端容器失败: %v", err)
+	}
+
 	return nil
 }
 
 // RobotView 查看机器人元数据
-func (r *RobotService) RobotView(ctx *gin.Context, robotID int64) *model.Robot {
+func (r *RobotService) RobotView(robotID int64) *model.Robot {
 	respo := repository.NewRobotRepo(r.ctx, vars.DB)
 	return respo.GetByID(robotID)
 }
 
 // RobotRemove 删除机器人
-func (r *RobotService) RobotRemove(ctx *gin.Context, robotID int64) error {
+func (r *RobotService) RobotRemove(robotID int64) error {
 	respo := repository.NewRobotRepo(r.ctx, vars.DB)
 	robot := respo.GetByID(robotID)
 	if robot == nil {
@@ -227,74 +271,123 @@ func (r *RobotService) RobotRemove(ctx *gin.Context, robotID int64) error {
 	if err != nil {
 		return err
 	}
-	projectRoot, err := r.GetProjectRoot()
+
+	// 使用Docker SDK停止并删除容器
+	dockerClient, err := r.getDockerClient()
 	if err != nil {
 		return err
 	}
-	dockerComposeFile := filepath.Join(projectRoot, "docker-compose", fmt.Sprintf("docker-compose-%s.yml", robot.RobotCode))
-	// 判断docker-compose文件是否存在
-	_, err = os.Stat(dockerComposeFile)
-	if os.IsNotExist(err) {
-		return nil
-	}
+	defer dockerClient.Close()
+
+	// 停止并删除服务端容器
+	serverContainerName := fmt.Sprintf("server_%s", robot.RobotCode)
+	err = r.stopAndRemoveContainer(dockerClient, serverContainerName)
 	if err != nil {
-		return err
+		return fmt.Errorf("删除服务端容器失败: %v", err)
 	}
-	// 通过docker-compose停止微信客户端和服务端
-	err = r.DockerComposeCommand(dockerComposeFile, "down")
+
+	// 停止并删除客户端容器
+	clientContainerName := fmt.Sprintf("client_%s", robot.RobotCode)
+	err = r.stopAndRemoveContainer(dockerClient, clientContainerName)
 	if err != nil {
-		return err
+		return fmt.Errorf("删除客户端容器失败: %v", err)
 	}
-	// 删除docker-compose文件
-	err = os.Remove(dockerComposeFile)
-	if err != nil {
-		return nil
-	}
+
 	return nil
 }
 
-func (r *RobotService) CreateDockerComposeFile(tmpl *template.Template, outputFilePath string, data DockerComposeFileContext) error {
-	outputFile, err := os.OpenFile(outputFilePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+// 辅助方法：停止并删除容器
+func (r *RobotService) stopAndRemoveContainer(dockerClient *client.Client, containerName string) error {
+	// 根据容器名查找容器ID
+	listFilters := filters.NewArgs()
+	listFilters.Add("name", containerName)
+
+	containers, err := dockerClient.ContainerList(r.ctx, container.ListOptions{
+		All:     true,
+		Filters: listFilters,
+	})
 	if err != nil {
 		return err
 	}
-	defer outputFile.Close()
-	// 渲染模板并写入目标文件
-	if err := tmpl.Execute(outputFile, data); err != nil {
+
+	// 如果找不到容器，直接返回
+	if len(containers) == 0 {
+		return nil
+	}
+
+	// 容器存在，先停止
+	timeout := 30
+	err = dockerClient.ContainerStop(r.ctx, containers[0].ID, container.StopOptions{
+		Timeout: &timeout,
+	})
+	if err != nil {
 		return err
 	}
+
+	// 删除容器
+	removeOptions := container.RemoveOptions{
+		Force:         true,
+		RemoveVolumes: true,
+	}
+	err = dockerClient.ContainerRemove(r.ctx, containers[0].ID, removeOptions)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (r *RobotService) RobotRestart(ctx *gin.Context, robotID int64, restartType string) error {
+func (r *RobotService) RobotRestart(robotID int64, restartType string) error {
 	respo := repository.NewRobotRepo(r.ctx, vars.DB)
 	robot := respo.GetByID(robotID)
 	if robot == nil {
 		return errors.New("机器人不存在")
 	}
-	projectRoot, err := r.GetProjectRoot()
+
+	// 使用Docker SDK重启容器
+	dockerClient, err := r.getDockerClient()
 	if err != nil {
 		return err
 	}
-	dockerComposeFile := filepath.Join(projectRoot, "docker-compose", fmt.Sprintf("docker-compose-%s.yml", robot.RobotCode))
-	// 判断docker-compose文件是否存在
-	_, err = os.Stat(dockerComposeFile)
+	defer dockerClient.Close()
+
+	// 根据重启类型确定容器名
+	containerName := fmt.Sprintf("%s_%s", restartType, robot.RobotCode)
+
+	// 根据容器名找到容器
+	listFilters := filters.NewArgs()
+	listFilters.Add("name", containerName)
+
+	containers, err := dockerClient.ContainerList(r.ctx, container.ListOptions{
+		All:     true,
+		Filters: listFilters,
+	})
 	if err != nil {
-		return err
+		return fmt.Errorf("查询容器失败: %v", err)
 	}
-	err = r.DockerComposeCommand(dockerComposeFile, "restart", fmt.Sprintf("%s_%s", restartType, robot.RobotCode))
+
+	if len(containers) == 0 {
+		return fmt.Errorf("找不到容器: %s", containerName)
+	}
+
+	// 重启容器
+	timeout := 30
+	err = dockerClient.ContainerRestart(r.ctx, containers[0].ID, container.StopOptions{
+		Timeout: &timeout,
+	})
 	if err != nil {
-		return err
+		return fmt.Errorf("重启容器失败: %v", err)
 	}
+
 	return nil
 }
 
-func (r *RobotService) RobotRestartClient(ctx *gin.Context, robotID int64) error {
-	return r.RobotRestart(ctx, robotID, "client")
+func (r *RobotService) RobotRestartClient(robotID int64) error {
+	return r.RobotRestart(robotID, "client")
 }
 
-func (r *RobotService) RobotRestartServer(ctx *gin.Context, robotID int64) error {
-	err := r.RobotRestart(ctx, robotID, "server")
+func (r *RobotService) RobotRestartServer(robotID int64) error {
+	err := r.RobotRestart(robotID, "server")
 	if err != nil {
 		return err
 	}
@@ -307,7 +400,7 @@ func (r *RobotService) RobotRestartServer(ctx *gin.Context, robotID int64) error
 	return nil
 }
 
-func (r *RobotService) RobotLogin(ctx *gin.Context, robot *model.Robot) (dto.RobotLoginResponse, error) {
+func (r *RobotService) RobotLogin(robot *model.Robot) (dto.RobotLoginResponse, error) {
 	var result dto.Response[dto.RobotLoginResponse]
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
@@ -319,7 +412,7 @@ func (r *RobotService) RobotLogin(ctx *gin.Context, robot *model.Robot) (dto.Rob
 	return result.Data, nil
 }
 
-func (r *RobotService) RobotLoginCheck(ctx *gin.Context, robot *model.Robot, uuid string) (dto.RobotLoginCheckResponse, error) {
+func (r *RobotService) RobotLoginCheck(robot *model.Robot, uuid string) (dto.RobotLoginCheckResponse, error) {
 	var result dto.Response[dto.RobotLoginCheckResponse]
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
@@ -334,7 +427,7 @@ func (r *RobotService) RobotLoginCheck(ctx *gin.Context, robot *model.Robot, uui
 	return result.Data, nil
 }
 
-func (r *RobotService) RobotLogout(ctx *gin.Context, robot *model.Robot) (err error) {
+func (r *RobotService) RobotLogout(robot *model.Robot) (err error) {
 	var resp dto.Response[struct{}]
 	_, err = resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
@@ -346,7 +439,7 @@ func (r *RobotService) RobotLogout(ctx *gin.Context, robot *model.Robot) (err er
 	return
 }
 
-func (r *RobotService) RobotState(ctx *gin.Context, robot *model.Robot) (err error) {
+func (r *RobotService) RobotState(robot *model.Robot) (err error) {
 	var isRunningResp dto.Response[bool]
 	var isLoggedInResp dto.Response[bool]
 	_, err = resty.New().R().

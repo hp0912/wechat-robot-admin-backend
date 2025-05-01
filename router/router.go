@@ -10,9 +10,13 @@ import (
 var wechatCtl *controller.WeChat
 var userCtl *controller.User
 var robotCtl *controller.Robot
+var systemCtl *controller.System
 
 func initController() {
 	wechatCtl = controller.NewWeChatAuthController()
+	userCtl = controller.NewUserController()
+	robotCtl = controller.NewRobotController()
+	systemCtl = controller.NewSystemController()
 }
 
 func RegisterRouter(r *gin.Engine) error {
@@ -30,6 +34,12 @@ func RegisterRouter(r *gin.Engine) error {
 		user := api.Group("/user")
 		user.GET("/self", userCtl.LoginUser)
 		user.DELETE("/logout", userCtl.Logout)
+	}
+
+	{
+		system := api.Group("/system")
+		system.Use(middleware.UserAuth())
+		system.GET("/robot-container-stats", middleware.UserOwnerAuth(), systemCtl.RobotContainerStats)
 	}
 
 	{

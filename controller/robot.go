@@ -34,7 +34,7 @@ func (r *Robot) RobotList(c *gin.Context) {
 		return
 	}
 	pager := appx.InitPager(c)
-	list, total, err := service.NewRobotService(c.Request.Context()).RobotList(c, req, pager)
+	list, total, err := service.NewRobotService(c).RobotList(req, pager)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
@@ -56,7 +56,7 @@ func (r *Robot) RobotCreate(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("机器人编码只能包含字母、数字和下划线，并且必须以字母开头"))
 		return
 	}
-	err := service.NewRobotService(c.Request.Context()).RobotCreate(c, req)
+	err := service.NewRobotService(c).RobotCreate(c, req)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
@@ -71,7 +71,7 @@ func (r *Robot) RobotView(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	robot := service.NewRobotService(c.Request.Context()).RobotView(c, req.ID)
+	robot := service.NewRobotService(c).RobotView(req.ID)
 	if robot == nil {
 		resp.ToErrorResponse(errors.New("机器人不存在"))
 		return
@@ -86,7 +86,7 @@ func (r *Robot) RobotRemove(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	err := service.NewRobotService(c.Request.Context()).RobotRemove(c, req.ID)
+	err := service.NewRobotService(c).RobotRemove(req.ID)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
@@ -101,7 +101,7 @@ func (r *Robot) RobotRestartClient(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	err := service.NewRobotService(c.Request.Context()).RobotRestartClient(c, req.ID)
+	err := service.NewRobotService(c).RobotRestartClient(req.ID)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
@@ -116,7 +116,7 @@ func (r *Robot) RobotRestartServer(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	err := service.NewRobotService(c.Request.Context()).RobotRestartServer(c, req.ID)
+	err := service.NewRobotService(c).RobotRestartServer(req.ID)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
@@ -136,7 +136,7 @@ func (r *Robot) RobotLogin(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	data, err := service.NewRobotService(c.Request.Context()).RobotLogin(c, robot)
+	data, err := service.NewRobotService(c).RobotLogin(robot)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
@@ -161,7 +161,7 @@ func (r *Robot) RobotLoginCheck(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	data, err := service.NewRobotService(c.Request.Context()).RobotLoginCheck(c, robot, req.Uuid)
+	data, err := service.NewRobotService(c).RobotLoginCheck(robot, req.Uuid)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
@@ -181,7 +181,7 @@ func (r *Robot) RobotLogout(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	err := service.NewRobotService(c.Request.Context()).RobotLogout(c, robot)
+	err := service.NewRobotService(c).RobotLogout(robot)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
@@ -201,7 +201,7 @@ func (r *Robot) RobotState(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	err := service.NewRobotService(c.Request.Context()).RobotState(c, robot)
+	err := service.NewRobotService(c).RobotState(robot)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
