@@ -16,8 +16,9 @@ type RobotCommonRequest struct {
 }
 
 type RobotLoginResponse struct {
-	Awken bool   `json:"awken"` // 微信登录凭证
-	Uuid  string `json:"uuid"`
+	AutoLogin  bool   `json:"auto_login"`  // 自动登陆
+	AwkenLogin bool   `json:"awken_login"` // 微信登录凭证
+	Uuid       string `json:"uuid"`
 }
 
 type AcctSectRespData struct {
