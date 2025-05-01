@@ -35,3 +35,23 @@ func (s *System) RobotContainerStats(c *gin.Context) {
 	}
 	resp.ToResponse(stats)
 }
+
+func (s *System) GetRobotContainerLogs(c *gin.Context) {
+	resp := appx.NewResponse(c)
+	_robot, exists := c.Get("robot")
+	if !exists {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, ok := _robot.(*model.Robot)
+	if !ok {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	logs, err := service.NewSystemService(c).GetRobotContainerLogs(robot)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(logs)
+}

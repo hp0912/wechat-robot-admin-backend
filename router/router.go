@@ -40,6 +40,7 @@ func RegisterRouter(r *gin.Engine) error {
 		system := api.Group("/system")
 		system.Use(middleware.UserAuth())
 		system.GET("/robot-container-stats", middleware.UserOwnerAuth(), systemCtl.RobotContainerStats)
+		system.GET("/robot-container-logs", middleware.UserOwnerAuth(), systemCtl.GetRobotContainerLogs)
 	}
 
 	{

@@ -1,6 +1,7 @@
 package service
 
 import (
+	"bufio"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -83,7 +84,7 @@ func (s *SystemService) getContainerStats(dockerClient *client.Client, container
 	}
 
 	containerID := containers[0].ID
-	stats.Status = string(containers[0].State)
+	stats.Status = containers[0].State
 
 	// 获取容器统计信息
 	containerStats, err := dockerClient.ContainerStats(s.ctx, containerID, false)
@@ -107,7 +108,9 @@ func (s *SystemService) getContainerStats(dockerClient *client.Client, container
 	if memLimit > 0 {
 		memPercent = (memUsage / memLimit) * 100
 	}
-	stats.MemoryUsage = fmt.Sprintf("%.2f MB / %.2f MB (%.2f%%)", memUsageMB, memLimitMB, memPercent)
+	stats.MemoryUsage.Usage = fmt.Sprintf("%.2f MB", memUsageMB)
+	stats.MemoryUsage.Limit = fmt.Sprintf("%.2f MB", memLimitMB)
+	stats.MemoryUsage.Percent = fmt.Sprintf("%.2f%%", memPercent)
 
 	// 计算CPU使用率
 	var cpuPercent float64
@@ -140,4 +143,85 @@ func (s *SystemService) getContainerStats(dockerClient *client.Client, container
 	stats.DiskWrite = fmt.Sprintf("%.2f MB", writeMB)
 
 	return stats, nil
+}
+
+// GetRobotContainerLogs 获取机器人客户端和服务端容器的最后500行日志
+func (s *SystemService) GetRobotContainerLogs(robot *model.Robot) (dto.RobotContainerLogsResponse, error) {
+	// 创建Docker客户端
+	dockerClient, err := s.getDockerClient()
+	if err != nil {
+		return dto.RobotContainerLogsResponse{}, err
+	}
+	defer dockerClient.Close()
+
+	// 获取客户端容器的日志
+	clientContainerName := fmt.Sprintf("client_%s", robot.RobotCode)
+	clientLogs, err := s.getContainerLogs(dockerClient, clientContainerName, 500)
+	if err != nil {
+		return dto.RobotContainerLogsResponse{}, fmt.Errorf("获取客户端容器日志失败: %v", err)
+	}
+
+	// 获取服务端容器的日志
+	serverContainerName := fmt.Sprintf("server_%s", robot.RobotCode)
+	serverLogs, err := s.getContainerLogs(dockerClient, serverContainerName, 500)
+	if err != nil {
+		return dto.RobotContainerLogsResponse{}, fmt.Errorf("获取服务端容器日志失败: %v", err)
+	}
+
+	return dto.RobotContainerLogsResponse{
+		Client: clientLogs,
+		Server: serverLogs,
+	}, nil
+}
+
+// getContainerLogs 获取指定容器的最后 n 行日志
+func (s *SystemService) getContainerLogs(dockerClient *client.Client, containerName string, lines int) ([]string, error) {
+	// 根据容器名查找容器
+	listFilters := filters.NewArgs()
+	listFilters.Add("name", containerName)
+
+	containers, err := dockerClient.ContainerList(s.ctx, container.ListOptions{
+		All:     true,
+		Filters: listFilters,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if len(containers) == 0 {
+		return nil, fmt.Errorf("找不到容器: %s", containerName)
+	}
+
+	containerID := containers[0].ID
+
+	// 获取容器日志
+	options := container.LogsOptions{
+		ShowStdout: true,
+		ShowStderr: true,
+		Tail:       fmt.Sprintf("%d", lines),
+	}
+
+	logsReader, err := dockerClient.ContainerLogs(s.ctx, containerID, options)
+	if err != nil {
+		return nil, err
+	}
+	defer logsReader.Close()
+
+	// 读取日志并按行分割
+	logLines := []string{}
+	scanner := bufio.NewScanner(logsReader)
+	for scanner.Scan() {
+		// Docker logs有8字节的header，需要去掉
+		text := scanner.Text()
+		// 如果行的长度大于8，并且前8个字节是Docker日志头，则去除
+		if len(text) > 8 && (text[0] == 1 || text[0] == 2) {
+			text = text[8:]
+		}
+		logLines = append(logLines, text)
+	}
+
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+
+	return logLines, nil
 }
