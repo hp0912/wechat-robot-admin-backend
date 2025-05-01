@@ -80,14 +80,9 @@ func (r *Robot) RobotView(c *gin.Context) {
 }
 
 func (r *Robot) RobotRemove(c *gin.Context) {
+	var req dto.RobotCommonRequest
 	resp := appx.NewResponse(c)
-	_req, exists := c.Get("req")
-	if !exists {
-		resp.ToErrorResponse(errors.New("参数错误"))
-		return
-	}
-	req, ok := _req.(dto.RobotCommonRequest)
-	if !ok {
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
@@ -100,14 +95,9 @@ func (r *Robot) RobotRemove(c *gin.Context) {
 }
 
 func (r *Robot) RobotRestartClient(c *gin.Context) {
+	var req dto.RobotCommonRequest
 	resp := appx.NewResponse(c)
-	_req, exists := c.Get("req")
-	if !exists {
-		resp.ToErrorResponse(errors.New("参数错误"))
-		return
-	}
-	req, ok := _req.(dto.RobotCommonRequest)
-	if !ok {
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
@@ -120,14 +110,9 @@ func (r *Robot) RobotRestartClient(c *gin.Context) {
 }
 
 func (r *Robot) RobotRestartServer(c *gin.Context) {
+	var req dto.RobotCommonRequest
 	resp := appx.NewResponse(c)
-	_req, exists := c.Get("req")
-	if !exists {
-		resp.ToErrorResponse(errors.New("参数错误"))
-		return
-	}
-	req, ok := _req.(dto.RobotCommonRequest)
-	if !ok {
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
@@ -160,14 +145,9 @@ func (r *Robot) RobotLogin(c *gin.Context) {
 }
 
 func (r *Robot) RobotLoginCheck(c *gin.Context) {
+	var req dto.RobotCommonRequest
 	resp := appx.NewResponse(c)
-	_req, exists := c.Get("req")
-	if !exists {
-		resp.ToErrorResponse(errors.New("参数错误"))
-		return
-	}
-	req, ok := _req.(dto.RobotCommonRequest)
-	if !ok {
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}

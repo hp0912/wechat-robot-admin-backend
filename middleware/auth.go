@@ -2,8 +2,7 @@ package middleware
 
 import (
 	"net/http"
-	"wechat-robot-admin-backend/dto"
-	"wechat-robot-admin-backend/pkg/appx"
+	"strconv"
 	"wechat-robot-admin-backend/repository"
 	"wechat-robot-admin-backend/vars"
 
@@ -83,19 +82,18 @@ func UserOwnerAuth() func(c *gin.Context) {
 			c.Next()
 			return
 		}
-		var req dto.RobotCommonRequest
-		if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		idStr := c.Query("id") // 获取字符串
+		robotId, err := strconv.ParseInt(idStr, 10, 64)
+		if err != nil {
 			c.JSON(http.StatusOK, gin.H{
 				"code":    500,
-				"message": "参数错误",
+				"message": "无效的机器人ID",
 				"data":    nil,
 			})
 			c.Abort()
 			return
 		}
-		c.Set("req", req)
-
-		robot := repository.NewRobotRepo(c.Request.Context(), vars.DB).GetByID(req.ID)
+		robot := repository.NewRobotRepo(c.Request.Context(), vars.DB).GetByID(robotId)
 		if robot == nil {
 			c.JSON(http.StatusOK, gin.H{
 				"code":    500,
