@@ -10,15 +10,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Contact struct {
+type ChatRoom struct {
 }
 
-func NewContactController() *Contact {
-	return &Contact{}
+func NewChatRoomController() *ChatRoom {
+	return &ChatRoom{}
 }
 
-func (ct *Contact) SyncContacts(c *gin.Context) {
-	var req dto.SyncContactsRequest
+func (crm *ChatRoom) SyncChatRoomMembers(c *gin.Context) {
+	var req dto.SyncChatRoomMemberRequest
 	resp := appx.NewResponse(c)
 	_robot, exists := c.Get("robot")
 	if !exists {
@@ -34,12 +34,12 @@ func (ct *Contact) SyncContacts(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	service.NewContactService(c).SyncContact(robot)
+	service.NewChatRoomService(c).SyncChatRoomMembers(robot, req.ChatRoomID)
 	resp.ToResponse(nil)
 }
 
-func (ct *Contact) GetContacts(c *gin.Context) {
-	var req dto.GetContactsRequest
+func (crm *ChatRoom) GetChatRoomMembers(c *gin.Context) {
+	var req dto.ChatRoomMemberRequest
 	resp := appx.NewResponse(c)
 	_robot, exists := c.Get("robot")
 	if !exists {
@@ -56,7 +56,7 @@ func (ct *Contact) GetContacts(c *gin.Context) {
 		return
 	}
 	pager := appx.InitPager(c)
-	data, total, err := service.NewContactService(c).GetContacts(req, pager, robot)
+	data, total, err := service.NewChatRoomService(c).GetChatRoomMembers(req, pager, robot)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return

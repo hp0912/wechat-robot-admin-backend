@@ -11,6 +11,7 @@ var wechatCtl *controller.WeChat
 var userCtl *controller.User
 var robotCtl *controller.Robot
 var contactCtl *controller.Contact
+var chatRoomCtl *controller.ChatRoom
 var systemCtl *controller.System
 
 func initController() {
@@ -19,6 +20,7 @@ func initController() {
 	robotCtl = controller.NewRobotController()
 	contactCtl = controller.NewContactController()
 	systemCtl = controller.NewSystemController()
+	chatRoomCtl = controller.NewChatRoomController()
 }
 
 func RegisterRouter(r *gin.Engine) error {
@@ -49,6 +51,14 @@ func RegisterRouter(r *gin.Engine) error {
 		contact := api.Group("/contact")
 		contact.Use(middleware.UserAuth())
 		contact.GET("/list", middleware.UserOwnerAuth(), contactCtl.GetContacts)
+		contact.POST("/sync", middleware.UserOwnerAuth(), contactCtl.SyncContacts)
+	}
+
+	{
+		chatRoom := api.Group("/chat-room")
+		chatRoom.Use(middleware.UserAuth())
+		chatRoom.GET("/members", middleware.UserOwnerAuth(), chatRoomCtl.GetChatRoomMembers)
+		chatRoom.POST("/members/sync", middleware.UserOwnerAuth(), chatRoomCtl.SyncChatRoomMembers)
 	}
 
 	{

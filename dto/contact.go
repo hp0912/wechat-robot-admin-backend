@@ -7,6 +7,10 @@ const (
 	ContactTypeGroup  ContactType = "group"
 )
 
+type SyncContactsRequest struct {
+	ID int64 `form:"id" json:"id"`
+}
+
 type GetContactsRequest struct {
 	ID      int64  `form:"id" json:"id"`
 	Type    string `form:"type" json:"type"`

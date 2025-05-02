@@ -1,0 +1,29 @@
+package dto
+
+type SyncChatRoomMemberRequest struct {
+	ID         int64  `form:"id" json:"id"  binding:"required"`
+	ChatRoomID string `form:"chat_room_id" json:"chat_room_id" binding:"required"`
+}
+
+type ChatRoomMemberRequest struct {
+	ID         int64  `form:"id" json:"id"  binding:"required"`
+	ChatRoomID string `form:"chat_room_id" json:"chat_room_id" binding:"required"`
+	Keyword    string `form:"keyword" json:"keyword"`
+}
+
+type ChatRoomMember struct {
+	ID              int64  `json:"id"`                // 主键ID
+	ChatRoomID      string `json:"chat_room_id"`      // 群ID
+	WechatID        string `json:"wechat_id"`         // 微信ID
+	Alias           string `json:"alias"`             // 微信号
+	Nickname        string `json:"nickname"`          // 昵称
+	Avatar          string `json:"avatar"`            // 头像
+	InviterWechatID string `json:"inviter_wechat_id"` // 邀请人微信ID
+	IsAdmin         bool   `json:"is_admin"`          // 是否群管理员
+	IsLeaved        bool   `json:"is_leaved"`         // 是否已经离开群聊
+	Score           *int64 `json:"score"`             // 积分
+	Remark          string `json:"remark"`            // 备注
+	JoinedAt        int64  `json:"joined_at"`         // 加入时间
+	LastActiveAt    int64  `json:"last_active_at"`    // 最近活跃时间
+	LeavedAt        *int64 `json:"leaved_at"`         // 离开时间
+}

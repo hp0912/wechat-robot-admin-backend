@@ -1,29 +1,29 @@
 -- TODO AI 自定义请求头、请求体
-CREATE TABLE IF NOT EXISTS `common-configs` (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '公共配置表主键ID',
-  ai_enabled BOOLEAN DEFAULT FALSE COMMENT '是否启用AI聊天功能',
-  ranking_enabled BOOLEAN DEFAULT FALSE COMMENT '是否启用群聊排行榜功能',
-  summary_enabled BOOLEAN DEFAULT FALSE COMMENT '是否启用聊天记录总结功能',
-  welcome_enabled BOOLEAN DEFAULT FALSE COMMENT '是否启用新成员加群欢迎功能',
-  chat_url VARCHAR(255) DEFAULT '' COMMENT '聊天AI的基础URL地址',
-  chat_key VARCHAR(255) DEFAULT '' COMMENT '聊天AI的API密钥',
-  chat_model VARCHAR(100) DEFAULT '' COMMENT '聊天AI使用的模型名称',
-  chat_persona TEXT COMMENT '聊天AI的人设配置',
-  summary_model VARCHAR(100) DEFAULT '' COMMENT '聊天总结使用的AI模型名称',
-  image_url VARCHAR(255) DEFAULT '' COMMENT '绘图AI的基础URL地址',
-  image_key VARCHAR(255) DEFAULT '' COMMENT '绘图AI的API密钥',
-  image_secret VARCHAR(255) DEFAULT '' COMMENT '绘图AI的API密钥secret',
-  image_model VARCHAR(100) DEFAULT '' COMMENT '绘图AI使用的模型名称',
-  image_scheduler VARCHAR(100) DEFAULT '' COMMENT '绘图AI的请求调度配置',
-  news_enabled BOOLEAN DEFAULT FALSE COMMENT '是否启用每日早报功能',
-  news_cron VARCHAR(100) DEFAULT '' COMMENT '每日早报的定时任务表达式',
-  friend_sync_enabled BOOLEAN DEFAULT FALSE COMMENT '是否启用好友同步功能',
-  friend_sync_cron VARCHAR(100) DEFAULT '' COMMENT '好友同步的定时任务表达式',
-  group_summary_enabled BOOLEAN DEFAULT FALSE COMMENT '是否启用群聊总结功能',
-  group_summary_cron VARCHAR(100) DEFAULT '' COMMENT '群聊总结的定时任务表达式',
-  morning_enabled BOOLEAN DEFAULT FALSE COMMENT '是否启用早安问候功能',
-  morning_cron VARCHAR(100) DEFAULT '' COMMENT '早安问候的定时任务表达式',
-  ranking_cron VARCHAR(100) DEFAULT '' COMMENT '群聊排行榜的定时任务表达式'
+CREATE TABLE IF NOT EXISTS `common_configs` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '公共配置表主键ID',
+  `ai_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI聊天功能',
+  `ranking_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用群聊排行榜功能',
+  `summary_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用聊天记录总结功能',
+  `welcome_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用新成员加群欢迎功能',
+  `chat_url` VARCHAR(255) DEFAULT '' COMMENT '聊天AI的基础URL地址',
+  `chat_key` VARCHAR(255) DEFAULT '' COMMENT '聊天AI的API密钥',
+  `chat_model` VARCHAR(100) DEFAULT '' COMMENT '聊天AI使用的模型名称',
+  `chat_persona` TEXT COMMENT '聊天AI的人设配置',
+  `summary_model` VARCHAR(100) DEFAULT '' COMMENT '聊天总结使用的AI模型名称',
+  `image_url` VARCHAR(255) DEFAULT '' COMMENT '绘图AI的基础URL地址',
+  `image_key` VARCHAR(255) DEFAULT '' COMMENT '绘图AI的API密钥',
+  `image_secret` VARCHAR(255) DEFAULT '' COMMENT '绘图AI的API密钥secret',
+  `image_model` VARCHAR(100) DEFAULT '' COMMENT '绘图AI使用的模型名称',
+  `image_scheduler` VARCHAR(100) DEFAULT '' COMMENT '绘图AI的请求调度配置',
+  `news_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用每日早报功能',
+  `news_cron` VARCHAR(100) DEFAULT '' COMMENT '每日早报的定时任务表达式',
+  `friend_sync_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用好友同步功能',
+  `friend_sync_cron` VARCHAR(100) DEFAULT '' COMMENT '好友同步的定时任务表达式',
+  `group_summary_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用群聊总结功能',
+  `group_summary_cron` VARCHAR(100) DEFAULT '' COMMENT '群聊总结的定时任务表达式',
+  `morning_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用早安问候功能',
+  `morning_cron` VARCHAR(100) DEFAULT '' COMMENT '早安问候的定时任务表达式',
+  `ranking_cron` VARCHAR(100) DEFAULT '' COMMENT '群聊排行榜的定时任务表达式'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `messages` (
@@ -74,4 +74,24 @@ CREATE TABLE IF NOT EXISTS `contacts` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_wechat_id` (`wechat_id`),
   KEY `idx_deleted_at` (`deleted_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE IF NOT EXISTS `chat_room_members` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `chat_room_id` VARCHAR(64) NOT NULL COMMENT '群ID',
+  `wechat_id` VARCHAR(64) NOT NULL COMMENT '微信ID',
+  `alias` VARCHAR(64) DEFAULT NULL COMMENT '微信号',
+  `nickname` VARCHAR(64) DEFAULT NULL COMMENT '昵称',
+  `avatar` VARCHAR(255) DEFAULT NULL COMMENT '头像',
+  `inviter_wechat_id` VARCHAR(64) NOT NULL COMMENT '邀请人微信ID',
+  `is_admin` BOOLEAN DEFAULT FALSE COMMENT '是否群管理员',
+  `is_leaved` BOOLEAN DEFAULT FALSE COMMENT '是否已经离开群聊',
+  `score` BIGINT DEFAULT NULL COMMENT '积分',
+  `remark` VARCHAR(255) DEFAULT NULL COMMENT '备注',
+  `joined_at` BIGINT NOT NULL COMMENT '加入时间',
+  `last_active_at` BIGINT NOT NULL COMMENT '最近活跃时间',
+  `leaved_at` BIGINT DEFAULT NULL COMMENT '离开时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_chat_room_id` (`chat_room_id`),
+  KEY `idx_wechat_id` (`wechat_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
