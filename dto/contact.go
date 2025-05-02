@@ -7,6 +7,12 @@ const (
 	ContactTypeGroup  ContactType = "group"
 )
 
+type GetContactsRequest struct {
+	ID      int64  `form:"id" json:"id"`
+	Type    string `form:"type" json:"type"`
+	Keyword string `form:"keyword" json:"keyword"`
+}
+
 type GetContactsResponse struct {
 	ID            int64       `json:"id"`
 	WechatID      string      `json:"wechat_id"` // 添加索引长度

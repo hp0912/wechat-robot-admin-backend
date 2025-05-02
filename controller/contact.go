@@ -2,6 +2,7 @@ package controller
 
 import (
 	"errors"
+	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/model"
 	"wechat-robot-admin-backend/pkg/appx"
 	"wechat-robot-admin-backend/service"
@@ -17,6 +18,7 @@ func NewContactController() *Contact {
 }
 
 func (ct *Contact) GetContacts(c *gin.Context) {
+	var req dto.GetContactsRequest
 	resp := appx.NewResponse(c)
 	_robot, exists := c.Get("robot")
 	if !exists {
@@ -28,10 +30,15 @@ func (ct *Contact) GetContacts(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	data, err := service.NewContactService(c).GetContacts(robot)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	pager := appx.InitPager(c)
+	data, total, err := service.NewContactService(c).GetContacts(req, pager, robot)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
 	}
-	resp.ToResponse(data)
+	resp.ToResponseList(data, total)
 }
