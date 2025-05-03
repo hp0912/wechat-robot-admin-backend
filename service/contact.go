@@ -27,7 +27,7 @@ func (c *ContaceService) SyncContact(robot *model.Robot) {
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetResult(&result).
-		Post(fmt.Sprintf("http://%s:%d/api/v1/robot/sync-contact", robot.RobotCode, 9002)) // TODO
+		Post(fmt.Sprintf("http://%s:%d/api/v1/robot/contacts/sync", robot.RobotCode, 9002)) // TODO
 	if err = result.CheckError(err); err != nil {
 		log.Printf("同步联系人发生错误: %v", err)
 	}

@@ -12,6 +12,7 @@ var userCtl *controller.User
 var robotCtl *controller.Robot
 var contactCtl *controller.Contact
 var chatRoomCtl *controller.ChatRoom
+var chatHistoryCtl *controller.ChatHistory
 var systemCtl *controller.System
 
 func initController() {
@@ -21,6 +22,7 @@ func initController() {
 	contactCtl = controller.NewContactController()
 	systemCtl = controller.NewSystemController()
 	chatRoomCtl = controller.NewChatRoomController()
+	chatHistoryCtl = controller.NewChatHistoryController()
 }
 
 func RegisterRouter(r *gin.Engine) error {
@@ -59,6 +61,12 @@ func RegisterRouter(r *gin.Engine) error {
 		chatRoom.Use(middleware.UserAuth())
 		chatRoom.GET("/members", middleware.UserOwnerAuth(), chatRoomCtl.GetChatRoomMembers)
 		chatRoom.POST("/members/sync", middleware.UserOwnerAuth(), chatRoomCtl.SyncChatRoomMembers)
+	}
+
+	{
+		chat := api.Group("/chat")
+		chat.Use(middleware.UserAuth())
+		chat.GET("/history", middleware.UserOwnerAuth(), chatHistoryCtl.GetChatRoomMembers)
 	}
 
 	{

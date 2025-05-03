@@ -420,7 +420,7 @@ func (r *RobotService) RobotLoginCheck(robot *model.Robot, uuid string) (dto.Rob
 			"uuid": uuid,
 		}).
 		SetResult(&result).
-		Post(fmt.Sprintf("http://%s:%d/api/v1/robot/login-check", robot.RobotCode, 9002)) // TODO
+		Post(fmt.Sprintf("http://%s:%d/api/v1/robot/login/check", robot.RobotCode, 9002)) // TODO
 	if err = result.CheckError(err); err != nil {
 		return dto.RobotLoginCheckResponse{}, err
 	}
