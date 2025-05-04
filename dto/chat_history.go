@@ -75,6 +75,7 @@ type ChatHistory struct {
 }
 
 type AttachDownloadRequest struct {
-	ID        int64 `form:"id" json:"id"  binding:"required"`
-	MessageID int64 `form:"message_id" json:"message_id" binding:"required"`
+	ID        int64  `form:"id" json:"id"  binding:"required"`
+	MessageID int64  `form:"message_id" json:"message_id" binding:"required"`
+	AttachUrl string `form:"attach_url" json:"attach_url"`
 }

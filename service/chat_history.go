@@ -46,7 +46,7 @@ func (c *ChatHistoryService) GetChatHistory(req dto.ChatHistoryRequest, pager ap
 
 func (c *ChatHistoryService) DownloadImageOrVoice(ctx *gin.Context, req dto.AttachDownloadRequest, robot *model.Robot, resp *appx.Response) {
 	// TODO 9002 端口号
-	robotURL := fmt.Sprintf("http://%s:%d/api/v1/robot/chat/image/download?message_id=%d", robot.RobotCode, 9002, req.MessageID)
+	robotURL := fmt.Sprintf("http://%s:%d/api/v1/robot%s?message_id=%d", robot.RobotCode, 9002, req.AttachUrl, req.MessageID)
 	client := &http.Client{
 		Timeout: 300 * time.Second,
 	}
