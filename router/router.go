@@ -67,6 +67,8 @@ func RegisterRouter(r *gin.Engine) error {
 		chat := api.Group("/chat")
 		chat.Use(middleware.UserAuth())
 		chat.GET("/history", middleware.UserOwnerAuth(), chatHistoryCtl.GetChatRoomMembers)
+		chat.GET("/image/download", middleware.UserOwnerAuth(), chatHistoryCtl.DownloadImageOrVoice)
+		chat.GET("/voice/download", middleware.UserOwnerAuth(), chatHistoryCtl.DownloadImageOrVoice)
 	}
 
 	{

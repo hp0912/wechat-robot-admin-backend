@@ -3,11 +3,15 @@ package service
 import (
 	"context"
 	"fmt"
+	"io"
+	"net/http"
 	"strconv"
+	"time"
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/model"
 	"wechat-robot-admin-backend/pkg/appx"
 
+	"github.com/gin-gonic/gin"
 	"github.com/go-resty/resty/v2"
 )
 
@@ -38,4 +42,38 @@ func (c *ChatHistoryService) GetChatHistory(req dto.ChatHistoryRequest, pager ap
 		return nil, 0, err
 	}
 	return result.Data.Itmes, result.Data.Total, nil
+}
+
+func (c *ChatHistoryService) DownloadImageOrVoice(ctx *gin.Context, req dto.AttachDownloadRequest, robot *model.Robot, resp *appx.Response) {
+	// TODO 9002 端口号
+	robotURL := fmt.Sprintf("http://%s:%d/api/v1/robot/chat/image/download?message_id=%d", robot.RobotCode, 9002, req.MessageID)
+	client := &http.Client{
+		Timeout: 300 * time.Second,
+	}
+	robotReq, err := http.NewRequest("GET", robotURL, nil)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	robotResp, err := client.Do(robotReq)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "发起下载请求失败: " + err.Error()})
+		return
+	}
+	defer robotResp.Body.Close()
+	if robotResp.StatusCode != http.StatusOK {
+		ctx.Status(robotResp.StatusCode)
+		io.Copy(ctx.Writer, robotResp.Body)
+		return
+	}
+	for key, values := range robotResp.Header {
+		for _, value := range values {
+			ctx.Header(key, value)
+		}
+	}
+	ctx.Status(robotResp.StatusCode)
+	_, err = io.Copy(ctx.Writer, robotResp.Body)
+	if err != nil {
+		fmt.Printf("下载图片/语音失败: %v\n", err)
+	}
 }

@@ -73,3 +73,8 @@ type ChatHistory struct {
 	SenderNickname     string      `json:"sender_nickname"`
 	SenderAvatar       string      `json:"sender_avatar"`
 }
+
+type AttachDownloadRequest struct {
+	ID        int64 `form:"id" json:"id"  binding:"required"`
+	MessageID int64 `form:"message_id" json:"message_id" binding:"required"`
+}
