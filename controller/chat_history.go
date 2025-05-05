@@ -103,5 +103,26 @@ func (ch *ChatHistory) DownloadFile(c *gin.Context) {
 		return
 	}
 	req.AttachUrl = "/chat/file/download"
-	service.NewChatHistoryService(c).DownloadFile(c, req, robot)
+	service.NewChatHistoryService(c).DownloadFileOrVideo(c, req, robot)
+}
+
+func (ch *ChatHistory) DownloadVideo(c *gin.Context) {
+	var req dto.AttachDownloadRequest
+	resp := appx.NewResponse(c)
+	_robot, exists := c.Get("robot")
+	if !exists {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, ok := _robot.(*model.Robot)
+	if !ok {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	req.AttachUrl = "/chat/video/download"
+	service.NewChatHistoryService(c).DownloadFileOrVideo(c, req, robot)
 }

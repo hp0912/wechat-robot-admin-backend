@@ -78,7 +78,7 @@ func (c *ChatHistoryService) DownloadImageOrVoice(ctx *gin.Context, req dto.Atta
 	}
 }
 
-func (c *ChatHistoryService) DownloadFile(ctx *gin.Context, req dto.AttachDownloadRequest, robot *model.Robot) {
+func (c *ChatHistoryService) DownloadFileOrVideo(ctx *gin.Context, req dto.AttachDownloadRequest, robot *model.Robot) {
 	// TODO 9002 端口号
 	robotURL := fmt.Sprintf("http://%s:%d/api/v1/robot%s?message_id=%d", robot.RobotCode, 9002, req.AttachUrl, req.MessageID)
 	robotReq, err := http.NewRequest("GET", robotURL, nil)
@@ -102,6 +102,6 @@ func (c *ChatHistoryService) DownloadFile(ctx *gin.Context, req dto.AttachDownlo
 	ctx.Status(robotResp.StatusCode)
 	_, err = io.Copy(ctx.Writer, robotResp.Body)
 	if err != nil {
-		fmt.Printf("下载附件失败: %v\n", err)
+		fmt.Printf("下载附件/ 视频失败: %v\n", err)
 	}
 }
