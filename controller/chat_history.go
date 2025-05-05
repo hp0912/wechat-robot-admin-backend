@@ -3,7 +3,6 @@ package controller
 import (
 	"errors"
 	"wechat-robot-admin-backend/dto"
-	"wechat-robot-admin-backend/model"
 	"wechat-robot-admin-backend/pkg/appx"
 	"wechat-robot-admin-backend/service"
 
@@ -20,13 +19,8 @@ func NewChatHistoryController() *ChatHistory {
 func (ch *ChatHistory) GetChatRoomMembers(c *gin.Context) {
 	var req dto.ChatHistoryRequest
 	resp := appx.NewResponse(c)
-	_robot, exists := c.Get("robot")
-	if !exists {
-		resp.ToErrorResponse(errors.New("参数错误"))
-		return
-	}
-	robot, ok := _robot.(*model.Robot)
-	if !ok {
+	robot, err := appx.GetRobot(c)
+	if err != nil {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
@@ -46,13 +40,8 @@ func (ch *ChatHistory) GetChatRoomMembers(c *gin.Context) {
 func (ch *ChatHistory) DownloadImage(c *gin.Context) {
 	var req dto.AttachDownloadRequest
 	resp := appx.NewResponse(c)
-	_robot, exists := c.Get("robot")
-	if !exists {
-		resp.ToErrorResponse(errors.New("参数错误"))
-		return
-	}
-	robot, ok := _robot.(*model.Robot)
-	if !ok {
+	robot, err := appx.GetRobot(c)
+	if err != nil {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
@@ -67,13 +56,8 @@ func (ch *ChatHistory) DownloadImage(c *gin.Context) {
 func (ch *ChatHistory) DownloadVoice(c *gin.Context) {
 	var req dto.AttachDownloadRequest
 	resp := appx.NewResponse(c)
-	_robot, exists := c.Get("robot")
-	if !exists {
-		resp.ToErrorResponse(errors.New("参数错误"))
-		return
-	}
-	robot, ok := _robot.(*model.Robot)
-	if !ok {
+	robot, err := appx.GetRobot(c)
+	if err != nil {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
@@ -88,13 +72,8 @@ func (ch *ChatHistory) DownloadVoice(c *gin.Context) {
 func (ch *ChatHistory) DownloadFile(c *gin.Context) {
 	var req dto.AttachDownloadRequest
 	resp := appx.NewResponse(c)
-	_robot, exists := c.Get("robot")
-	if !exists {
-		resp.ToErrorResponse(errors.New("参数错误"))
-		return
-	}
-	robot, ok := _robot.(*model.Robot)
-	if !ok {
+	robot, err := appx.GetRobot(c)
+	if err != nil {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
@@ -109,13 +88,8 @@ func (ch *ChatHistory) DownloadFile(c *gin.Context) {
 func (ch *ChatHistory) DownloadVideo(c *gin.Context) {
 	var req dto.AttachDownloadRequest
 	resp := appx.NewResponse(c)
-	_robot, exists := c.Get("robot")
-	if !exists {
-		resp.ToErrorResponse(errors.New("参数错误"))
-		return
-	}
-	robot, ok := _robot.(*model.Robot)
-	if !ok {
+	robot, err := appx.GetRobot(c)
+	if err != nil {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}

@@ -3,7 +3,6 @@ package controller
 import (
 	"errors"
 	"wechat-robot-admin-backend/dto"
-	"wechat-robot-admin-backend/model"
 	"wechat-robot-admin-backend/pkg/appx"
 	"wechat-robot-admin-backend/service"
 
@@ -20,13 +19,8 @@ func NewChatRoomController() *ChatRoom {
 func (crm *ChatRoom) SyncChatRoomMembers(c *gin.Context) {
 	var req dto.SyncChatRoomMemberRequest
 	resp := appx.NewResponse(c)
-	_robot, exists := c.Get("robot")
-	if !exists {
-		resp.ToErrorResponse(errors.New("参数错误"))
-		return
-	}
-	robot, ok := _robot.(*model.Robot)
-	if !ok {
+	robot, err := appx.GetRobot(c)
+	if err != nil {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
@@ -41,13 +35,8 @@ func (crm *ChatRoom) SyncChatRoomMembers(c *gin.Context) {
 func (crm *ChatRoom) GetChatRoomMembers(c *gin.Context) {
 	var req dto.ChatRoomMemberRequest
 	resp := appx.NewResponse(c)
-	_robot, exists := c.Get("robot")
-	if !exists {
-		resp.ToErrorResponse(errors.New("参数错误"))
-		return
-	}
-	robot, ok := _robot.(*model.Robot)
-	if !ok {
+	robot, err := appx.GetRobot(c)
+	if err != nil {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}

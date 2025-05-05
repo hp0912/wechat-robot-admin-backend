@@ -4,3 +4,4 @@ wechat-robot-client
 !/docker-compose/docker-compose.temp
 !/docker-compose/docker-compose.debug.yml
 __debug*
+wechat-robot-admin-backend

@@ -1,8 +1,10 @@
 package appx
 
 import (
+	"errors"
 	"strconv"
 	"strings"
+	"wechat-robot-admin-backend/model"
 
 	"github.com/gin-gonic/gin"
 )
@@ -64,4 +66,16 @@ func InitPager(c *gin.Context) Pager {
 	}
 	pager.OffSet = (pager.PageIndex - 1) * pager.PageSize
 	return pager
+}
+
+func GetRobot(c *gin.Context) (*model.Robot, error) {
+	_robot, exists := c.Get("robot")
+	if !exists {
+		return nil, errors.New("参数错误")
+	}
+	robot, ok := _robot.(*model.Robot)
+	if !ok {
+		return nil, errors.New("参数错误")
+	}
+	return robot, nil
 }
