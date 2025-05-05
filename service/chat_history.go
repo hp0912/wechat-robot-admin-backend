@@ -77,3 +77,31 @@ func (c *ChatHistoryService) DownloadImageOrVoice(ctx *gin.Context, req dto.Atta
 		fmt.Printf("下载图片/语音失败: %v\n", err)
 	}
 }
+
+func (c *ChatHistoryService) DownloadFile(ctx *gin.Context, req dto.AttachDownloadRequest, robot *model.Robot) {
+	// TODO 9002 端口号
+	robotURL := fmt.Sprintf("http://%s:%d/api/v1/robot%s?message_id=%d", robot.RobotCode, 9002, req.AttachUrl, req.MessageID)
+	robotReq, err := http.NewRequest("GET", robotURL, nil)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadGateway,
+			gin.H{"message": err.Error()})
+		return
+	}
+	robotResp, err := http.DefaultClient.Do(robotReq)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadGateway,
+			gin.H{"message": err.Error()})
+		return
+	}
+	defer robotResp.Body.Close()
+	for key, values := range robotResp.Header {
+		for _, value := range values {
+			ctx.Header(key, value)
+		}
+	}
+	ctx.Status(robotResp.StatusCode)
+	_, err = io.Copy(ctx.Writer, robotResp.Body)
+	if err != nil {
+		fmt.Printf("下载附件失败: %v\n", err)
+	}
+}

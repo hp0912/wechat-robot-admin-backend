@@ -69,6 +69,7 @@ func RegisterRouter(r *gin.Engine) error {
 		chat.GET("/history", middleware.UserOwnerAuth(), chatHistoryCtl.GetChatRoomMembers)
 		chat.GET("/image/download", middleware.UserOwnerAuth(), chatHistoryCtl.DownloadImage)
 		chat.GET("/voice/download", middleware.UserOwnerAuth(), chatHistoryCtl.DownloadVoice)
+		chat.GET("/file/download", middleware.UserOwnerAuth(), chatHistoryCtl.DownloadFile)
 	}
 
 	{

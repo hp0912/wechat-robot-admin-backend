@@ -48,30 +48,33 @@ const (
 	AppMsgTypeEmotion               AppMessageType = 15     // Emotion
 	AppMsgTypeCardTicket            AppMessageType = 16     // 名片消息
 	AppMsgTypeRealtimeShareLocation AppMessageType = 17     // 地理位置消息
+	AppMsgTypequote                 AppMessageType = 57     // 引用消息
+	AppMsgTypeAttachUploading       AppMessageType = 74     // 附件上传中
 	AppMsgTypeTransfers             AppMessageType = 2000   // 转账消息
 	AppMsgTypeRedEnvelopes          AppMessageType = 2001   // 红包消息
 	AppMsgTypeReaderType            AppMessageType = 100001 //自定义的消息
 )
 
 type ChatHistory struct {
-	ID                 int64       `json:"id"`
-	MsgId              int64       `json:"msg_id"`        // 消息Id
-	ClientMsgId        int64       `json:"client_msg_id"` // 客户端消息Id
-	IsGroup            bool        `json:"is_group"`
-	IsAtMe             bool        `json:"is_atme"` // @所有人 好的
-	IsRecalled         bool        `json:"is_recalled"`
-	Type               MessageType `json:"type"`                 // 消息类型
-	Content            string      `json:"content"`              // 内容
-	DisplayFullContent string      `json:"display_full_content"` // 显示的完整内容
-	MessageSource      string      `json:"message_source"`
-	FromWxID           string      `json:"from_wxid"`      // 消息来源
-	SenderWxID         string      `json:"sender_wxid"`    // 消息发送者
-	ToWxID             string      `json:"to_wxid"`        // 接收者
-	AttachmentUrl      string      `json:"attachment_url"` // 文件地址
-	CreatedAt          int64       `json:"created_at"`
-	UpdatedAt          int64       `json:"updated_at"`
-	SenderNickname     string      `json:"sender_nickname"`
-	SenderAvatar       string      `json:"sender_avatar"`
+	ID                 int64          `json:"id"`
+	MsgId              int64          `json:"msg_id"`        // 消息Id
+	ClientMsgId        int64          `json:"client_msg_id"` // 客户端消息Id
+	IsGroup            bool           `json:"is_group"`
+	IsAtMe             bool           `json:"is_atme"` // @所有人 好的
+	IsRecalled         bool           `json:"is_recalled"`
+	Type               MessageType    `json:"type"`                 // 消息类型
+	AppMsgType         AppMessageType `json:"app_msg_type"`         // 消息类型
+	Content            string         `json:"content"`              // 内容
+	DisplayFullContent string         `json:"display_full_content"` // 显示的完整内容
+	MessageSource      string         `json:"message_source"`
+	FromWxID           string         `json:"from_wxid"`      // 消息来源
+	SenderWxID         string         `json:"sender_wxid"`    // 消息发送者
+	ToWxID             string         `json:"to_wxid"`        // 接收者
+	AttachmentUrl      string         `json:"attachment_url"` // 文件地址
+	CreatedAt          int64          `json:"created_at"`
+	UpdatedAt          int64          `json:"updated_at"`
+	SenderNickname     string         `json:"sender_nickname"`
+	SenderAvatar       string         `json:"sender_avatar"`
 }
 
 type AttachDownloadRequest struct {

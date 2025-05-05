@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS `messages` (
   `msg_id` BIGINT NOT NULL,
   `client_msg_id` BIGINT NOT NULL,
   `type` INT NOT NULL,
+  `app_msg_type` INT DEFAULT NULL,
   `is_group` BOOLEAN DEFAULT FALSE COMMENT '是否为群聊消息',
   `is_atme` BOOLEAN DEFAULT FALSE COMMENT '消息是否@我',
   `is_recalled` BOOLEAN DEFAULT FALSE COMMENT '消息是否已经撤回',
@@ -47,6 +48,7 @@ CREATE TABLE IF NOT EXISTS `messages` (
   UNIQUE KEY `uniq_msg_id` (`msg_id`),
   UNIQUE KEY `uniq_client_msg_id` (`client_msg_id`),
   KEY `idx_from_wxid` (`from_wxid`),
+  KEY `idx_type` (`type`),
   KEY `idx_sender_wxid` (`sender_wxid`),
   KEY `idx_created_at` (`created_at`),
   KEY `idx_deleted_at` (`deleted_at`)
