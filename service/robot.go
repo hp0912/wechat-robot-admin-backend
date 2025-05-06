@@ -67,7 +67,7 @@ func (r *RobotService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest)
 	if err != nil {
 		return err
 	}
-	// 一个账号最多创建5个机器人
+	// 一个账号最多创建2个机器人
 	robots := respo.GetByOwner(wechatId.(string), true)
 	if len(robots) >= 2 && role.(int) != vars.RoleRootUser {
 		return errors.New("一个账号最多创建2个机器人")
