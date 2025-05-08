@@ -13,14 +13,14 @@ var robotCtl *controller.Robot
 var contactCtl *controller.Contact
 var chatRoomCtl *controller.ChatRoom
 var chatHistoryCtl *controller.ChatHistory
-var systemCtl *controller.System
+var dockerCtl *controller.DockerController
 
 func initController() {
 	wechatCtl = controller.NewWeChatAuthController()
 	userCtl = controller.NewUserController()
 	robotCtl = controller.NewRobotController()
 	contactCtl = controller.NewContactController()
-	systemCtl = controller.NewSystemController()
+	dockerCtl = controller.NewDockerController()
 	chatRoomCtl = controller.NewChatRoomController()
 	chatHistoryCtl = controller.NewChatHistoryController()
 }
@@ -45,8 +45,8 @@ func RegisterRouter(r *gin.Engine) error {
 	{
 		system := api.Group("/system")
 		system.Use(middleware.UserAuth())
-		system.GET("/robot-container-stats", middleware.UserOwnerAuth(), systemCtl.RobotContainerStats)
-		system.GET("/robot-container-logs", middleware.UserOwnerAuth(), systemCtl.GetRobotContainerLogs)
+		system.GET("/robot-container-stats", middleware.UserOwnerAuth(), dockerCtl.RobotContainerStats)
+		system.GET("/robot-container-logs", middleware.UserOwnerAuth(), dockerCtl.GetRobotContainerLogs)
 	}
 
 	{

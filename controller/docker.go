@@ -8,21 +8,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type System struct {
+type DockerController struct {
 }
 
-func NewSystemController() *System {
-	return &System{}
+func NewDockerController() *DockerController {
+	return &DockerController{}
 }
 
-func (s *System) RobotContainerStats(c *gin.Context) {
+func (d *DockerController) RobotContainerStats(c *gin.Context) {
 	resp := appx.NewResponse(c)
 	robot, err := appx.GetRobot(c)
 	if err != nil {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	stats, err := service.NewSystemService(c).RobotContainerStats(robot)
+	stats, err := service.NewDockerService(c).RobotContainerStats(robot)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
@@ -30,14 +30,14 @@ func (s *System) RobotContainerStats(c *gin.Context) {
 	resp.ToResponse(stats)
 }
 
-func (s *System) GetRobotContainerLogs(c *gin.Context) {
+func (d *DockerController) GetRobotContainerLogs(c *gin.Context) {
 	resp := appx.NewResponse(c)
 	robot, err := appx.GetRobot(c)
 	if err != nil {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	logs, err := service.NewSystemService(c).GetRobotContainerLogs(robot)
+	logs, err := service.NewDockerService(c).GetRobotContainerLogs(robot)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
