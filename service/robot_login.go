@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/model"
 	"wechat-robot-admin-backend/repository"
@@ -27,7 +26,7 @@ func (r *RobotLoginService) RobotLogin(robot *model.Robot) (dto.RobotLoginRespon
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetResult(&result).
-		Post(fmt.Sprintf("http://%s:%d/api/v1/robot/login", robot.RobotCode, 9002)) // TODO
+		Post(robot.GetBaseURL() + "/login")
 	if err = result.CheckError(err); err != nil {
 		return dto.RobotLoginResponse{}, err
 	}
@@ -43,7 +42,7 @@ func (r *RobotLoginService) RobotLoginCheck(robot *model.Robot, uuid string) (dt
 			"uuid": uuid,
 		}).
 		SetResult(&result).
-		Post(fmt.Sprintf("http://%s:%d/api/v1/robot/login/check", robot.RobotCode, 9002)) // TODO
+		Post(robot.GetBaseURL() + "/login/check")
 	if err = result.CheckError(err); err != nil {
 		return dto.RobotLoginCheckResponse{}, err
 	}
@@ -56,7 +55,7 @@ func (r *RobotLoginService) RobotLogout(robot *model.Robot) (err error) {
 	_, err = resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetResult(&resp).
-		Delete(fmt.Sprintf("http://%s:%d/api/v1/robot/logout", robot.RobotCode, 9002)) // TODO
+		Delete(robot.GetBaseURL() + "/logout")
 	if err = resp.CheckError(err); err != nil {
 		return
 	}
@@ -70,14 +69,14 @@ func (r *RobotLoginService) RobotState(robot *model.Robot) (err error) {
 	_, err = resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetResult(&isRunningResp).
-		Get(fmt.Sprintf("http://%s:%d/api/v1/robot/is-running", robot.RobotCode, 9002)) // TODO
+		Get(robot.GetBaseURL() + "/is-running")
 	if err = isRunningResp.CheckError(err); err != nil {
 		return
 	}
 	_, err = resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetResult(&isLoggedInResp).
-		Get(fmt.Sprintf("http://%s:%d/api/v1/robot/is-loggedin", robot.RobotCode, 9002)) // TODO
+		Get(robot.GetBaseURL() + "/is-loggedin")
 	if err = isLoggedInResp.CheckError(err); err != nil {
 		return
 	}

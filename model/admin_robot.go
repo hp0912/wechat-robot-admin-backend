@@ -1,6 +1,8 @@
 package model
 
 import (
+	"fmt"
+
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
 )
@@ -40,4 +42,8 @@ type Robot struct {
 // TableName 指定表名
 func (Robot) TableName() string {
 	return "robot"
+}
+
+func (r *Robot) GetBaseURL() string {
+	return fmt.Sprintf("http://%s:%d/api/v1/robot", r.RobotCode, 9002) // TODO 9002 端口号
 }

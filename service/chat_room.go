@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"strconv"
 	"wechat-robot-admin-backend/dto"
@@ -30,7 +29,7 @@ func (c *ChatRoomService) SyncChatRoomMembers(robot *model.Robot, chatRoomID str
 			"chat_room_id": chatRoomID,
 		}).
 		SetResult(&result).
-		Post(fmt.Sprintf("http://%s:%d/api/v1/robot/chat-room/members/sync", robot.RobotCode, 9002)) // TODO
+		Post(robot.GetBaseURL() + "/chat-room/members/sync")
 	if err = result.CheckError(err); err != nil {
 		log.Printf("同步群成员发生错误: %v", err)
 	}
@@ -49,7 +48,7 @@ func (c *ChatRoomService) GetChatRoomMembers(req dto.ChatRoomMemberRequest, page
 		SetQueryParam("page_index", strconv.Itoa(pager.PageIndex)).
 		SetQueryParam("page_size", "20").
 		SetResult(&result).
-		Get(fmt.Sprintf("http://%s:%d/api/v1/robot/chat-room/members", robot.RobotCode, 9002)) // TODO
+		Get(robot.GetBaseURL() + "/chat-room/members")
 	if err = result.CheckError(err); err != nil {
 		return nil, 0, err
 	}

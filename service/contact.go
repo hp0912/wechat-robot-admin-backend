@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"strconv"
 	"wechat-robot-admin-backend/dto"
@@ -27,7 +26,7 @@ func (c *ContactService) SyncContact(robot *model.Robot) {
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetResult(&result).
-		Post(fmt.Sprintf("http://%s:%d/api/v1/robot/contacts/sync", robot.RobotCode, 9002)) // TODO
+		Post(robot.GetBaseURL() + "/contacts/sync")
 	if err = result.CheckError(err); err != nil {
 		log.Printf("同步联系人发生错误: %v", err)
 	}
@@ -46,7 +45,7 @@ func (c *ContactService) GetContacts(req dto.GetContactsRequest, pager appx.Page
 		SetQueryParam("page_index", strconv.Itoa(pager.PageIndex)).
 		SetQueryParam("page_size", "20").
 		SetResult(&result).
-		Get(fmt.Sprintf("http://%s:%d/api/v1/robot/contacts", robot.RobotCode, 9002)) // TODO
+		Get(robot.GetBaseURL() + "/contacts")
 	if err = result.CheckError(err); err != nil {
 		return nil, 0, err
 	}
