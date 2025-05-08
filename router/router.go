@@ -9,7 +9,8 @@ import (
 
 var wechatCtl *controller.WeChat
 var userCtl *controller.User
-var robotCtl *controller.Robot
+var robotLoginCtl *controller.RobotLogin
+var robotManageCtl *controller.RobotManage
 var contactCtl *controller.Contact
 var chatRoomCtl *controller.ChatRoom
 var chatHistoryCtl *controller.ChatHistory
@@ -18,7 +19,8 @@ var dockerCtl *controller.DockerController
 func initController() {
 	wechatCtl = controller.NewWeChatAuthController()
 	userCtl = controller.NewUserController()
-	robotCtl = controller.NewRobotController()
+	robotLoginCtl = controller.NewRobotLoginController()
+	robotManageCtl = controller.NewRobotManageController()
 	contactCtl = controller.NewContactController()
 	dockerCtl = controller.NewDockerController()
 	chatRoomCtl = controller.NewChatRoomController()
@@ -77,17 +79,17 @@ func RegisterRouter(r *gin.Engine) error {
 		robot := api.Group("/robot")
 		robot.Use(middleware.UserAuth())
 
-		robot.GET("/list", robotCtl.RobotList)
-		robot.POST("/create", robotCtl.RobotCreate)
-		robot.GET("/view", middleware.UserOwnerAuth(), robotCtl.RobotView)
-		robot.POST("/restart-client", middleware.UserOwnerAuth(), robotCtl.RobotRestartClient)
-		robot.POST("/restart-server", middleware.UserOwnerAuth(), robotCtl.RobotRestartServer)
-		robot.DELETE("/remove", middleware.UserOwnerAuth(), robotCtl.RobotRemove)
+		robot.GET("/list", robotManageCtl.RobotList)
+		robot.POST("/create", robotManageCtl.RobotCreate)
+		robot.GET("/view", middleware.UserOwnerAuth(), robotManageCtl.RobotView)
+		robot.POST("/restart-client", middleware.UserOwnerAuth(), robotManageCtl.RobotRestartClient)
+		robot.POST("/restart-server", middleware.UserOwnerAuth(), robotManageCtl.RobotRestartServer)
+		robot.DELETE("/remove", middleware.UserOwnerAuth(), robotManageCtl.RobotRemove)
 		// 机器人登陆、登出
-		robot.GET("/state", middleware.UserOwnerAuth(), robotCtl.RobotState)
-		robot.POST("/login", middleware.UserOwnerAuth(), robotCtl.RobotLogin)
-		robot.POST("/login-check", middleware.UserOwnerAuth(), robotCtl.RobotLoginCheck)
-		robot.DELETE("/logout", middleware.UserOwnerAuth(), robotCtl.RobotLogout)
+		robot.GET("/state", middleware.UserOwnerAuth(), robotLoginCtl.RobotState)
+		robot.POST("/login", middleware.UserOwnerAuth(), robotLoginCtl.RobotLogin)
+		robot.POST("/login-check", middleware.UserOwnerAuth(), robotLoginCtl.RobotLoginCheck)
+		robot.DELETE("/logout", middleware.UserOwnerAuth(), robotLoginCtl.RobotLogout)
 	}
 
 	return nil

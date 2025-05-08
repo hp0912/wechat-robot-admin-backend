@@ -12,17 +12,17 @@ import (
 	"github.com/go-resty/resty/v2"
 )
 
-type ContaceService struct {
+type ContactService struct {
 	ctx context.Context
 }
 
-func NewContactService(ctx context.Context) *ContaceService {
-	return &ContaceService{
+func NewContactService(ctx context.Context) *ContactService {
+	return &ContactService{
 		ctx: ctx,
 	}
 }
 
-func (c *ContaceService) SyncContact(robot *model.Robot) {
+func (c *ContactService) SyncContact(robot *model.Robot) {
 	var result dto.Response[struct{}]
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
@@ -33,7 +33,7 @@ func (c *ContaceService) SyncContact(robot *model.Robot) {
 	}
 }
 
-func (c *ContaceService) GetContacts(req dto.GetContactsRequest, pager appx.Pager, robot *model.Robot) ([]*dto.GetContactsResponse, int64, error) {
+func (c *ContactService) GetContacts(req dto.GetContactsRequest, pager appx.Pager, robot *model.Robot) ([]*dto.GetContactsResponse, int64, error) {
 	var result dto.Response[struct {
 		Itmes []*dto.GetContactsResponse `json:"items"`
 		Total int64                      `json:"total"`

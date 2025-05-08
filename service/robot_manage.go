@@ -21,26 +21,25 @@ import (
 	"github.com/docker/docker/client"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/go-resty/resty/v2"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
-type RobotService struct {
+type RobotManageService struct {
 	ctx context.Context
 }
 
-func NewRobotService(ctx context.Context) *RobotService {
-	return &RobotService{
+func NewRobotManageService(ctx context.Context) *RobotManageService {
+	return &RobotManageService{
 		ctx: ctx,
 	}
 }
 
-func (r *RobotService) RobotList(req dto.RobotListRequest, pager appx.Pager) ([]*model.Robot, int64, error) {
+func (r *RobotManageService) RobotList(req dto.RobotListRequest, pager appx.Pager) ([]*model.Robot, int64, error) {
 	return repository.NewRobotRepo(r.ctx, vars.DB).RobotList(req, pager)
 }
 
-func (r *RobotService) GetProjectRoot() (string, error) {
+func (r *RobotManageService) GetProjectRoot() (string, error) {
 	_, filename, _, ok := runtime.Caller(0)
 	if !ok {
 		return "", errors.New("无法获取运行时信息")
@@ -50,7 +49,7 @@ func (r *RobotService) GetProjectRoot() (string, error) {
 }
 
 // 辅助方法：获取Docker客户端
-func (r *RobotService) getDockerClient() (*client.Client, error) {
+func (r *RobotManageService) getDockerClient() (*client.Client, error) {
 	dockerClient, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
 		return nil, fmt.Errorf("创建Docker客户端失败: %v", err)
@@ -58,7 +57,7 @@ func (r *RobotService) getDockerClient() (*client.Client, error) {
 	return dockerClient, nil
 }
 
-func (r *RobotService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest) error {
+func (r *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest) error {
 	session := sessions.Default(ctx)
 	wechatId := session.Get("wechat_id")
 	role := session.Get("role")
@@ -252,13 +251,13 @@ func (r *RobotService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest)
 }
 
 // RobotView 查看机器人元数据
-func (r *RobotService) RobotView(robotID int64) *model.Robot {
+func (r *RobotManageService) RobotView(robotID int64) *model.Robot {
 	respo := repository.NewRobotRepo(r.ctx, vars.DB)
 	return respo.GetByID(robotID)
 }
 
 // RobotRemove 删除机器人
-func (r *RobotService) RobotRemove(robotID int64) error {
+func (r *RobotManageService) RobotRemove(robotID int64) error {
 	respo := repository.NewRobotRepo(r.ctx, vars.DB)
 	robot := respo.GetByID(robotID)
 	if robot == nil {
@@ -297,7 +296,7 @@ func (r *RobotService) RobotRemove(robotID int64) error {
 }
 
 // 辅助方法：停止并删除容器
-func (r *RobotService) stopAndRemoveContainer(dockerClient *client.Client, containerName string) error {
+func (r *RobotManageService) stopAndRemoveContainer(dockerClient *client.Client, containerName string) error {
 	// 根据容器名查找容器ID
 	listFilters := filters.NewArgs()
 	listFilters.Add("name", containerName)
@@ -337,7 +336,7 @@ func (r *RobotService) stopAndRemoveContainer(dockerClient *client.Client, conta
 	return nil
 }
 
-func (r *RobotService) RobotRestart(robotID int64, restartType string) error {
+func (r *RobotManageService) RobotRestart(robotID int64, restartType string) error {
 	respo := repository.NewRobotRepo(r.ctx, vars.DB)
 	robot := respo.GetByID(robotID)
 	if robot == nil {
@@ -382,11 +381,11 @@ func (r *RobotService) RobotRestart(robotID int64, restartType string) error {
 	return nil
 }
 
-func (r *RobotService) RobotRestartClient(robotID int64) error {
+func (r *RobotManageService) RobotRestartClient(robotID int64) error {
 	return r.RobotRestart(robotID, "client")
 }
 
-func (r *RobotService) RobotRestartServer(robotID int64) error {
+func (r *RobotManageService) RobotRestartServer(robotID int64) error {
 	err := r.RobotRestart(robotID, "server")
 	if err != nil {
 		return err
@@ -398,77 +397,4 @@ func (r *RobotService) RobotRestartServer(robotID int64) error {
 	}
 	respo.Update(&robot)
 	return nil
-}
-
-func (r *RobotService) RobotLogin(robot *model.Robot) (dto.RobotLoginResponse, error) {
-	var result dto.Response[dto.RobotLoginResponse]
-	_, err := resty.New().R().
-		SetHeader("Content-Type", "application/json;chartset=utf-8").
-		SetResult(&result).
-		Post(fmt.Sprintf("http://%s:%d/api/v1/robot/login", robot.RobotCode, 9002)) // TODO
-	if err = result.CheckError(err); err != nil {
-		return dto.RobotLoginResponse{}, err
-	}
-	return result.Data, nil
-}
-
-func (r *RobotService) RobotLoginCheck(robot *model.Robot, uuid string) (dto.RobotLoginCheckResponse, error) {
-	var result dto.Response[dto.RobotLoginCheckResponse]
-	_, err := resty.New().R().
-		SetHeader("Content-Type", "application/json;chartset=utf-8").
-		SetBody(map[string]string{
-			"uuid": uuid,
-		}).
-		SetResult(&result).
-		Post(fmt.Sprintf("http://%s:%d/api/v1/robot/login/check", robot.RobotCode, 9002)) // TODO
-	if err = result.CheckError(err); err != nil {
-		return dto.RobotLoginCheckResponse{}, err
-	}
-	return result.Data, nil
-}
-
-func (r *RobotService) RobotLogout(robot *model.Robot) (err error) {
-	var resp dto.Response[struct{}]
-	_, err = resty.New().R().
-		SetHeader("Content-Type", "application/json;chartset=utf-8").
-		SetResult(&resp).
-		Delete(fmt.Sprintf("http://%s:%d/api/v1/robot/logout", robot.RobotCode, 9002)) // TODO
-	if err = resp.CheckError(err); err != nil {
-		return
-	}
-	return
-}
-
-func (r *RobotService) RobotState(robot *model.Robot) (err error) {
-	var isRunningResp dto.Response[bool]
-	var isLoggedInResp dto.Response[bool]
-	_, err = resty.New().R().
-		SetHeader("Content-Type", "application/json;chartset=utf-8").
-		SetResult(&isRunningResp).
-		Get(fmt.Sprintf("http://%s:%d/api/v1/robot/is-running", robot.RobotCode, 9002)) // TODO
-	if err = isRunningResp.CheckError(err); err != nil {
-		return
-	}
-	_, err = resty.New().R().
-		SetHeader("Content-Type", "application/json;chartset=utf-8").
-		SetResult(&isLoggedInResp).
-		Get(fmt.Sprintf("http://%s:%d/api/v1/robot/is-loggedin", robot.RobotCode, 9002)) // TODO
-	if err = isLoggedInResp.CheckError(err); err != nil {
-		return
-	}
-	respo := repository.NewRobotRepo(r.ctx, vars.DB)
-	if isRunningResp.Data && isLoggedInResp.Data {
-		newRobot := model.Robot{
-			ID:     robot.ID,
-			Status: model.RobotStatusOnline,
-		}
-		respo.Update(&newRobot)
-	} else {
-		newRobot := model.Robot{
-			ID:     robot.ID,
-			Status: model.RobotStatusOffline,
-		}
-		respo.Update(&newRobot)
-	}
-	return
 }
