@@ -3,7 +3,6 @@ package controller
 import (
 	"errors"
 	"wechat-robot-admin-backend/dto"
-	"wechat-robot-admin-backend/model"
 	"wechat-robot-admin-backend/pkg/appx"
 	"wechat-robot-admin-backend/service"
 
@@ -19,13 +18,8 @@ func NewRobotLoginController() *RobotLogin {
 
 func (r *RobotLogin) RobotLogin(c *gin.Context) {
 	resp := appx.NewResponse(c)
-	_robot, exists := c.Get("robot")
-	if !exists {
-		resp.ToErrorResponse(errors.New("参数错误"))
-		return
-	}
-	robot, ok := _robot.(*model.Robot)
-	if !ok {
+	robot, err := appx.GetRobot(c)
+	if err != nil {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
@@ -44,13 +38,8 @@ func (r *RobotLogin) RobotLoginCheck(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	_robot, exists := c.Get("robot")
-	if !exists {
-		resp.ToErrorResponse(errors.New("参数错误"))
-		return
-	}
-	robot, ok := _robot.(*model.Robot)
-	if !ok {
+	robot, err := appx.GetRobot(c)
+	if err != nil {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
@@ -64,17 +53,12 @@ func (r *RobotLogin) RobotLoginCheck(c *gin.Context) {
 
 func (r *RobotLogin) RobotLogout(c *gin.Context) {
 	resp := appx.NewResponse(c)
-	_robot, exists := c.Get("robot")
-	if !exists {
+	robot, err := appx.GetRobot(c)
+	if err != nil {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	robot, ok := _robot.(*model.Robot)
-	if !ok {
-		resp.ToErrorResponse(errors.New("参数错误"))
-		return
-	}
-	err := service.NewRobotLoginService(c).RobotLogout(robot)
+	err = service.NewRobotLoginService(c).RobotLogout(robot)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
@@ -84,17 +68,12 @@ func (r *RobotLogin) RobotLogout(c *gin.Context) {
 
 func (r *RobotLogin) RobotState(c *gin.Context) {
 	resp := appx.NewResponse(c)
-	_robot, exists := c.Get("robot")
-	if !exists {
+	robot, err := appx.GetRobot(c)
+	if err != nil {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	robot, ok := _robot.(*model.Robot)
-	if !ok {
-		resp.ToErrorResponse(errors.New("参数错误"))
-		return
-	}
-	err := service.NewRobotLoginService(c).RobotState(robot)
+	err = service.NewRobotLoginService(c).RobotState(robot)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
