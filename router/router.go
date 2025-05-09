@@ -15,6 +15,7 @@ var contactCtl *controller.Contact
 var chatRoomCtl *controller.ChatRoom
 var chatHistoryCtl *controller.ChatHistory
 var dockerCtl *controller.DockerController
+var messageCtl *controller.Message
 
 func initController() {
 	wechatCtl = controller.NewWeChatAuthController()
@@ -25,6 +26,7 @@ func initController() {
 	dockerCtl = controller.NewDockerController()
 	chatRoomCtl = controller.NewChatRoomController()
 	chatHistoryCtl = controller.NewChatHistoryController()
+	messageCtl = controller.NewMessageController()
 }
 
 func RegisterRouter(r *gin.Engine) error {
@@ -73,6 +75,12 @@ func RegisterRouter(r *gin.Engine) error {
 		chat.GET("/voice/download", middleware.UserOwnerAuth(), chatHistoryCtl.DownloadVoice)
 		chat.GET("/file/download", middleware.UserOwnerAuth(), chatHistoryCtl.DownloadFile)
 		chat.GET("/video/download", middleware.UserOwnerAuth(), chatHistoryCtl.DownloadVideo)
+	}
+
+	{
+		message := api.Group("/message")
+		message.Use(middleware.UserAuth())
+		message.POST("/revoke", middleware.UserOwnerAuth(), messageCtl.MessageRevoke)
 	}
 
 	{
