@@ -46,7 +46,7 @@ func (c *ChatRoomService) GetChatRoomMembers(req dto.ChatRoomMemberRequest, page
 		SetQueryParam("chat_room_id", req.ChatRoomID).
 		SetQueryParam("keyword", req.Keyword).
 		SetQueryParam("page_index", strconv.Itoa(pager.PageIndex)).
-		SetQueryParam("page_size", "20").
+		SetQueryParam("page_size", strconv.Itoa(pager.PageSize)).
 		SetResult(&result).
 		Get(robot.GetBaseURL() + "/chat-room/members")
 	if err = result.CheckError(err); err != nil {
