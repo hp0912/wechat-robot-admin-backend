@@ -45,17 +45,26 @@ func (c *ChatHistoryService) GetChatHistory(req dto.ChatHistoryRequest, pager ap
 }
 
 func (c *ChatHistoryService) DownloadImageOrVoice(ctx *gin.Context, req dto.AttachDownloadRequest, robot *model.Robot, resp *appx.Response) {
+	clientCtx := ctx.Request.Context()
 	robotURL := fmt.Sprintf("%s%s?message_id=%d", robot.GetBaseURL(), req.AttachUrl, req.MessageID)
 	client := &http.Client{
 		Timeout: 300 * time.Second,
 	}
-	robotReq, err := http.NewRequest("GET", robotURL, nil)
+	robotReq, err := http.NewRequestWithContext(clientCtx, "GET", robotURL, nil)
 	if err != nil {
+		if clientCtx.Err() != nil {
+			fmt.Printf("客户端取消下载: %v\n", err)
+			return
+		}
 		resp.ToErrorResponse(err)
 		return
 	}
 	robotResp, err := client.Do(robotReq)
 	if err != nil {
+		if clientCtx.Err() != nil {
+			fmt.Printf("客户端取消下载: %v\n", err)
+			return
+		}
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "发起下载请求失败: " + err.Error()})
 		return
 	}
@@ -73,20 +82,33 @@ func (c *ChatHistoryService) DownloadImageOrVoice(ctx *gin.Context, req dto.Atta
 	ctx.Status(robotResp.StatusCode)
 	_, err = io.Copy(ctx.Writer, robotResp.Body)
 	if err != nil {
-		fmt.Printf("下载图片/语音失败: %v\n", err)
+		if clientCtx.Err() != nil {
+			fmt.Printf("客户端取消下载: %v\n", err)
+		} else {
+			fmt.Printf("下载图片/语音失败: %v\n", err)
+		}
 	}
 }
 
 func (c *ChatHistoryService) DownloadFileOrVideo(ctx *gin.Context, req dto.AttachDownloadRequest, robot *model.Robot) {
+	clientCtx := ctx.Request.Context()
 	robotURL := fmt.Sprintf("%s%s?message_id=%d", robot.GetBaseURL(), req.AttachUrl, req.MessageID)
-	robotReq, err := http.NewRequest("GET", robotURL, nil)
+	robotReq, err := http.NewRequestWithContext(clientCtx, "GET", robotURL, nil)
 	if err != nil {
+		if clientCtx.Err() != nil {
+			fmt.Printf("客户端取消下载: %v\n", err)
+			return
+		}
 		ctx.AbortWithStatusJSON(http.StatusBadGateway,
 			gin.H{"message": err.Error()})
 		return
 	}
 	robotResp, err := http.DefaultClient.Do(robotReq)
 	if err != nil {
+		if clientCtx.Err() != nil {
+			fmt.Printf("客户端取消下载: %v\n", err)
+			return
+		}
 		ctx.AbortWithStatusJSON(http.StatusBadGateway,
 			gin.H{"message": err.Error()})
 		return
@@ -100,6 +122,10 @@ func (c *ChatHistoryService) DownloadFileOrVideo(ctx *gin.Context, req dto.Attac
 	ctx.Status(robotResp.StatusCode)
 	_, err = io.Copy(ctx.Writer, robotResp.Body)
 	if err != nil {
-		fmt.Printf("下载附件/ 视频失败: %v\n", err)
+		if clientCtx.Err() != nil {
+			fmt.Printf("客户端取消下载: %v\n", err)
+		} else {
+			fmt.Printf("下载附件/视频失败: %v\n", err)
+		}
 	}
 }
