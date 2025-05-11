@@ -157,3 +157,51 @@ func (m *Message) SendVideoMessage(c *gin.Context) {
 	}
 	resp.ToResponse(nil)
 }
+
+func (m *Message) SendVoiceMessage(c *gin.Context) {
+	resp := appx.NewResponse(c)
+	// 获取表单文件
+	file, fileHeader, err := c.Request.FormFile("voice")
+	if err != nil {
+		resp.ToErrorResponse(errors.New("获取上传文件失败"))
+		return
+	}
+	defer file.Close()
+
+	// 检查文件大小
+	if fileHeader.Size > 50*1024*1024 { // 限制为50MB
+		resp.ToErrorResponse(errors.New("文件大小不能超过50MB"))
+		return
+	}
+
+	// 检查文件类型
+	ext := filepath.Ext(fileHeader.Filename)
+	allowedExts := map[string]bool{
+		".amr": true,
+		".mp3": true,
+		".wav": true,
+	}
+	if !allowedExts[ext] {
+		resp.ToErrorResponse(errors.New("不支持的音频格式"))
+		return
+	}
+
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	// 解析表单参数
+	var req dto.SendVoiceMessageRequest
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+
+	err = service.NewMessageService(c).SendVoiceMessage(c, req, file, fileHeader, robot)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}

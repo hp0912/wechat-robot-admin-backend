@@ -83,6 +83,7 @@ func RegisterRouter(r *gin.Engine) error {
 		message.POST("/revoke", middleware.UserOwnerAuth(), messageCtl.MessageRevoke)
 		message.POST("/send/text", middleware.UserOwnerAuth(), messageCtl.SendTextMessage)
 		message.POST("/send/image", middleware.UserOwnerAuth(), messageCtl.SendImageMessage)
+		message.POST("/send/voice", middleware.UserOwnerAuth(), messageCtl.SendVoiceMessage)
 		message.POST("/send/video", middleware.UserOwnerAuth(), messageCtl.SendVideoMessage)
 	}
 
