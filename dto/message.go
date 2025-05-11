@@ -24,3 +24,8 @@ type SendImageMessageRequest struct {
 	ID     int64  `form:"id" json:"id"  binding:"required"`
 	ToWxid string `form:"to_wxid" json:"to_wxid" binding:"required"`
 }
+
+type SendVideoMessageRequest struct {
+	ID     int64  `form:"id" json:"id"  binding:"required"`
+	ToWxid string `form:"to_wxid" json:"to_wxid" binding:"required"`
+}

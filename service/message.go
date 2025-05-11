@@ -94,3 +94,42 @@ func (s *MessageService) SendImageMessage(ctx *gin.Context, req dto.SendImageMes
 
 	return nil
 }
+
+func (s *MessageService) SendVideoMessage(ctx *gin.Context, req dto.SendVideoMessageRequest, file multipart.File, header *multipart.FileHeader, robot *model.Robot) error {
+	robotURL := fmt.Sprintf("%s/message/send/video", robot.GetBaseURL())
+	// 准备转发请求
+	var requestBody bytes.Buffer
+	writer := multipart.NewWriter(&requestBody)
+	// 创建文件表单字段
+	part, err := writer.CreateFormFile("video", header.Filename)
+	if err != nil {
+		return err
+	}
+	// 复制文件内容
+	if _, err = io.Copy(part, file); err != nil {
+		return err
+	}
+	// 添加其他表单字段
+	if err := writer.WriteField("to_wxid", req.ToWxid); err != nil {
+		return err
+	}
+	// 关闭multipart writer
+	if err = writer.Close(); err != nil {
+		return err
+	}
+	robotRequest, err := http.NewRequest("POST", robotURL, &requestBody)
+	if err != nil {
+		return err
+	}
+	// 设置请求头
+	robotRequest.Header.Set("Content-Type", writer.FormDataContentType())
+	// 发送请求并获取响应
+	robotClient := &http.Client{}
+	robotResp, err := robotClient.Do(robotRequest)
+	if err != nil {
+		return err
+	}
+	defer robotResp.Body.Close()
+
+	return nil
+}
