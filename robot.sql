@@ -18,13 +18,13 @@ CREATE TABLE IF NOT EXISTS `common_configs` (
   `welcome_text` VARCHAR(255) DEFAULT '' COMMENT '欢迎新成员的文本',
   `welcome_emoji_md5` VARCHAR(64) DEFAULT '' COMMENT '欢迎新成员的表情MD5',
   `welcome_emoji_len` BIGINT DEFAULT 0 COMMENT '欢迎新成员的表情MD5长度',
-  `welcome_image_url` BIGINT DEFAULT 0 COMMENT '欢迎新成员的图片URL',
-  `welcome_url` BIGINT DEFAULT 0 COMMENT '欢迎新成员的URL',
+  `welcome_image_url` VARCHAR(255) DEFAULT '' COMMENT '欢迎新成员的图片URL',
+  `welcome_url` VARCHAR(255) DEFAULT '' COMMENT '欢迎新成员的URL',
   -- 群聊排行榜
   `chat_room_ranking_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用群聊排行榜功能',
-  `chat_room_ranking_daily_cron` BOOLEAN DEFAULT FALSE COMMENT '每日定时任务表达式',
-  `chat_room_ranking_weekly_cron` BOOLEAN DEFAULT FALSE COMMENT '每周定时任务表达式',
-  `chat_room_ranking_month_cron` BOOLEAN DEFAULT FALSE COMMENT '每月定时任务表达式',
+  `chat_room_ranking_daily_cron` VARCHAR(255) DEFAULT '' COMMENT '每日定时任务表达式',
+  `chat_room_ranking_weekly_cron` VARCHAR(255) DEFAULT '' COMMENT '每周定时任务表达式',
+  `chat_room_ranking_month_cron` VARCHAR(255) DEFAULT '' COMMENT '每月定时任务表达式',
   -- 群聊总结
   `chat_room_summary_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用聊天记录总结功能',
   `chat_room_summary_model` VARCHAR(100) DEFAULT '' COMMENT '聊天总结使用的AI模型名称',
@@ -76,8 +76,8 @@ CREATE TABLE IF NOT EXISTS `chat_room_configs` (
   `welcome_text` VARCHAR(255) DEFAULT '' COMMENT '欢迎新成员的文本',
   `welcome_emoji_md5` VARCHAR(64) DEFAULT '' COMMENT '欢迎新成员的表情MD5',
   `welcome_emoji_len` BIGINT DEFAULT 0 COMMENT '欢迎新成员的表情MD5长度',
-  `welcome_image_url` BIGINT DEFAULT 0 COMMENT '欢迎新成员的图片URL',
-  `welcome_url` BIGINT DEFAULT 0 COMMENT '欢迎新成员的URL',
+  `welcome_image_url` VARCHAR(255) DEFAULT '' COMMENT '欢迎新成员的图片URL',
+  `welcome_url` VARCHAR(255) DEFAULT '' COMMENT '欢迎新成员的URL',
   -- 群聊排行榜
   `chat_room_ranking_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用群聊排行榜功能',
   -- 群聊总结
