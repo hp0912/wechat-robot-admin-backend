@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS `common_configs` (
   `chat_base_url` VARCHAR(255) DEFAULT '' COMMENT '聊天AI的基础URL地址',
   `chat_api_key` VARCHAR(255) DEFAULT '' COMMENT '聊天AI的API密钥',
   `chat_model` VARCHAR(100) DEFAULT '' COMMENT '聊天AI使用的模型名称',
-  `chat_prompt` TEXT DEFAULT '' COMMENT '聊天AI系统提示词',
+  `chat_prompt` TEXT COMMENT '聊天AI系统提示词',
   -- 绘图模型AI设置
   `image_ai_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI绘图功能',
   `image_model` VARCHAR(255) DEFAULT '' COMMENT '绘图AI模型',
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `friend_configs` (
   `chat_base_url` VARCHAR(255) DEFAULT '' COMMENT '聊天AI的基础URL地址',
   `chat_api_key` VARCHAR(255) DEFAULT '' COMMENT '聊天AI的API密钥',
   `chat_model` VARCHAR(100) DEFAULT '' COMMENT '聊天AI使用的模型名称',
-  `chat_prompt` TEXT DEFAULT '' COMMENT '聊天AI系统提示词',
+  `chat_prompt` TEXT COMMENT '聊天AI系统提示词',
   -- 绘图模型AI设置
   `image_ai_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI绘图功能',
   `image_model` VARCHAR(255) DEFAULT '' COMMENT '绘图AI模型',
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `chat_room_configs` (
   `chat_base_url` VARCHAR(255) DEFAULT '' COMMENT '聊天AI的基础URL地址',
   `chat_api_key` VARCHAR(255) DEFAULT '' COMMENT '聊天AI的API密钥',
   `chat_model` VARCHAR(100) DEFAULT '' COMMENT '聊天AI使用的模型名称',
-  `chat_prompt` TEXT DEFAULT '' COMMENT '聊天AI系统提示词',
+  `chat_prompt` TEXT COMMENT '聊天AI系统提示词',
   -- 绘图模型AI设置
   `image_ai_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI绘图功能',
   `image_model` VARCHAR(255) DEFAULT '' COMMENT '绘图AI模型',
