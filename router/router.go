@@ -15,6 +15,7 @@ var contactCtl *controller.Contact
 var chatRoomCtl *controller.ChatRoom
 var chatHistoryCtl *controller.ChatHistory
 var dockerCtl *controller.DockerController
+var globalSettingsCtl *controller.GlobalSettings
 var messageCtl *controller.Message
 
 func initController() {
@@ -27,6 +28,7 @@ func initController() {
 	chatRoomCtl = controller.NewChatRoomController()
 	chatHistoryCtl = controller.NewChatHistoryController()
 	messageCtl = controller.NewMessageController()
+	globalSettingsCtl = controller.NewGlobalSettingsController()
 }
 
 func RegisterRouter(r *gin.Engine) error {
@@ -85,6 +87,13 @@ func RegisterRouter(r *gin.Engine) error {
 		message.POST("/send/image", middleware.UserOwnerAuth(), messageCtl.SendImageMessage)
 		message.POST("/send/voice", middleware.UserOwnerAuth(), messageCtl.SendVoiceMessage)
 		message.POST("/send/video", middleware.UserOwnerAuth(), messageCtl.SendVideoMessage)
+	}
+
+	{
+		message := api.Group("/global-settings")
+		message.Use(middleware.UserAuth())
+		message.GET("", middleware.UserOwnerAuth(), globalSettingsCtl.GetGlobalSettings)
+		message.POST("", middleware.UserOwnerAuth(), globalSettingsCtl.SaveGlobalSettings)
 	}
 
 	{

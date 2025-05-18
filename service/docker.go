@@ -23,7 +23,7 @@ func NewDockerService(ctx context.Context) *DockerService {
 	}
 }
 
-func (d *DockerService) getDockerClient() (*client.Client, error) {
+func (sv *DockerService) getDockerClient() (*client.Client, error) {
 	dockerClient, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
 		return nil, fmt.Errorf("创建Docker客户端失败: %v", err)
@@ -32,9 +32,9 @@ func (d *DockerService) getDockerClient() (*client.Client, error) {
 }
 
 // RobotContainerStats 获取机器人容器的资源使用情况
-func (d *DockerService) RobotContainerStats(robot *model.Robot) (dto.RobotContainerStatsResponse, error) {
+func (sv *DockerService) RobotContainerStats(robot *model.Robot) (dto.RobotContainerStatsResponse, error) {
 	// 创建Docker客户端
-	dockerClient, err := d.getDockerClient()
+	dockerClient, err := sv.getDockerClient()
 	if err != nil {
 		return dto.RobotContainerStatsResponse{}, err
 	}
@@ -42,14 +42,14 @@ func (d *DockerService) RobotContainerStats(robot *model.Robot) (dto.RobotContai
 
 	// 获取客户端容器的状态
 	clientContainerName := fmt.Sprintf("client_%s", robot.RobotCode)
-	clientStats, err := d.getContainerStats(dockerClient, clientContainerName)
+	clientStats, err := sv.getContainerStats(dockerClient, clientContainerName)
 	if err != nil {
 		return dto.RobotContainerStatsResponse{}, fmt.Errorf("获取客户端容器状态失败: %v", err)
 	}
 
 	// 获取服务端容器的状态
 	serverContainerName := fmt.Sprintf("server_%s", robot.RobotCode)
-	serverStats, err := d.getContainerStats(dockerClient, serverContainerName)
+	serverStats, err := sv.getContainerStats(dockerClient, serverContainerName)
 	if err != nil {
 		return dto.RobotContainerStatsResponse{}, fmt.Errorf("获取服务端容器状态失败: %v", err)
 	}
@@ -61,7 +61,7 @@ func (d *DockerService) RobotContainerStats(robot *model.Robot) (dto.RobotContai
 }
 
 // getContainerStats 获取单个容器的资源使用情况
-func (d *DockerService) getContainerStats(dockerClient *client.Client, containerName string) (dto.ContainerStats, error) {
+func (sv *DockerService) getContainerStats(dockerClient *client.Client, containerName string) (dto.ContainerStats, error) {
 	// 初始化返回结构
 	stats := dto.ContainerStats{
 		Name: containerName,
@@ -71,7 +71,7 @@ func (d *DockerService) getContainerStats(dockerClient *client.Client, container
 	listFilters := filters.NewArgs()
 	listFilters.Add("name", containerName)
 
-	containers, err := dockerClient.ContainerList(d.ctx, container.ListOptions{
+	containers, err := dockerClient.ContainerList(sv.ctx, container.ListOptions{
 		All:     true,
 		Filters: listFilters,
 	})
@@ -87,7 +87,7 @@ func (d *DockerService) getContainerStats(dockerClient *client.Client, container
 	stats.Status = containers[0].State
 
 	// 获取容器统计信息
-	containerStats, err := dockerClient.ContainerStats(d.ctx, containerID, false)
+	containerStats, err := dockerClient.ContainerStats(sv.ctx, containerID, false)
 	if err != nil {
 		return stats, err
 	}
@@ -146,9 +146,9 @@ func (d *DockerService) getContainerStats(dockerClient *client.Client, container
 }
 
 // GetRobotContainerLogs 获取机器人客户端和服务端容器的最后500行日志
-func (d *DockerService) GetRobotContainerLogs(robot *model.Robot) (dto.RobotContainerLogsResponse, error) {
+func (sv *DockerService) GetRobotContainerLogs(robot *model.Robot) (dto.RobotContainerLogsResponse, error) {
 	// 创建Docker客户端
-	dockerClient, err := d.getDockerClient()
+	dockerClient, err := sv.getDockerClient()
 	if err != nil {
 		return dto.RobotContainerLogsResponse{}, err
 	}
@@ -156,14 +156,14 @@ func (d *DockerService) GetRobotContainerLogs(robot *model.Robot) (dto.RobotCont
 
 	// 获取客户端容器的日志
 	clientContainerName := fmt.Sprintf("client_%s", robot.RobotCode)
-	clientLogs, err := d.getContainerLogs(dockerClient, clientContainerName, 500)
+	clientLogs, err := sv.getContainerLogs(dockerClient, clientContainerName, 500)
 	if err != nil {
 		return dto.RobotContainerLogsResponse{}, fmt.Errorf("获取客户端容器日志失败: %v", err)
 	}
 
 	// 获取服务端容器的日志
 	serverContainerName := fmt.Sprintf("server_%s", robot.RobotCode)
-	serverLogs, err := d.getContainerLogs(dockerClient, serverContainerName, 500)
+	serverLogs, err := sv.getContainerLogs(dockerClient, serverContainerName, 500)
 	if err != nil {
 		return dto.RobotContainerLogsResponse{}, fmt.Errorf("获取服务端容器日志失败: %v", err)
 	}
@@ -175,12 +175,12 @@ func (d *DockerService) GetRobotContainerLogs(robot *model.Robot) (dto.RobotCont
 }
 
 // getContainerLogs 获取指定容器的最后 n 行日志
-func (d *DockerService) getContainerLogs(dockerClient *client.Client, containerName string, lines int) ([]string, error) {
+func (sv *DockerService) getContainerLogs(dockerClient *client.Client, containerName string, lines int) ([]string, error) {
 	// 根据容器名查找容器
 	listFilters := filters.NewArgs()
 	listFilters.Add("name", containerName)
 
-	containers, err := dockerClient.ContainerList(d.ctx, container.ListOptions{
+	containers, err := dockerClient.ContainerList(sv.ctx, container.ListOptions{
 		All:     true,
 		Filters: listFilters,
 	})
@@ -200,7 +200,7 @@ func (d *DockerService) getContainerLogs(dockerClient *client.Client, containerN
 		Tail:       fmt.Sprintf("%d", lines),
 	}
 
-	logsReader, err := dockerClient.ContainerLogs(d.ctx, containerID, options)
+	logsReader, err := dockerClient.ContainerLogs(sv.ctx, containerID, options)
 	if err != nil {
 		return nil, err
 	}

@@ -19,7 +19,7 @@ func NewRobotManageController() *RobotManage {
 	return &RobotManage{}
 }
 
-func (r *RobotManage) RobotList(c *gin.Context) {
+func (ct *RobotManage) RobotList(c *gin.Context) {
 	var req dto.RobotListRequest
 	resp := appx.NewResponse(c)
 	session := sessions.Default(c)
@@ -41,7 +41,7 @@ func (r *RobotManage) RobotList(c *gin.Context) {
 	resp.ToResponseList(list, total)
 }
 
-func (r *RobotManage) RobotCreate(c *gin.Context) {
+func (ct *RobotManage) RobotCreate(c *gin.Context) {
 	var req dto.RobotCreateRequest
 	resp := appx.NewResponse(c)
 	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
@@ -63,7 +63,7 @@ func (r *RobotManage) RobotCreate(c *gin.Context) {
 	resp.ToResponse(nil)
 }
 
-func (r *RobotManage) RobotView(c *gin.Context) {
+func (ct *RobotManage) RobotView(c *gin.Context) {
 	var req dto.RobotCommonRequest
 	resp := appx.NewResponse(c)
 	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
@@ -78,7 +78,7 @@ func (r *RobotManage) RobotView(c *gin.Context) {
 	resp.ToResponse(robot)
 }
 
-func (r *RobotManage) RobotRemove(c *gin.Context) {
+func (ct *RobotManage) RobotRemove(c *gin.Context) {
 	var req dto.RobotCommonRequest
 	resp := appx.NewResponse(c)
 	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
@@ -93,7 +93,7 @@ func (r *RobotManage) RobotRemove(c *gin.Context) {
 	resp.ToResponse(nil)
 }
 
-func (r *RobotManage) RobotRestartClient(c *gin.Context) {
+func (ct *RobotManage) RobotRestartClient(c *gin.Context) {
 	var req dto.RobotCommonRequest
 	resp := appx.NewResponse(c)
 	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
@@ -108,7 +108,7 @@ func (r *RobotManage) RobotRestartClient(c *gin.Context) {
 	resp.ToResponse(nil)
 }
 
-func (r *RobotManage) RobotRestartServer(c *gin.Context) {
+func (ct *RobotManage) RobotRestartServer(c *gin.Context) {
 	var req dto.RobotCommonRequest
 	resp := appx.NewResponse(c)
 	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {

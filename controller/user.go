@@ -16,7 +16,7 @@ func NewUserController() *User {
 	return &User{}
 }
 
-func (w *User) LoginUser(c *gin.Context) {
+func (ct *User) LoginUser(c *gin.Context) {
 	resp := appx.NewResponse(c)
 	session := sessions.Default(c)
 	id := session.Get("id")
@@ -34,7 +34,7 @@ func (w *User) LoginUser(c *gin.Context) {
 	}
 }
 
-func (w *User) Logout(c *gin.Context) {
+func (ct *User) Logout(c *gin.Context) {
 	resp := appx.NewResponse(c)
 	err := service.NewUserService(c.Request.Context()).Logout(c)
 	if err != nil {

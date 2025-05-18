@@ -9,15 +9,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ChatRoom struct {
+type GlobalSettings struct {
 }
 
-func NewChatRoomController() *ChatRoom {
-	return &ChatRoom{}
+func NewGlobalSettingsController() *GlobalSettings {
+	return &GlobalSettings{}
 }
 
-func (ct *ChatRoom) SyncChatRoomMembers(c *gin.Context) {
-	var req dto.SyncChatRoomMemberRequest
+func (ct *GlobalSettings) GetGlobalSettings(c *gin.Context) {
+	var req dto.GetGlobalSettingsRequest
 	resp := appx.NewResponse(c)
 	robot, err := appx.GetRobot(c)
 	if err != nil {
@@ -28,27 +28,30 @@ func (ct *ChatRoom) SyncChatRoomMembers(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	service.NewChatRoomService(c).SyncChatRoomMembers(robot, req.ChatRoomID)
-	resp.ToResponse(nil)
-}
-
-func (ct *ChatRoom) GetChatRoomMembers(c *gin.Context) {
-	var req dto.ChatRoomMemberRequest
-	resp := appx.NewResponse(c)
-	robot, err := appx.GetRobot(c)
-	if err != nil {
-		resp.ToErrorResponse(errors.New("参数错误"))
-		return
-	}
-	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
-		resp.ToErrorResponse(errors.New("参数错误"))
-		return
-	}
-	pager := appx.InitPager(c)
-	data, total, err := service.NewChatRoomService(c).GetChatRoomMembers(req, pager, robot)
+	globalSettings, err := service.NewGlobalSettingsService(c).GetGlobalSettings(req.ID, robot)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
 	}
-	resp.ToResponseList(data, total)
+	resp.ToResponse(globalSettings)
+}
+
+func (ct *GlobalSettings) SaveGlobalSettings(c *gin.Context) {
+	var req dto.SaveGlobalSettingsRequest
+	resp := appx.NewResponse(c)
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	err = service.NewGlobalSettingsService(c).SaveGlobalSettings(req, robot)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
 }

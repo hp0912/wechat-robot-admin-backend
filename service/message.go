@@ -24,7 +24,7 @@ func NewMessageService(ctx context.Context) *MessageService {
 	}
 }
 
-func (s *MessageService) MessageRevoke(req dto.MessageRevokeRequest, robot *model.Robot) error {
+func (sv *MessageService) MessageRevoke(req dto.MessageRevokeRequest, robot *model.Robot) error {
 	var result dto.Response[any]
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
@@ -39,7 +39,7 @@ func (s *MessageService) MessageRevoke(req dto.MessageRevokeRequest, robot *mode
 	return nil
 }
 
-func (s *MessageService) SendTextMessage(req dto.SendTextMessageRequest, robot *model.Robot) error {
+func (sv *MessageService) SendTextMessage(req dto.SendTextMessageRequest, robot *model.Robot) error {
 	var result dto.Response[any]
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
@@ -56,7 +56,7 @@ func (s *MessageService) SendTextMessage(req dto.SendTextMessageRequest, robot *
 	return nil
 }
 
-func (s *MessageService) SendImageMessage(ctx *gin.Context, req dto.SendImageMessageRequest, file multipart.File, header *multipart.FileHeader, robot *model.Robot) error {
+func (sv *MessageService) SendImageMessage(ctx *gin.Context, req dto.SendImageMessageRequest, file multipart.File, header *multipart.FileHeader, robot *model.Robot) error {
 	robotURL := fmt.Sprintf("%s/message/send/image", robot.GetBaseURL())
 	// 准备转发请求
 	var requestBody bytes.Buffer
@@ -95,7 +95,7 @@ func (s *MessageService) SendImageMessage(ctx *gin.Context, req dto.SendImageMes
 	return nil
 }
 
-func (s *MessageService) SendVideoMessage(ctx *gin.Context, req dto.SendVideoMessageRequest, file multipart.File, header *multipart.FileHeader, robot *model.Robot) error {
+func (sv *MessageService) SendVideoMessage(ctx *gin.Context, req dto.SendVideoMessageRequest, file multipart.File, header *multipart.FileHeader, robot *model.Robot) error {
 	robotURL := fmt.Sprintf("%s/message/send/video", robot.GetBaseURL())
 	// 准备转发请求
 	var requestBody bytes.Buffer
@@ -134,7 +134,7 @@ func (s *MessageService) SendVideoMessage(ctx *gin.Context, req dto.SendVideoMes
 	return nil
 }
 
-func (s *MessageService) SendVoiceMessage(ctx *gin.Context, req dto.SendVoiceMessageRequest, file multipart.File, header *multipart.FileHeader, robot *model.Robot) error {
+func (sv *MessageService) SendVoiceMessage(ctx *gin.Context, req dto.SendVoiceMessageRequest, file multipart.File, header *multipart.FileHeader, robot *model.Robot) error {
 	robotURL := fmt.Sprintf("%s/message/send/voice", robot.GetBaseURL())
 	// 准备转发请求
 	var requestBody bytes.Buffer

@@ -17,7 +17,7 @@ func NewMessageController() *Message {
 	return &Message{}
 }
 
-func (m *Message) MessageRevoke(c *gin.Context) {
+func (ct *Message) MessageRevoke(c *gin.Context) {
 	var req dto.MessageRevokeRequest
 	resp := appx.NewResponse(c)
 	robot, err := appx.GetRobot(c)
@@ -37,7 +37,7 @@ func (m *Message) MessageRevoke(c *gin.Context) {
 	resp.ToResponse(nil)
 }
 
-func (m *Message) SendTextMessage(c *gin.Context) {
+func (ct *Message) SendTextMessage(c *gin.Context) {
 	var req dto.SendTextMessageRequest
 	resp := appx.NewResponse(c)
 	robot, err := appx.GetRobot(c)
@@ -57,7 +57,7 @@ func (m *Message) SendTextMessage(c *gin.Context) {
 	resp.ToResponse(nil)
 }
 
-func (m *Message) SendImageMessage(c *gin.Context) {
+func (ct *Message) SendImageMessage(c *gin.Context) {
 	resp := appx.NewResponse(c)
 	// 获取表单文件
 	file, fileHeader, err := c.Request.FormFile("image")
@@ -107,7 +107,7 @@ func (m *Message) SendImageMessage(c *gin.Context) {
 	resp.ToResponse(nil)
 }
 
-func (m *Message) SendVideoMessage(c *gin.Context) {
+func (ct *Message) SendVideoMessage(c *gin.Context) {
 	resp := appx.NewResponse(c)
 	// 获取表单文件
 	file, fileHeader, err := c.Request.FormFile("video")
@@ -158,7 +158,7 @@ func (m *Message) SendVideoMessage(c *gin.Context) {
 	resp.ToResponse(nil)
 }
 
-func (m *Message) SendVoiceMessage(c *gin.Context) {
+func (ct *Message) SendVoiceMessage(c *gin.Context) {
 	resp := appx.NewResponse(c)
 	// 获取表单文件
 	file, fileHeader, err := c.Request.FormFile("voice")

@@ -16,7 +16,7 @@ func NewRobotLoginController() *RobotLogin {
 	return &RobotLogin{}
 }
 
-func (r *RobotLogin) RobotLogin(c *gin.Context) {
+func (ct *RobotLogin) RobotLogin(c *gin.Context) {
 	resp := appx.NewResponse(c)
 	robot, err := appx.GetRobot(c)
 	if err != nil {
@@ -31,7 +31,7 @@ func (r *RobotLogin) RobotLogin(c *gin.Context) {
 	resp.ToResponse(data)
 }
 
-func (r *RobotLogin) RobotLoginCheck(c *gin.Context) {
+func (ct *RobotLogin) RobotLoginCheck(c *gin.Context) {
 	var req dto.RobotLoginCheckRequest
 	resp := appx.NewResponse(c)
 	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
@@ -51,7 +51,7 @@ func (r *RobotLogin) RobotLoginCheck(c *gin.Context) {
 	resp.ToResponse(data)
 }
 
-func (r *RobotLogin) RobotLogout(c *gin.Context) {
+func (ct *RobotLogin) RobotLogout(c *gin.Context) {
 	resp := appx.NewResponse(c)
 	robot, err := appx.GetRobot(c)
 	if err != nil {
@@ -66,7 +66,7 @@ func (r *RobotLogin) RobotLogout(c *gin.Context) {
 	resp.ToResponse(nil)
 }
 
-func (r *RobotLogin) RobotState(c *gin.Context) {
+func (ct *RobotLogin) RobotState(c *gin.Context) {
 	resp := appx.NewResponse(c)
 	robot, err := appx.GetRobot(c)
 	if err != nil {

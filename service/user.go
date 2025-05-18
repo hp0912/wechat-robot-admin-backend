@@ -20,7 +20,7 @@ func NewUserService(ctx context.Context) *UserService {
 	}
 }
 
-func (u *UserService) SetupLogin(ctx *gin.Context, user *model.User) error {
+func (sv *UserService) SetupLogin(ctx *gin.Context, user *model.User) error {
 	session := sessions.Default(ctx)
 	session.Set("id", user.Id)
 	session.Set("wechat_id", user.WeChatId)
@@ -29,12 +29,12 @@ func (u *UserService) SetupLogin(ctx *gin.Context, user *model.User) error {
 	return session.Save()
 }
 
-func (u *UserService) Logout(ctx *gin.Context) error {
+func (sv *UserService) Logout(ctx *gin.Context) error {
 	session := sessions.Default(ctx)
 	session.Clear()
 	return session.Save()
 }
 
-func (u *UserService) LoginUser(ctx *gin.Context, id int64) *model.User {
-	return repository.NewUserRepo(u.ctx, vars.DB).GetUserByID(id)
+func (sv *UserService) LoginUser(ctx *gin.Context, id int64) *model.User {
+	return repository.NewUserRepo(sv.ctx, vars.DB).GetUserByID(id)
 }

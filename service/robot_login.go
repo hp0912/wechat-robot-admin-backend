@@ -21,7 +21,7 @@ func NewRobotLoginService(ctx context.Context) *RobotLoginService {
 }
 
 // RobotLogin 获取机器人登陆二维码
-func (r *RobotLoginService) RobotLogin(robot *model.Robot) (dto.RobotLoginResponse, error) {
+func (sv *RobotLoginService) RobotLogin(robot *model.Robot) (dto.RobotLoginResponse, error) {
 	var result dto.Response[dto.RobotLoginResponse]
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
@@ -34,7 +34,7 @@ func (r *RobotLoginService) RobotLogin(robot *model.Robot) (dto.RobotLoginRespon
 }
 
 // RobotLoginCheck 检查机器人登陆状态
-func (r *RobotLoginService) RobotLoginCheck(robot *model.Robot, uuid string) (dto.RobotLoginCheckResponse, error) {
+func (sv *RobotLoginService) RobotLoginCheck(robot *model.Robot, uuid string) (dto.RobotLoginCheckResponse, error) {
 	var result dto.Response[dto.RobotLoginCheckResponse]
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
@@ -50,7 +50,7 @@ func (r *RobotLoginService) RobotLoginCheck(robot *model.Robot, uuid string) (dt
 }
 
 // RobotLogout 机器人登出
-func (r *RobotLoginService) RobotLogout(robot *model.Robot) (err error) {
+func (sv *RobotLoginService) RobotLogout(robot *model.Robot) (err error) {
 	var resp dto.Response[struct{}]
 	_, err = resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
@@ -63,7 +63,7 @@ func (r *RobotLoginService) RobotLogout(robot *model.Robot) (err error) {
 }
 
 // RobotState 获取机器人状态
-func (r *RobotLoginService) RobotState(robot *model.Robot) (err error) {
+func (sv *RobotLoginService) RobotState(robot *model.Robot) (err error) {
 	var isRunningResp dto.Response[bool]
 	var isLoggedInResp dto.Response[bool]
 	_, err = resty.New().R().
@@ -80,7 +80,7 @@ func (r *RobotLoginService) RobotState(robot *model.Robot) (err error) {
 	if err = isLoggedInResp.CheckError(err); err != nil {
 		return
 	}
-	respo := repository.NewRobotRepo(r.ctx, vars.DB)
+	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
 	if isRunningResp.Data && isLoggedInResp.Data {
 		newRobot := model.Robot{
 			ID:     robot.ID,

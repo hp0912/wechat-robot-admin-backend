@@ -35,11 +35,11 @@ func NewRobotManageService(ctx context.Context) *RobotManageService {
 	}
 }
 
-func (r *RobotManageService) RobotList(req dto.RobotListRequest, pager appx.Pager) ([]*model.Robot, int64, error) {
-	return repository.NewRobotRepo(r.ctx, vars.DB).RobotList(req, pager)
+func (sv *RobotManageService) RobotList(req dto.RobotListRequest, pager appx.Pager) ([]*model.Robot, int64, error) {
+	return repository.NewRobotRepo(sv.ctx, vars.DB).RobotList(req, pager)
 }
 
-func (r *RobotManageService) GetProjectRoot() (string, error) {
+func (sv *RobotManageService) GetProjectRoot() (string, error) {
 	_, filename, _, ok := runtime.Caller(0)
 	if !ok {
 		return "", errors.New("无法获取运行时信息")
@@ -49,7 +49,7 @@ func (r *RobotManageService) GetProjectRoot() (string, error) {
 }
 
 // 辅助方法：获取Docker客户端
-func (r *RobotManageService) getDockerClient() (*client.Client, error) {
+func (sv *RobotManageService) getDockerClient() (*client.Client, error) {
 	dockerClient, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
 		return nil, fmt.Errorf("创建Docker客户端失败: %v", err)
@@ -57,11 +57,11 @@ func (r *RobotManageService) getDockerClient() (*client.Client, error) {
 	return dockerClient, nil
 }
 
-func (r *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest) error {
+func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest) error {
 	session := sessions.Default(ctx)
 	wechatId := session.Get("wechat_id")
 	role := session.Get("role")
-	respo := repository.NewRobotRepo(r.ctx, vars.DB)
+	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
 	redisDb, err := respo.GetMaxRedisDB()
 	if err != nil {
 		return err
@@ -111,7 +111,7 @@ func (r *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRe
 	}
 	defer db.Close()
 	// 读取建表模版
-	projectRoot, err := r.GetProjectRoot()
+	projectRoot, err := sv.GetProjectRoot()
 	if err != nil {
 		return err
 	}
@@ -131,7 +131,7 @@ func (r *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRe
 		return err
 	}
 	// 插入一条公共配置记录
-	commonConf := fmt.Sprintf("INSERT INTO `%s`.`%s` (`owner`, `chat_ai_enabled`, `chat_base_url`, `chat_api_key`, `chat_model`, `chat_prompt`) VALUES (%s, 1, '%s', '%s', '%s', '%s');",
+	commonConf := fmt.Sprintf("INSERT INTO `%s`.`%s` (`owner`, `chat_ai_enabled`, `chat_base_url`, `chat_api_key`, `chat_model`, `chat_prompt`, `friend_sync_cron`) VALUES (%s, 1, '%s', '%s', '%s', '%s', '0 * * * *');",
 		robot.RobotCode, "common_configs", robot.RobotCode, "https://ai-api.houhoukang.com/", vars.OpenAIApiKey, "gpt-4o-mini", "我是一个聊天机器人。")
 	err = newDB.Exec(commonConf).Error
 	if err != nil {
@@ -139,7 +139,7 @@ func (r *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRe
 	}
 
 	// 创建Docker客户端
-	dockerClient, err := r.getDockerClient()
+	dockerClient, err := sv.getDockerClient()
 	if err != nil {
 		return err
 	}
@@ -173,7 +173,7 @@ func (r *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRe
 
 	// 创建服务端容器
 	serverResp, err := dockerClient.ContainerCreate(
-		r.ctx,
+		sv.ctx,
 		serverConfig,
 		serverHostConfig,
 		serverNetworkConfig,
@@ -185,7 +185,7 @@ func (r *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRe
 	}
 
 	// 启动服务端容器
-	err = dockerClient.ContainerStart(r.ctx, serverResp.ID, container.StartOptions{})
+	err = dockerClient.ContainerStart(sv.ctx, serverResp.ID, container.StartOptions{})
 	if err != nil {
 		return fmt.Errorf("启动服务端容器失败: %v", err)
 	}
@@ -230,7 +230,7 @@ func (r *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRe
 
 	// 创建客户端容器
 	clientResp, err := dockerClient.ContainerCreate(
-		r.ctx,
+		sv.ctx,
 		clientConfig,
 		clientHostConfig,
 		clientNetworkConfig,
@@ -242,7 +242,7 @@ func (r *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRe
 	}
 
 	// 启动客户端容器
-	err = dockerClient.ContainerStart(r.ctx, clientResp.ID, container.StartOptions{})
+	err = dockerClient.ContainerStart(sv.ctx, clientResp.ID, container.StartOptions{})
 	if err != nil {
 		return fmt.Errorf("启动客户端容器失败: %v", err)
 	}
@@ -251,14 +251,14 @@ func (r *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRe
 }
 
 // RobotView 查看机器人元数据
-func (r *RobotManageService) RobotView(robotID int64) *model.Robot {
-	respo := repository.NewRobotRepo(r.ctx, vars.DB)
+func (sv *RobotManageService) RobotView(robotID int64) *model.Robot {
+	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
 	return respo.GetByID(robotID)
 }
 
 // RobotRemove 删除机器人
-func (r *RobotManageService) RobotRemove(robotID int64) error {
-	respo := repository.NewRobotRepo(r.ctx, vars.DB)
+func (sv *RobotManageService) RobotRemove(robotID int64) error {
+	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
 	robot := respo.GetByID(robotID)
 	if robot == nil {
 		return errors.New("机器人不存在")
@@ -272,7 +272,7 @@ func (r *RobotManageService) RobotRemove(robotID int64) error {
 	}
 
 	// 使用Docker SDK停止并删除容器
-	dockerClient, err := r.getDockerClient()
+	dockerClient, err := sv.getDockerClient()
 	if err != nil {
 		return err
 	}
@@ -280,14 +280,14 @@ func (r *RobotManageService) RobotRemove(robotID int64) error {
 
 	// 停止并删除服务端容器
 	serverContainerName := fmt.Sprintf("server_%s", robot.RobotCode)
-	err = r.stopAndRemoveContainer(dockerClient, serverContainerName)
+	err = sv.stopAndRemoveContainer(dockerClient, serverContainerName)
 	if err != nil {
 		return fmt.Errorf("删除服务端容器失败: %v", err)
 	}
 
 	// 停止并删除客户端容器
 	clientContainerName := fmt.Sprintf("client_%s", robot.RobotCode)
-	err = r.stopAndRemoveContainer(dockerClient, clientContainerName)
+	err = sv.stopAndRemoveContainer(dockerClient, clientContainerName)
 	if err != nil {
 		return fmt.Errorf("删除客户端容器失败: %v", err)
 	}
@@ -296,12 +296,12 @@ func (r *RobotManageService) RobotRemove(robotID int64) error {
 }
 
 // 辅助方法：停止并删除容器
-func (r *RobotManageService) stopAndRemoveContainer(dockerClient *client.Client, containerName string) error {
+func (sv *RobotManageService) stopAndRemoveContainer(dockerClient *client.Client, containerName string) error {
 	// 根据容器名查找容器ID
 	listFilters := filters.NewArgs()
 	listFilters.Add("name", containerName)
 
-	containers, err := dockerClient.ContainerList(r.ctx, container.ListOptions{
+	containers, err := dockerClient.ContainerList(sv.ctx, container.ListOptions{
 		All:     true,
 		Filters: listFilters,
 	})
@@ -316,7 +316,7 @@ func (r *RobotManageService) stopAndRemoveContainer(dockerClient *client.Client,
 
 	// 容器存在，先停止
 	timeout := 30
-	err = dockerClient.ContainerStop(r.ctx, containers[0].ID, container.StopOptions{
+	err = dockerClient.ContainerStop(sv.ctx, containers[0].ID, container.StopOptions{
 		Timeout: &timeout,
 	})
 	if err != nil {
@@ -328,7 +328,7 @@ func (r *RobotManageService) stopAndRemoveContainer(dockerClient *client.Client,
 		Force:         true,
 		RemoveVolumes: true,
 	}
-	err = dockerClient.ContainerRemove(r.ctx, containers[0].ID, removeOptions)
+	err = dockerClient.ContainerRemove(sv.ctx, containers[0].ID, removeOptions)
 	if err != nil {
 		return err
 	}
@@ -336,15 +336,15 @@ func (r *RobotManageService) stopAndRemoveContainer(dockerClient *client.Client,
 	return nil
 }
 
-func (r *RobotManageService) RobotRestart(robotID int64, restartType string) error {
-	respo := repository.NewRobotRepo(r.ctx, vars.DB)
+func (sv *RobotManageService) RobotRestart(robotID int64, restartType string) error {
+	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
 	robot := respo.GetByID(robotID)
 	if robot == nil {
 		return errors.New("机器人不存在")
 	}
 
 	// 使用Docker SDK重启容器
-	dockerClient, err := r.getDockerClient()
+	dockerClient, err := sv.getDockerClient()
 	if err != nil {
 		return err
 	}
@@ -357,7 +357,7 @@ func (r *RobotManageService) RobotRestart(robotID int64, restartType string) err
 	listFilters := filters.NewArgs()
 	listFilters.Add("name", containerName)
 
-	containers, err := dockerClient.ContainerList(r.ctx, container.ListOptions{
+	containers, err := dockerClient.ContainerList(sv.ctx, container.ListOptions{
 		All:     true,
 		Filters: listFilters,
 	})
@@ -371,7 +371,7 @@ func (r *RobotManageService) RobotRestart(robotID int64, restartType string) err
 
 	// 重启容器
 	timeout := 30
-	err = dockerClient.ContainerRestart(r.ctx, containers[0].ID, container.StopOptions{
+	err = dockerClient.ContainerRestart(sv.ctx, containers[0].ID, container.StopOptions{
 		Timeout: &timeout,
 	})
 	if err != nil {
@@ -381,16 +381,16 @@ func (r *RobotManageService) RobotRestart(robotID int64, restartType string) err
 	return nil
 }
 
-func (r *RobotManageService) RobotRestartClient(robotID int64) error {
-	return r.RobotRestart(robotID, "client")
+func (sv *RobotManageService) RobotRestartClient(robotID int64) error {
+	return sv.RobotRestart(robotID, "client")
 }
 
-func (r *RobotManageService) RobotRestartServer(robotID int64) error {
-	err := r.RobotRestart(robotID, "server")
+func (sv *RobotManageService) RobotRestartServer(robotID int64) error {
+	err := sv.RobotRestart(robotID, "server")
 	if err != nil {
 		return err
 	}
-	respo := repository.NewRobotRepo(r.ctx, vars.DB)
+	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
 	robot := model.Robot{
 		ID:     robotID,
 		Status: model.RobotStatusOffline,

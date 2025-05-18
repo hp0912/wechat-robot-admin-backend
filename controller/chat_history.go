@@ -16,7 +16,7 @@ func NewChatHistoryController() *ChatHistory {
 	return &ChatHistory{}
 }
 
-func (ch *ChatHistory) GetChatRoomMembers(c *gin.Context) {
+func (ct *ChatHistory) GetChatRoomMembers(c *gin.Context) {
 	var req dto.ChatHistoryRequest
 	resp := appx.NewResponse(c)
 	robot, err := appx.GetRobot(c)
@@ -37,7 +37,7 @@ func (ch *ChatHistory) GetChatRoomMembers(c *gin.Context) {
 	resp.ToResponseList(data, total)
 }
 
-func (ch *ChatHistory) DownloadImage(c *gin.Context) {
+func (ct *ChatHistory) DownloadImage(c *gin.Context) {
 	var req dto.AttachDownloadRequest
 	resp := appx.NewResponse(c)
 	robot, err := appx.GetRobot(c)
@@ -53,7 +53,7 @@ func (ch *ChatHistory) DownloadImage(c *gin.Context) {
 	service.NewChatHistoryService(c).DownloadImageOrVoice(c, req, robot, resp)
 }
 
-func (ch *ChatHistory) DownloadVoice(c *gin.Context) {
+func (ct *ChatHistory) DownloadVoice(c *gin.Context) {
 	var req dto.AttachDownloadRequest
 	resp := appx.NewResponse(c)
 	robot, err := appx.GetRobot(c)
@@ -69,7 +69,7 @@ func (ch *ChatHistory) DownloadVoice(c *gin.Context) {
 	service.NewChatHistoryService(c).DownloadImageOrVoice(c, req, robot, resp)
 }
 
-func (ch *ChatHistory) DownloadFile(c *gin.Context) {
+func (ct *ChatHistory) DownloadFile(c *gin.Context) {
 	var req dto.AttachDownloadRequest
 	resp := appx.NewResponse(c)
 	robot, err := appx.GetRobot(c)
@@ -85,7 +85,7 @@ func (ch *ChatHistory) DownloadFile(c *gin.Context) {
 	service.NewChatHistoryService(c).DownloadFileOrVideo(c, req, robot)
 }
 
-func (ch *ChatHistory) DownloadVideo(c *gin.Context) {
+func (ct *ChatHistory) DownloadVideo(c *gin.Context) {
 	var req dto.AttachDownloadRequest
 	resp := appx.NewResponse(c)
 	robot, err := appx.GetRobot(c)

@@ -25,7 +25,7 @@ func NewChatHistoryService(ctx context.Context) *ChatHistoryService {
 	}
 }
 
-func (c *ChatHistoryService) GetChatHistory(req dto.ChatHistoryRequest, pager appx.Pager, robot *model.Robot) ([]*dto.ChatHistory, int64, error) {
+func (sv *ChatHistoryService) GetChatHistory(req dto.ChatHistoryRequest, pager appx.Pager, robot *model.Robot) ([]*dto.ChatHistory, int64, error) {
 	var result dto.Response[struct {
 		Itmes []*dto.ChatHistory `json:"items"`
 		Total int64              `json:"total"`
@@ -44,7 +44,7 @@ func (c *ChatHistoryService) GetChatHistory(req dto.ChatHistoryRequest, pager ap
 	return result.Data.Itmes, result.Data.Total, nil
 }
 
-func (c *ChatHistoryService) DownloadImageOrVoice(ctx *gin.Context, req dto.AttachDownloadRequest, robot *model.Robot, resp *appx.Response) {
+func (sv *ChatHistoryService) DownloadImageOrVoice(ctx *gin.Context, req dto.AttachDownloadRequest, robot *model.Robot, resp *appx.Response) {
 	clientCtx := ctx.Request.Context()
 	robotURL := fmt.Sprintf("%s%s?message_id=%d", robot.GetBaseURL(), req.AttachUrl, req.MessageID)
 	client := &http.Client{
@@ -90,7 +90,7 @@ func (c *ChatHistoryService) DownloadImageOrVoice(ctx *gin.Context, req dto.Atta
 	}
 }
 
-func (c *ChatHistoryService) DownloadFileOrVideo(ctx *gin.Context, req dto.AttachDownloadRequest, robot *model.Robot) {
+func (sv *ChatHistoryService) DownloadFileOrVideo(ctx *gin.Context, req dto.AttachDownloadRequest, robot *model.Robot) {
 	clientCtx := ctx.Request.Context()
 	robotURL := fmt.Sprintf("%s%s?message_id=%d", robot.GetBaseURL(), req.AttachUrl, req.MessageID)
 	robotReq, err := http.NewRequestWithContext(clientCtx, "GET", robotURL, nil)

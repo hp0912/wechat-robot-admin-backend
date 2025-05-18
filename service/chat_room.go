@@ -21,7 +21,7 @@ func NewChatRoomService(ctx context.Context) *ChatRoomService {
 	}
 }
 
-func (c *ChatRoomService) SyncChatRoomMembers(robot *model.Robot, chatRoomID string) {
+func (sv *ChatRoomService) SyncChatRoomMembers(robot *model.Robot, chatRoomID string) {
 	var result dto.Response[struct{}]
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
@@ -35,7 +35,7 @@ func (c *ChatRoomService) SyncChatRoomMembers(robot *model.Robot, chatRoomID str
 	}
 }
 
-func (c *ChatRoomService) GetChatRoomMembers(req dto.ChatRoomMemberRequest, pager appx.Pager, robot *model.Robot) ([]*dto.ChatRoomMember, int64, error) {
+func (sv *ChatRoomService) GetChatRoomMembers(req dto.ChatRoomMemberRequest, pager appx.Pager, robot *model.Robot) ([]*dto.ChatRoomMember, int64, error) {
 	var result dto.Response[struct {
 		Itmes []*dto.ChatRoomMember `json:"items"`
 		Total int64                 `json:"total"`

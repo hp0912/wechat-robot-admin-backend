@@ -15,7 +15,7 @@ func NewDockerController() *DockerController {
 	return &DockerController{}
 }
 
-func (d *DockerController) RobotContainerStats(c *gin.Context) {
+func (ct *DockerController) RobotContainerStats(c *gin.Context) {
 	resp := appx.NewResponse(c)
 	robot, err := appx.GetRobot(c)
 	if err != nil {
@@ -30,7 +30,7 @@ func (d *DockerController) RobotContainerStats(c *gin.Context) {
 	resp.ToResponse(stats)
 }
 
-func (d *DockerController) GetRobotContainerLogs(c *gin.Context) {
+func (ct *DockerController) GetRobotContainerLogs(c *gin.Context) {
 	resp := appx.NewResponse(c)
 	robot, err := appx.GetRobot(c)
 	if err != nil {

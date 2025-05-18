@@ -29,7 +29,7 @@ func NewWeChatService(ctx context.Context) *WeChatService {
 	}
 }
 
-func (w *WeChatService) GetWeChatIdByCode(code string) (string, error) {
+func (sv *WeChatService) GetWeChatIdByCode(code string) (string, error) {
 	if code == "" {
 		return "", errors.New("无效的参数")
 	}
@@ -60,8 +60,8 @@ func (w *WeChatService) GetWeChatIdByCode(code string) (string, error) {
 	return resp.Data, nil
 }
 
-func (w *WeChatService) WeChatAuth(ctx context.Context, code string) (*model.User, error) {
-	wechatId, err := w.GetWeChatIdByCode(code)
+func (sv *WeChatService) WeChatAuth(ctx context.Context, code string) (*model.User, error) {
+	wechatId, err := sv.GetWeChatIdByCode(code)
 	if err != nil {
 		return nil, err
 	}
