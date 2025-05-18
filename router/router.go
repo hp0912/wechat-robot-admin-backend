@@ -16,6 +16,8 @@ var chatRoomCtl *controller.ChatRoom
 var chatHistoryCtl *controller.ChatHistory
 var dockerCtl *controller.DockerController
 var globalSettingsCtl *controller.GlobalSettings
+var friendSettingsCtl *controller.FriendSettings
+var chatRoomSettingsCtl *controller.ChatRoomSettings
 var messageCtl *controller.Message
 
 func initController() {
@@ -29,6 +31,8 @@ func initController() {
 	chatHistoryCtl = controller.NewChatHistoryController()
 	messageCtl = controller.NewMessageController()
 	globalSettingsCtl = controller.NewGlobalSettingsController()
+	friendSettingsCtl = controller.NewFriendSettingsController()
+	chatRoomSettingsCtl = controller.NewChatRoomSettingsController()
 }
 
 func RegisterRouter(r *gin.Engine) error {
@@ -90,10 +94,24 @@ func RegisterRouter(r *gin.Engine) error {
 	}
 
 	{
-		message := api.Group("/global-settings")
-		message.Use(middleware.UserAuth())
-		message.GET("", middleware.UserOwnerAuth(), globalSettingsCtl.GetGlobalSettings)
-		message.POST("", middleware.UserOwnerAuth(), globalSettingsCtl.SaveGlobalSettings)
+		globalSettings := api.Group("/global-settings")
+		globalSettings.Use(middleware.UserAuth())
+		globalSettings.GET("", middleware.UserOwnerAuth(), globalSettingsCtl.GetGlobalSettings)
+		globalSettings.POST("", middleware.UserOwnerAuth(), globalSettingsCtl.SaveGlobalSettings)
+	}
+
+	{
+		friendSettings := api.Group("/friend-settings")
+		friendSettings.Use(middleware.UserAuth())
+		friendSettings.GET("", middleware.UserOwnerAuth(), friendSettingsCtl.GetFriendSettings)
+		friendSettings.POST("", middleware.UserOwnerAuth(), friendSettingsCtl.SaveFriendSettings)
+	}
+
+	{
+		chatRoomSettings := api.Group("/chat-room-settings")
+		chatRoomSettings.Use(middleware.UserAuth())
+		chatRoomSettings.GET("", middleware.UserOwnerAuth(), chatRoomSettingsCtl.GetChatRoomSettings)
+		chatRoomSettings.POST("", middleware.UserOwnerAuth(), chatRoomSettingsCtl.SaveChatRoomSettings)
 	}
 
 	{

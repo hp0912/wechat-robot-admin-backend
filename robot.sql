@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `common_configs` (
+CREATE TABLE IF NOT EXISTS `global_settings` (
   `id` BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '公共配置表主键ID',
   `owner` VARCHAR(64) DEFAULT '' COMMENT '所有者微信ID',
   -- 聊天模型AI设置
@@ -40,13 +40,12 @@ CREATE TABLE IF NOT EXISTS `common_configs` (
   `friend_sync_cron` VARCHAR(100) DEFAULT '' COMMENT '好友同步的定时任务表达式'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE IF NOT EXISTS `friend_configs` (
+CREATE TABLE IF NOT EXISTS `friend_settings` (
   `id` BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '群聊配置表主键ID',
   `owner` VARCHAR(64) DEFAULT '' COMMENT '所有者微信ID',
   `wechat_id` VARCHAR(64) DEFAULT '' COMMENT '好友微信ID',
   -- 聊天模型AI设置
   `chat_ai_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI聊天功能',
-  `chat_ai_trigger` VARCHAR(20) DEFAULT '' COMMENT '触发聊天AI的关键词',
   `chat_base_url` VARCHAR(255) DEFAULT '' COMMENT '聊天AI的基础URL地址',
   `chat_api_key` VARCHAR(255) DEFAULT '' COMMENT '聊天AI的API密钥',
   `chat_model` VARCHAR(100) DEFAULT '' COMMENT '聊天AI使用的模型名称',
@@ -57,7 +56,7 @@ CREATE TABLE IF NOT EXISTS `friend_configs` (
   `image_ai_settings` JSON COMMENT '绘图AI配置项'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE IF NOT EXISTS `chat_room_configs` (
+CREATE TABLE IF NOT EXISTS `chat_room_settings` (
   `id` BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '群聊配置表主键ID',
   `owner` VARCHAR(64) DEFAULT '' COMMENT '所有者微信ID',
   `chat_room_id` VARCHAR(64) DEFAULT '' COMMENT '群聊微信ID',

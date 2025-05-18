@@ -8,22 +8,23 @@ import (
 	"github.com/go-resty/resty/v2"
 )
 
-type GlobalSettingsService struct {
+type ChatRoomSettingsService struct {
 	ctx context.Context
 }
 
-func NewGlobalSettingsService(ctx context.Context) *GlobalSettingsService {
-	return &GlobalSettingsService{
+func NewChatRoomSettingsService(ctx context.Context) *ChatRoomSettingsService {
+	return &ChatRoomSettingsService{
 		ctx: ctx,
 	}
 }
 
-func (sv *GlobalSettingsService) GetGlobalSettings(robot *model.Robot) (resp dto.GetGlobalSettingsResponse, err error) {
-	var result dto.Response[dto.GetGlobalSettingsResponse]
+func (sv *ChatRoomSettingsService) GetChatRoomSettings(chatRoomID string, robot *model.Robot) (resp dto.GetChatRoomSettingsResponse, err error) {
+	var result dto.Response[dto.GetChatRoomSettingsResponse]
 	_, err = resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetQueryParam("chat_room_id", chatRoomID).
 		SetResult(&result).
-		Get(robot.GetBaseURL() + "/global-settings")
+		Get(robot.GetBaseURL() + "/chat-room-settings")
 	if err = result.CheckError(err); err != nil {
 		return
 	}
@@ -31,14 +32,14 @@ func (sv *GlobalSettingsService) GetGlobalSettings(robot *model.Robot) (resp dto
 	return
 }
 
-func (sv *GlobalSettingsService) SaveGlobalSettings(req dto.SaveGlobalSettingsRequest, robot *model.Robot) error {
+func (sv *ChatRoomSettingsService) SaveChatRoomSettings(req dto.SaveChatRoomSettingsRequest, robot *model.Robot) error {
 	var result dto.Response[struct{}]
 	req.ID = req.ConfigID
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetBody(req).
 		SetResult(&result).
-		Post(robot.GetBaseURL() + "/global-settings")
+		Post(robot.GetBaseURL() + "/chat-room-settings")
 	if err = result.CheckError(err); err != nil {
 		return err
 	}

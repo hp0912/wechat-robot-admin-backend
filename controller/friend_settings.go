@@ -9,30 +9,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type GlobalSettings struct {
+type FriendSettings struct {
 }
 
-func NewGlobalSettingsController() *GlobalSettings {
-	return &GlobalSettings{}
+func NewFriendSettingsController() *FriendSettings {
+	return &FriendSettings{}
 }
 
-func (ct *GlobalSettings) GetGlobalSettings(c *gin.Context) {
-	resp := appx.NewResponse(c)
-	robot, err := appx.GetRobot(c)
-	if err != nil {
-		resp.ToErrorResponse(errors.New("参数错误"))
-		return
-	}
-	globalSettings, err := service.NewGlobalSettingsService(c).GetGlobalSettings(robot)
-	if err != nil {
-		resp.ToErrorResponse(err)
-		return
-	}
-	resp.ToResponse(globalSettings)
-}
-
-func (ct *GlobalSettings) SaveGlobalSettings(c *gin.Context) {
-	var req dto.SaveGlobalSettingsRequest
+func (ct *FriendSettings) GetFriendSettings(c *gin.Context) {
+	var req dto.GetFriendSettingsRequest
 	resp := appx.NewResponse(c)
 	robot, err := appx.GetRobot(c)
 	if err != nil {
@@ -43,7 +28,27 @@ func (ct *GlobalSettings) SaveGlobalSettings(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	err = service.NewGlobalSettingsService(c).SaveGlobalSettings(req, robot)
+	friendSettings, err := service.NewFriendSettingsService(c).GetFriendSettings(req.ContactID, robot)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(friendSettings)
+}
+
+func (ct *FriendSettings) SaveFriendSettings(c *gin.Context) {
+	var req dto.SaveFriendSettingsRequest
+	resp := appx.NewResponse(c)
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	err = service.NewFriendSettingsService(c).SaveFriendSettings(req, robot)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return

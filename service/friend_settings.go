@@ -8,22 +8,23 @@ import (
 	"github.com/go-resty/resty/v2"
 )
 
-type GlobalSettingsService struct {
+type FriendSettingsService struct {
 	ctx context.Context
 }
 
-func NewGlobalSettingsService(ctx context.Context) *GlobalSettingsService {
-	return &GlobalSettingsService{
+func NewFriendSettingsService(ctx context.Context) *FriendSettingsService {
+	return &FriendSettingsService{
 		ctx: ctx,
 	}
 }
 
-func (sv *GlobalSettingsService) GetGlobalSettings(robot *model.Robot) (resp dto.GetGlobalSettingsResponse, err error) {
-	var result dto.Response[dto.GetGlobalSettingsResponse]
+func (sv *FriendSettingsService) GetFriendSettings(contactID string, robot *model.Robot) (resp dto.GetFriendSettingsResponse, err error) {
+	var result dto.Response[dto.GetFriendSettingsResponse]
 	_, err = resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetQueryParam("contact_id", contactID).
 		SetResult(&result).
-		Get(robot.GetBaseURL() + "/global-settings")
+		Get(robot.GetBaseURL() + "/friend-settings")
 	if err = result.CheckError(err); err != nil {
 		return
 	}
@@ -31,14 +32,14 @@ func (sv *GlobalSettingsService) GetGlobalSettings(robot *model.Robot) (resp dto
 	return
 }
 
-func (sv *GlobalSettingsService) SaveGlobalSettings(req dto.SaveGlobalSettingsRequest, robot *model.Robot) error {
+func (sv *FriendSettingsService) SaveFriendSettings(req dto.SaveFriendSettingsRequest, robot *model.Robot) error {
 	var result dto.Response[struct{}]
 	req.ID = req.ConfigID
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetBody(req).
 		SetResult(&result).
-		Post(robot.GetBaseURL() + "/global-settings")
+		Post(robot.GetBaseURL() + "/friend-settings")
 	if err = result.CheckError(err); err != nil {
 		return err
 	}
