@@ -146,6 +146,7 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 	defer dockerClient.Close()
 
 	// 服务端容器配置
+	clientContainerName := fmt.Sprintf("client_%s", robot.RobotCode)
 	serverContainerName := fmt.Sprintf("server_%s", robot.RobotCode)
 	serverConfig := &container.Config{
 		Image: "registry.cn-shenzhen.aliyuncs.com/houhou/wechat-robot-server:latest",
@@ -155,6 +156,7 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 			fmt.Sprintf("REDIS_PORT=%s", vars.RedisSettings.Port),
 			fmt.Sprintf("REDIS_PASSWORD=%s", vars.RedisSettings.Password),
 			fmt.Sprintf("REDIS_DB=%d", robot.RedisDB),
+			fmt.Sprintf("WECHAT_CLIENT_HOST=%s", fmt.Sprintf("%s:%d", clientContainerName, 9000)),
 		},
 	}
 
@@ -191,7 +193,6 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 	}
 
 	// 客户端容器配置
-	clientContainerName := fmt.Sprintf("client_%s", robot.RobotCode)
 	clientConfig := &container.Config{
 		Image: "registry.cn-shenzhen.aliyuncs.com/houhou/wechat-robot-client:latest",
 		Env: []string{
