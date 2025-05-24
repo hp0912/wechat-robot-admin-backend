@@ -23,6 +23,7 @@ RUN apk add --no-cache docker-cli ca-certificates tzdata
 WORKDIR /app
 
 COPY --from=builder /app/wechat-robot-admin-backend ./
+COPY --from=builder /app/robot.sql ./robot.sql
 
 EXPOSE 9000
 
