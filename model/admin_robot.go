@@ -45,5 +45,5 @@ func (Robot) TableName() string {
 }
 
 func (r *Robot) GetBaseURL() string {
-	return fmt.Sprintf("http://%s:%d/api/v1/robot", r.RobotCode, 9002) // TODO 9002 端口号
+	return fmt.Sprintf("http://client_%s:%d/api/v1/robot", r.RobotCode, 9000)
 }
