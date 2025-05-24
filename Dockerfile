@@ -17,6 +17,9 @@ FROM alpine:latest
 ENV GIN_MODE=release \
   TZ=Asia/Shanghai
 
+# 安装 Docker CLI 和其他必要工具
+RUN apk add --no-cache docker-cli ca-certificates tzdata
+
 WORKDIR /app
 
 COPY --from=builder /app/wechat-robot-admin-backend ./
