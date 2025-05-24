@@ -149,7 +149,7 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 	clientContainerName := fmt.Sprintf("client_%s", robot.RobotCode)
 	serverContainerName := fmt.Sprintf("server_%s", robot.RobotCode)
 	serverConfig := &container.Config{
-		Image: "registry.cn-shenzhen.aliyuncs.com/houhou/wechat-robot-server:latest",
+		Image: "registry.cn-shenzhen.aliyuncs.com/houhou/wechat-ipad:latest",
 		Env: []string{
 			fmt.Sprintf("WECHAT_PORT=%s", "9000"),
 			fmt.Sprintf("REDIS_HOST=%s", vars.RedisSettings.Host),
