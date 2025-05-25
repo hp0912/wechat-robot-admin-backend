@@ -197,6 +197,7 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 		Image: "registry.cn-shenzhen.aliyuncs.com/houhou/wechat-robot-client:latest",
 		Env: []string{
 			fmt.Sprintf("GIN_MODE=%s", "release"),
+			fmt.Sprintf("ROBOT_ID=%d", robot.ID),
 			fmt.Sprintf("ROBOT_CODE=%s", robot.RobotCode),
 			fmt.Sprintf("ROBOT_START_TIMEOUT=%s", "60"),
 			fmt.Sprintf("MYSQL_DRIVER=%s", vars.MysqlSettings.Driver),
@@ -207,12 +208,6 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 			fmt.Sprintf("MYSQL_ADMIN_DB=%s", vars.MysqlSettings.Db),
 			fmt.Sprintf("MYSQL_DB=%s", robot.RobotCode),
 			fmt.Sprintf("MYSQL_SCHEMA=%s", vars.MysqlSettings.Schema),
-		},
-		Healthcheck: &container.HealthConfig{
-			Test:     []string{"CMD-SHELL", "wget -q -O - http://localhost:3000/api/v1/probe | grep -o '\"success\":\\s*true' | awk -F: '{print $2}'"},
-			Interval: 30 * time.Second,
-			Timeout:  10 * time.Second,
-			Retries:  3,
 		},
 	}
 
