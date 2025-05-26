@@ -132,7 +132,7 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 	}
 	// 插入一条公共配置记录
 	commonConf := fmt.Sprintf("INSERT INTO `%s`.`%s` (`owner`, `chat_ai_enabled`, `chat_base_url`, `chat_api_key`, `chat_model`, `chat_prompt`, `friend_sync_cron`) VALUES ('%s', 1, '%s', '%s', '%s', '%s', '0 * * * *');",
-		robot.RobotCode, "global_settings", robot.RobotCode, "https://ai-api.houhoukang.com/", vars.OpenAIApiKey, "gpt-4o-mini", "我是一个聊天机器人。")
+		robot.RobotCode, "global_settings", robot.WeChatID, "https://ai-api.houhoukang.com/", vars.OpenAIApiKey, "gpt-4o-mini", "我是一个聊天机器人。")
 	err = newDB.Exec(commonConf).Error
 	if err != nil {
 		return err
