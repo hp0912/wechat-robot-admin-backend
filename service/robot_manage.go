@@ -4,14 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"os"
-	"path/filepath"
-	"runtime"
 	"time"
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/model"
 	"wechat-robot-admin-backend/pkg/appx"
 	"wechat-robot-admin-backend/repository"
+	"wechat-robot-admin-backend/template"
 	"wechat-robot-admin-backend/utils"
 	"wechat-robot-admin-backend/vars"
 
@@ -37,15 +35,6 @@ func NewRobotManageService(ctx context.Context) *RobotManageService {
 
 func (sv *RobotManageService) RobotList(req dto.RobotListRequest, pager appx.Pager) ([]*model.Robot, int64, error) {
 	return repository.NewRobotRepo(sv.ctx, vars.DB).RobotList(req, pager)
-}
-
-func (sv *RobotManageService) GetProjectRoot() (string, error) {
-	_, filename, _, ok := runtime.Caller(0)
-	if !ok {
-		return "", errors.New("无法获取运行时信息")
-	}
-	projectRoot := filepath.Join(filepath.Dir(filename), "..") // 上一级为项目根目录
-	return projectRoot, nil
 }
 
 // 辅助方法：获取Docker客户端
@@ -110,23 +99,8 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 		return err
 	}
 	defer db.Close()
-	// 读取建表模版
-	projectRoot, err := sv.GetProjectRoot()
-	if err != nil {
-		return err
-	}
-	sqlFilePath := filepath.Join(projectRoot, "robot.sql")
-	// 检查文件是否存在
-	if _, err := os.Stat(sqlFilePath); os.IsNotExist(err) {
-		return errors.New("建表模版不存在")
-	}
-	// 读取文件内容
-	content, err := os.ReadFile(sqlFilePath)
-	if err != nil {
-		return err
-	}
 	// 开始建表
-	err = newDB.Exec(fmt.Sprintf("USE `%s`;\n%s", robot.RobotCode, string(content))).Error
+	err = newDB.Exec(fmt.Sprintf("USE `%s`;\n%s", robot.RobotCode, template.RobotSqlTemplate)).Error
 	if err != nil {
 		return err
 	}
