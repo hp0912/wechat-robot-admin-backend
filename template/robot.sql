@@ -98,25 +98,23 @@ CREATE TABLE IF NOT EXISTS `messages` (
   `type` INT NOT NULL,
   `app_msg_type` INT DEFAULT NULL,
   `is_group` BOOLEAN DEFAULT FALSE COMMENT '是否为群聊消息',
-  `is_atme` BOOLEAN DEFAULT FALSE COMMENT '消息是否@我',
+  `is_at_me` BOOLEAN DEFAULT FALSE COMMENT '消息是否@我',
   `is_recalled` BOOLEAN DEFAULT FALSE COMMENT '消息是否已经撤回',
   `content` TEXT,
   `display_full_content` TEXT,
   `message_source` TEXT,
-  `from_wxid` VARCHAR(255),
-  `sender_wxid` VARCHAR(255),
-  `to_wxid` VARCHAR(255),
+  `from_wxid` VARCHAR(64),
+  `sender_wxid` VARCHAR(64),
+  `reply_wxid` VARCHAR(64),
+  `to_wxid` VARCHAR(64),
   `attachment_url` VARCHAR(512),
   `created_at` BIGINT NOT NULL,
   `updated_at` BIGINT NOT NULL,
-  `deleted_at` DATETIME DEFAULT NULL,
   UNIQUE KEY `uniq_msg_id` (`msg_id`),
-  UNIQUE KEY `uniq_client_msg_id` (`client_msg_id`),
   KEY `idx_from_wxid` (`from_wxid`),
   KEY `idx_type` (`type`),
   KEY `idx_sender_wxid` (`sender_wxid`),
-  KEY `idx_created_at` (`created_at`),
-  KEY `idx_deleted_at` (`deleted_at`)
+  KEY `idx_created_at` (`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `contacts` (
