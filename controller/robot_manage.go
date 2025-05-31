@@ -164,7 +164,7 @@ func (ct *RobotManage) RobotDockerImagePull(c *gin.Context) {
 		case <-c.Request.Context().Done():
 			// 客户端断开连接
 			return false
-		case <-time.After(30 * time.Second):
+		case <-time.After(300 * time.Second):
 			// 超时处理
 			c.SSEvent("error", "操作超时")
 			return false

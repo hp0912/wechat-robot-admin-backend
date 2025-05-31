@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"time"
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/model"
@@ -270,7 +271,13 @@ func (sv *RobotManageService) RobotStopAndRemoveClientAndServer(ctx *gin.Context
 	if robot == nil {
 		return errors.New("机器人不存在")
 	}
-	err := sv.DockerStopAndRemoveClientAndServer(ctx, robot)
+	// 先尝试退出登录
+	robotLoginService := NewRobotLoginService(sv.ctx)
+	err := robotLoginService.RobotLogout(robot)
+	if err != nil {
+		log.Println("删除机器人容器前，机器人登出失败:", err)
+	}
+	err = sv.DockerStopAndRemoveClientAndServer(ctx, robot)
 	if err != nil {
 		return err
 	}
