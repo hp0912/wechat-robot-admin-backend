@@ -85,7 +85,7 @@ func (ct *RobotManage) RobotRemove(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	err := service.NewRobotManageService(c).RobotRemove(req.ID)
+	err := service.NewRobotManageService(c).RobotRemove(c, req.ID)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return

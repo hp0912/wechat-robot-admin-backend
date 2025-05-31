@@ -46,72 +46,7 @@ func (sv *RobotManageService) getDockerClient() (*client.Client, error) {
 	return dockerClient, nil
 }
 
-func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest) error {
-	session := sessions.Default(ctx)
-	wechatId := session.Get("wechat_id")
-	role := session.Get("role")
-	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
-	redisDb, err := respo.GetMaxRedisDB()
-	if err != nil {
-		return err
-	}
-	// 一个账号最多创建2个机器人
-	robots := respo.GetByOwner(wechatId.(string), true)
-	if len(robots) >= 2 && role.(int) != vars.RoleRootUser {
-		return errors.New("一个账号最多创建2个机器人")
-	}
-
-	robot := &model.Robot{
-		RobotCode:    req.RobotCode,
-		Owner:        wechatId.(string),
-		DeviceID:     utils.CreateDeviceID(""),
-		DeviceName:   utils.CreateDeviceName(),
-		WeChatID:     "", // 登陆后才会有
-		Nickname:     "",
-		Avatar:       vars.RobotDefaultAvatar,
-		Status:       model.RobotStatusOffline,
-		ErrorMessage: "",
-		LastLoginAt:  0,
-		CreatedAt:    time.Now().Unix(),
-		UpdatedAt:    time.Now().Unix(),
-		RedisDB:      redisDb + 1,
-	}
-	respo.Create(robot)
-	// 创建机器人实例数据库
-	err = vars.DB.Exec(fmt.Sprintf("CREATE DATABASE IF NOT EXISTS `%s` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;", robot.RobotCode)).Error
-	if err != nil {
-		return err
-	}
-	// 创建机器人实例表
-	newDsn := fmt.Sprintf("%s:%s@tcp(%s:%v)/%s?charset=utf8mb4&parseTime=True&loc=Local&multiStatements=true",
-		vars.MysqlSettings.User, vars.MysqlSettings.Password, vars.MysqlSettings.Host, vars.MysqlSettings.Port, robot.RobotCode)
-	mysqlConfig := mysql.Config{
-		DSN: newDsn,
-	}
-	// gorm 配置
-	gormConfig := gorm.Config{}
-	newDB, err := gorm.Open(mysql.New(mysqlConfig), &gormConfig)
-	if err != nil {
-		return err
-	}
-	db, err := newDB.DB()
-	if err != nil {
-		return err
-	}
-	defer db.Close()
-	// 开始建表
-	err = newDB.Exec(fmt.Sprintf("USE `%s`;\n%s", robot.RobotCode, template.RobotSqlTemplate)).Error
-	if err != nil {
-		return err
-	}
-	// 插入一条公共配置记录
-	commonConf := fmt.Sprintf("INSERT INTO `%s`.`%s` (`owner`, `chat_ai_enabled`, `chat_base_url`, `chat_api_key`, `chat_model`, `chat_prompt`, `friend_sync_cron`) VALUES ('%s', 1, '%s', '%s', '%s', '%s', '0 * * * *');",
-		robot.RobotCode, "global_settings", robot.WeChatID, "https://ai-api.houhoukang.com/", vars.OpenAIApiKey, "gpt-4o-mini", "我是一个聊天机器人。")
-	err = newDB.Exec(commonConf).Error
-	if err != nil {
-		return err
-	}
-
+func (sv *RobotManageService) RobotStartClientAndServer(ctx *gin.Context, robot *model.Robot) error {
 	// 创建Docker客户端
 	dockerClient, err := sv.getDockerClient()
 	if err != nil {
@@ -220,27 +155,7 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 	return nil
 }
 
-// RobotView 查看机器人元数据
-func (sv *RobotManageService) RobotView(robotID int64) *model.Robot {
-	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
-	return respo.GetByID(robotID)
-}
-
-// RobotRemove 删除机器人
-func (sv *RobotManageService) RobotRemove(robotID int64) error {
-	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
-	robot := respo.GetByID(robotID)
-	if robot == nil {
-		return errors.New("机器人不存在")
-	}
-	// 删除机器人实例数据
-	respo.DeleteById(robotID)
-	// 删除机器人数据库
-	err := vars.DB.Exec(fmt.Sprintf("DROP DATABASE IF EXISTS `%s`;", robot.RobotCode)).Error
-	if err != nil {
-		return err
-	}
-
+func (sv *RobotManageService) RobotStopAndRemoveClientAndServer(ctx *gin.Context, robot *model.Robot) error {
 	// 使用Docker SDK停止并删除容器
 	dockerClient, err := sv.getDockerClient()
 	if err != nil {
@@ -260,6 +175,109 @@ func (sv *RobotManageService) RobotRemove(robotID int64) error {
 	err = sv.stopAndRemoveContainer(dockerClient, clientContainerName)
 	if err != nil {
 		return fmt.Errorf("删除客户端容器失败: %v", err)
+	}
+
+	return nil
+}
+
+func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest) error {
+	session := sessions.Default(ctx)
+	wechatId := session.Get("wechat_id")
+	role := session.Get("role")
+	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
+	redisDb, err := respo.GetMaxRedisDB()
+	if err != nil {
+		return err
+	}
+	// 一个账号最多创建2个机器人
+	robots := respo.GetByOwner(wechatId.(string), true)
+	if len(robots) >= 2 && role.(int) != vars.RoleRootUser {
+		return errors.New("一个账号最多创建2个机器人")
+	}
+
+	robot := &model.Robot{
+		RobotCode:    req.RobotCode,
+		Owner:        wechatId.(string),
+		DeviceID:     utils.CreateDeviceID(""),
+		DeviceName:   utils.CreateDeviceName(),
+		WeChatID:     "", // 登陆后才会有
+		Nickname:     "",
+		Avatar:       vars.RobotDefaultAvatar,
+		Status:       model.RobotStatusOffline,
+		ErrorMessage: "",
+		LastLoginAt:  0,
+		CreatedAt:    time.Now().Unix(),
+		UpdatedAt:    time.Now().Unix(),
+		RedisDB:      redisDb + 1,
+	}
+	respo.Create(robot)
+	// 创建机器人实例数据库
+	err = vars.DB.Exec(fmt.Sprintf("CREATE DATABASE IF NOT EXISTS `%s` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;", robot.RobotCode)).Error
+	if err != nil {
+		return err
+	}
+	// 创建机器人实例表
+	newDsn := fmt.Sprintf("%s:%s@tcp(%s:%v)/%s?charset=utf8mb4&parseTime=True&loc=Local&multiStatements=true",
+		vars.MysqlSettings.User, vars.MysqlSettings.Password, vars.MysqlSettings.Host, vars.MysqlSettings.Port, robot.RobotCode)
+	mysqlConfig := mysql.Config{
+		DSN: newDsn,
+	}
+	// gorm 配置
+	gormConfig := gorm.Config{}
+	newDB, err := gorm.Open(mysql.New(mysqlConfig), &gormConfig)
+	if err != nil {
+		return err
+	}
+	db, err := newDB.DB()
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+	// 开始建表
+	err = newDB.Exec(fmt.Sprintf("USE `%s`;\n%s", robot.RobotCode, template.RobotSqlTemplate)).Error
+	if err != nil {
+		return err
+	}
+	// 插入一条公共配置记录
+	commonConf := fmt.Sprintf("INSERT INTO `%s`.`%s` (`owner`, `chat_ai_enabled`, `chat_base_url`, `chat_api_key`, `chat_model`, `chat_prompt`, `friend_sync_cron`) VALUES ('%s', 1, '%s', '%s', '%s', '%s', '0 * * * *');",
+		robot.RobotCode, "global_settings", robot.WeChatID, "https://ai-api.houhoukang.com/", vars.OpenAIApiKey, "gpt-4o-mini", "我是一个聊天机器人。")
+	err = newDB.Exec(commonConf).Error
+	if err != nil {
+		return err
+	}
+
+	err = sv.RobotStartClientAndServer(ctx, robot)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// RobotView 查看机器人元数据
+func (sv *RobotManageService) RobotView(robotID int64) *model.Robot {
+	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
+	return respo.GetByID(robotID)
+}
+
+// RobotRemove 删除机器人
+func (sv *RobotManageService) RobotRemove(ctx *gin.Context, robotID int64) error {
+	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
+	robot := respo.GetByID(robotID)
+	if robot == nil {
+		return errors.New("机器人不存在")
+	}
+	// 删除机器人实例数据
+	respo.DeleteById(robotID)
+	// 删除机器人数据库
+	err := vars.DB.Exec(fmt.Sprintf("DROP DATABASE IF EXISTS `%s`;", robot.RobotCode)).Error
+	if err != nil {
+		return err
+	}
+
+	err = sv.RobotStopAndRemoveClientAndServer(ctx, robot)
+	if err != nil {
+		return err
 	}
 
 	return nil
