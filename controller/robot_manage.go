@@ -2,7 +2,9 @@ package controller
 
 import (
 	"errors"
+	"io"
 	"regexp"
+	"time"
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/pkg/appx"
 	"wechat-robot-admin-backend/service"
@@ -130,12 +132,43 @@ func (ct *RobotManage) RobotDockerImagePull(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	err := service.NewRobotManageService(c).RobotDockerImagePull(c)
-	if err != nil {
-		resp.ToErrorResponse(err)
-		return
-	}
-	resp.ToResponse(nil)
+	// 设置SSE响应头
+	c.Header("Content-Type", "text/event-stream")
+	c.Header("Cache-Control", "no-cache")
+	c.Header("Connection", "keep-alive")
+	c.Header("Access-Control-Allow-Origin", "*")
+	// 创建进度通道
+	progressChan := make(chan dto.PullProgress, 100)
+	// 启动goroutine执行拉取任务
+	go func() {
+		err := service.NewRobotManageService(c).RobotDockerImagePull(c, progressChan)
+		if err != nil {
+			// 错误已经通过progressChan发送
+			return
+		}
+	}()
+	// 发送进度数据
+	c.Stream(func(w io.Writer) bool {
+		select {
+		case progress, ok := <-progressChan:
+			if !ok {
+				// 通道已关闭，发送完成事件
+				c.SSEvent("complete", "拉取完成")
+				return false
+			}
+
+			// 发送进度数据
+			c.SSEvent("progress", progress)
+			return true
+		case <-c.Request.Context().Done():
+			// 客户端断开连接
+			return false
+		case <-time.After(30 * time.Second):
+			// 超时处理
+			c.SSEvent("error", "操作超时")
+			return false
+		}
+	})
 }
 
 func (ct *RobotManage) RobotStopAndRemoveClientAndServer(c *gin.Context) {

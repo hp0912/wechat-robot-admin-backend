@@ -2,9 +2,10 @@ package service
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
+	"io"
 	"time"
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/model"
@@ -313,10 +314,15 @@ func (sv *RobotManageService) RobotRemove(ctx *gin.Context, robotID int64) error
 	return nil
 }
 
-func (sv *RobotManageService) RobotDockerImagePull(ctx *gin.Context) error {
+func (sv *RobotManageService) RobotDockerImagePull(ctx *gin.Context, progressChan chan<- dto.PullProgress) error {
+	defer close(progressChan)
 	// 创建Docker客户端
 	dockerClient, err := sv.getDockerClient()
 	if err != nil {
+		progressChan <- dto.PullProgress{
+			Status: "error",
+			Error:  fmt.Sprintf("创建Docker客户端失败: %v", err),
+		}
 		return fmt.Errorf("创建Docker客户端失败: %v", err)
 	}
 	defer dockerClient.Close()
@@ -327,23 +333,69 @@ func (sv *RobotManageService) RobotDockerImagePull(ctx *gin.Context) error {
 	}
 	// 逐个拉取镜像
 	for _, image := range images {
-		log.Printf("开始拉取镜像: %s\n", image)
+		progressChan <- dto.PullProgress{
+			Image:  image,
+			Status: "start",
+		}
 		// 拉取镜像
 		reader, err := dockerClient.ImagePull(sv.ctx, image, dockerImage.PullOptions{})
 		if err != nil {
+			progressChan <- dto.PullProgress{
+				Image:  image,
+				Status: "error",
+				Error:  fmt.Sprintf("拉取镜像 %s 失败: %v", image, err),
+			}
 			return fmt.Errorf("拉取镜像 %s 失败: %v", image, err)
 		}
-		// 读取拉取进度（可选：如果需要显示进度）
-		defer reader.Close()
-		// 等待拉取完成
-		buf := make([]byte, 1024)
-		for {
-			_, err := reader.Read(buf)
-			if err != nil {
+		// 解析拉取进度
+		err = sv.parseDockerPullProgress(reader, image, progressChan)
+		reader.Close()
+		if err != nil {
+			progressChan <- dto.PullProgress{
+				Image:  image,
+				Status: "error",
+				Error:  fmt.Sprintf("解析进度失败: %v", err),
+			}
+			return err
+		}
+		progressChan <- dto.PullProgress{
+			Image:  image,
+			Status: "complete",
+		}
+	}
+	progressChan <- dto.PullProgress{
+		Status: "all_complete",
+	}
+	return nil
+}
+
+// 解析Docker拉取进度
+func (sv *RobotManageService) parseDockerPullProgress(reader io.ReadCloser, image string, progressChan chan<- dto.PullProgress) error {
+	decoder := json.NewDecoder(reader)
+	for {
+		var progress map[string]interface{}
+		if err := decoder.Decode(&progress); err != nil {
+			if err == io.EOF {
 				break
 			}
+			return err
 		}
-		log.Printf("成功拉取镜像: %s\n", image)
+		status, _ := progress["status"].(string)
+		progressDetail, _ := progress["progressDetail"].(map[string]interface{})
+		var progressStr string
+		if progressDetail != nil {
+			current, _ := progressDetail["current"].(float64)
+			total, _ := progressDetail["total"].(float64)
+			if total > 0 {
+				percentage := (current / total) * 100
+				progressStr = fmt.Sprintf("%.1f%%", percentage)
+			}
+		}
+		progressChan <- dto.PullProgress{
+			Image:    image,
+			Status:   status,
+			Progress: progressStr,
+		}
 	}
 	return nil
 }
