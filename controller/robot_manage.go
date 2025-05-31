@@ -2,7 +2,7 @@ package controller
 
 import (
 	"errors"
-	"io"
+	"fmt"
 	"regexp"
 	"time"
 	"wechat-robot-admin-backend/dto"
@@ -137,8 +137,14 @@ func (ct *RobotManage) RobotDockerImagePull(c *gin.Context) {
 	c.Header("Cache-Control", "no-cache")
 	c.Header("Connection", "keep-alive")
 	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("X-Accel-Buffering", "no") // 禁用nginx缓冲
+
+	// 立即刷新响应头
+	c.Writer.Flush()
+
 	// 创建进度通道
 	progressChan := make(chan dto.PullProgress, 100)
+	defer close(progressChan) // 确保通道被关闭
 	// 启动goroutine执行拉取任务
 	go func() {
 		err := service.NewRobotManageService(c).RobotDockerImagePull(c, progressChan)
@@ -148,27 +154,37 @@ func (ct *RobotManage) RobotDockerImagePull(c *gin.Context) {
 		}
 	}()
 	// 发送进度数据
-	c.Stream(func(w io.Writer) bool {
+	for {
 		select {
 		case progress, ok := <-progressChan:
 			if !ok {
 				// 通道已关闭，发送完成事件
-				c.SSEvent("complete", "拉取完成")
-				return false
+				fmt.Fprintf(c.Writer, "event: complete\ndata: 拉取完成\n\n")
+				c.Writer.Flush()
+				return
+			}
+
+			// 如果有错误，发送错误事件
+			if progress.Error != "" {
+				fmt.Fprintf(c.Writer, "event: error\ndata: %s\n\n", progress.Error)
+				c.Writer.Flush()
+				return
 			}
 
 			// 发送进度数据
-			c.SSEvent("progress", progress)
-			return true
+			fmt.Fprintf(c.Writer, "event: progress\ndata: %s\n\n", progress)
+			c.Writer.Flush()
+
 		case <-c.Request.Context().Done():
 			// 客户端断开连接
-			return false
+			return
 		case <-time.After(30 * time.Second):
 			// 超时处理
-			c.SSEvent("error", "操作超时")
-			return false
+			fmt.Fprintf(c.Writer, "event: error\ndata: 操作超时\n\n")
+			c.Writer.Flush()
+			return
 		}
-	})
+	}
 }
 
 func (ct *RobotManage) RobotStopAndRemoveClientAndServer(c *gin.Context) {
