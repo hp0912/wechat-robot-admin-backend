@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"time"
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/model"
@@ -15,6 +16,7 @@ import (
 
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
+	dockerImage "github.com/docker/docker/api/types/image"
 	"github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/client"
 	"github.com/gin-contrib/sessions"
@@ -46,7 +48,7 @@ func (sv *RobotManageService) getDockerClient() (*client.Client, error) {
 	return dockerClient, nil
 }
 
-func (sv *RobotManageService) RobotStartClientAndServer(ctx *gin.Context, robot *model.Robot) error {
+func (sv *RobotManageService) DockerStartClientAndServer(ctx *gin.Context, robot *model.Robot) error {
 	// 创建Docker客户端
 	dockerClient, err := sv.getDockerClient()
 	if err != nil {
@@ -155,7 +157,7 @@ func (sv *RobotManageService) RobotStartClientAndServer(ctx *gin.Context, robot 
 	return nil
 }
 
-func (sv *RobotManageService) RobotStopAndRemoveClientAndServer(ctx *gin.Context, robot *model.Robot) error {
+func (sv *RobotManageService) DockerStopAndRemoveClientAndServer(ctx *gin.Context, robot *model.Robot) error {
 	// 使用Docker SDK停止并删除容器
 	dockerClient, err := sv.getDockerClient()
 	if err != nil {
@@ -246,7 +248,7 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 		return err
 	}
 
-	err = sv.RobotStartClientAndServer(ctx, robot)
+	err = sv.DockerStartClientAndServer(ctx, robot)
 	if err != nil {
 		return err
 	}
@@ -258,6 +260,34 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 func (sv *RobotManageService) RobotView(robotID int64) *model.Robot {
 	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
 	return respo.GetByID(robotID)
+}
+
+// RobotStopAndRemoveClientAndServer 删除机器人容器
+func (sv *RobotManageService) RobotStopAndRemoveClientAndServer(ctx *gin.Context, robotID int64) error {
+	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
+	robot := respo.GetByID(robotID)
+	if robot == nil {
+		return errors.New("机器人不存在")
+	}
+	err := sv.DockerStopAndRemoveClientAndServer(ctx, robot)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// RobotStartClientAndServer 启动机器人容器
+func (sv *RobotManageService) RobotStartClientAndServer(ctx *gin.Context, robotID int64) error {
+	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
+	robot := respo.GetByID(robotID)
+	if robot == nil {
+		return errors.New("机器人不存在")
+	}
+	err := sv.DockerStartClientAndServer(ctx, robot)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // RobotRemove 删除机器人
@@ -275,11 +305,46 @@ func (sv *RobotManageService) RobotRemove(ctx *gin.Context, robotID int64) error
 		return err
 	}
 
-	err = sv.RobotStopAndRemoveClientAndServer(ctx, robot)
+	err = sv.DockerStopAndRemoveClientAndServer(ctx, robot)
 	if err != nil {
 		return err
 	}
 
+	return nil
+}
+
+func (sv *RobotManageService) RobotDockerImagePull(ctx *gin.Context) error {
+	// 创建Docker客户端
+	dockerClient, err := sv.getDockerClient()
+	if err != nil {
+		return fmt.Errorf("创建Docker客户端失败: %v", err)
+	}
+	defer dockerClient.Close()
+	// 定义需要拉取的镜像列表
+	images := []string{
+		"registry.cn-shenzhen.aliyuncs.com/houhou/wechat-ipad:latest",
+		"registry.cn-shenzhen.aliyuncs.com/houhou/wechat-robot-client:latest",
+	}
+	// 逐个拉取镜像
+	for _, image := range images {
+		log.Printf("开始拉取镜像: %s\n", image)
+		// 拉取镜像
+		reader, err := dockerClient.ImagePull(sv.ctx, image, dockerImage.PullOptions{})
+		if err != nil {
+			return fmt.Errorf("拉取镜像 %s 失败: %v", image, err)
+		}
+		// 读取拉取进度（可选：如果需要显示进度）
+		defer reader.Close()
+		// 等待拉取完成
+		buf := make([]byte, 1024)
+		for {
+			_, err := reader.Read(buf)
+			if err != nil {
+				break
+			}
+		}
+		log.Printf("成功拉取镜像: %s\n", image)
+	}
 	return nil
 }
 

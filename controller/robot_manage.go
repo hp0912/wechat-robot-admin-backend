@@ -122,3 +122,48 @@ func (ct *RobotManage) RobotRestartServer(c *gin.Context) {
 	}
 	resp.ToResponse(nil)
 }
+
+func (ct *RobotManage) RobotDockerImagePull(c *gin.Context) {
+	var req dto.RobotCommonRequest
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	err := service.NewRobotManageService(c).RobotDockerImagePull(c)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
+
+func (ct *RobotManage) RobotStopAndRemoveClientAndServer(c *gin.Context) {
+	var req dto.RobotCommonRequest
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	err := service.NewRobotManageService(c).RobotStopAndRemoveClientAndServer(c, req.ID)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
+
+func (ct *RobotManage) RobotStartClientAndServer(c *gin.Context) {
+	var req dto.RobotCommonRequest
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	err := service.NewRobotManageService(c).RobotStartClientAndServer(c, req.ID)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
