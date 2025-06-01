@@ -86,13 +86,19 @@ func (sv *RobotLoginService) RobotState(robot *model.Robot) (err error) {
 			ID:     robot.ID,
 			Status: model.RobotStatusOnline,
 		}
-		respo.Update(&newRobot)
+		err = respo.Update(&newRobot)
+		if err != nil {
+			return
+		}
 	} else {
 		newRobot := model.Robot{
 			ID:     robot.ID,
 			Status: model.RobotStatusOffline,
 		}
-		respo.Update(&newRobot)
+		err = respo.Update(&newRobot)
+		if err != nil {
+			return
+		}
 	}
 	return
 }

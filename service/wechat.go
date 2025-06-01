@@ -65,7 +65,10 @@ func (sv *WeChatService) WeChatAuth(ctx context.Context, code string) (*model.Us
 	if err != nil {
 		return nil, err
 	}
-	user := repository.NewUserRepo(ctx, vars.DB).GetUserByWeChatID(wechatId)
+	user, err := repository.NewUserRepo(ctx, vars.DB).GetUserByWeChatID(wechatId)
+	if err != nil {
+		return nil, err
+	}
 	if user == nil {
 		user = &model.User{
 			WeChatId:    wechatId,
@@ -76,10 +79,16 @@ func (sv *WeChatService) WeChatAuth(ctx context.Context, code string) (*model.Us
 			LastLoginAt: time.Now().Unix(),
 			CreatedAt:   time.Now().Unix(),
 		}
-		repository.NewUserRepo(ctx, vars.DB).Create(user)
+		err = repository.NewUserRepo(ctx, vars.DB).Create(user)
+		if err != nil {
+			return nil, fmt.Errorf("登录失败，请联系管理员: %w", err)
+		}
 	} else {
 		user.LastLoginAt = time.Now().Unix()
-		repository.NewUserRepo(ctx, vars.DB).Update(user)
+		err = repository.NewUserRepo(ctx, vars.DB).Update(user)
+		if err != nil {
+			return nil, fmt.Errorf("登录失败，请联系管理员: %w", err)
+		}
 	}
 	return user, nil
 }

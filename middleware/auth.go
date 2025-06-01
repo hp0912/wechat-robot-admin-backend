@@ -93,7 +93,16 @@ func UserOwnerAuth() func(c *gin.Context) {
 			c.Abort()
 			return
 		}
-		robot := repository.NewRobotRepo(c.Request.Context(), vars.DB).GetByID(robotId)
+		robot, err := repository.NewRobotRepo(c.Request.Context(), vars.DB).GetByID(robotId)
+		if err != nil {
+			c.JSON(http.StatusOK, gin.H{
+				"code":    500,
+				"message": "获取机器人信息失败",
+				"data":    nil,
+			})
+			c.Abort()
+			return
+		}
 		if robot == nil {
 			c.JSON(http.StatusOK, gin.H{
 				"code":    500,

@@ -194,7 +194,10 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 		return err
 	}
 	// 一个账号最多创建2个机器人
-	robots := respo.GetByOwner(wechatId.(string), true)
+	robots, err := respo.GetByOwner(wechatId.(string), true)
+	if err != nil {
+		return err
+	}
 	if len(robots) >= 2 && role.(int) != vars.RoleRootUser {
 		return errors.New("一个账号最多创建2个机器人")
 	}
@@ -214,7 +217,10 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 		UpdatedAt:    time.Now().Unix(),
 		RedisDB:      redisDb + 1,
 	}
-	respo.Create(robot)
+	err = respo.Create(robot)
+	if err != nil {
+		return err
+	}
 	// 创建机器人实例数据库
 	err = vars.DB.Exec(fmt.Sprintf("CREATE DATABASE IF NOT EXISTS `%s` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;", robot.RobotCode)).Error
 	if err != nil {
@@ -259,7 +265,7 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 }
 
 // RobotView 查看机器人元数据
-func (sv *RobotManageService) RobotView(robotID int64) *model.Robot {
+func (sv *RobotManageService) RobotView(robotID int64) (*model.Robot, error) {
 	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
 	return respo.GetByID(robotID)
 }
@@ -267,13 +273,16 @@ func (sv *RobotManageService) RobotView(robotID int64) *model.Robot {
 // RobotStopAndRemoveClientAndServer 删除机器人容器
 func (sv *RobotManageService) RobotStopAndRemoveClientAndServer(ctx *gin.Context, robotID int64) error {
 	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
-	robot := respo.GetByID(robotID)
+	robot, err := respo.GetByID(robotID)
+	if err != nil {
+		return err
+	}
 	if robot == nil {
 		return errors.New("机器人不存在")
 	}
 	// 先尝试退出登录
 	robotLoginService := NewRobotLoginService(sv.ctx)
-	err := robotLoginService.RobotLogout(robot)
+	err = robotLoginService.RobotLogout(robot)
 	if err != nil {
 		log.Println("删除机器人容器前，机器人登出失败:", err)
 	}
@@ -287,11 +296,14 @@ func (sv *RobotManageService) RobotStopAndRemoveClientAndServer(ctx *gin.Context
 // RobotStartClientAndServer 启动机器人容器
 func (sv *RobotManageService) RobotStartClientAndServer(ctx *gin.Context, robotID int64) error {
 	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
-	robot := respo.GetByID(robotID)
+	robot, err := respo.GetByID(robotID)
+	if err != nil {
+		return err
+	}
 	if robot == nil {
 		return errors.New("机器人不存在")
 	}
-	err := sv.DockerStartClientAndServer(ctx, robot)
+	err = sv.DockerStartClientAndServer(ctx, robot)
 	if err != nil {
 		return err
 	}
@@ -301,14 +313,20 @@ func (sv *RobotManageService) RobotStartClientAndServer(ctx *gin.Context, robotI
 // RobotRemove 删除机器人
 func (sv *RobotManageService) RobotRemove(ctx *gin.Context, robotID int64) error {
 	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
-	robot := respo.GetByID(robotID)
+	robot, err := respo.GetByID(robotID)
+	if err != nil {
+		return err
+	}
 	if robot == nil {
 		return errors.New("机器人不存在")
 	}
 	// 删除机器人实例数据
-	respo.DeleteById(robotID)
+	err = respo.Delete(robotID)
+	if err != nil {
+		return err
+	}
 	// 删除机器人数据库
-	err := vars.DB.Exec(fmt.Sprintf("DROP DATABASE IF EXISTS `%s`;", robot.RobotCode)).Error
+	err = vars.DB.Exec(fmt.Sprintf("DROP DATABASE IF EXISTS `%s`;", robot.RobotCode)).Error
 	if err != nil {
 		return err
 	}
@@ -450,7 +468,10 @@ func (sv *RobotManageService) stopAndRemoveContainer(dockerClient *client.Client
 
 func (sv *RobotManageService) RobotRestart(robotID int64, restartType string) error {
 	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
-	robot := respo.GetByID(robotID)
+	robot, err := respo.GetByID(robotID)
+	if err != nil {
+		return err
+	}
 	if robot == nil {
 		return errors.New("机器人不存在")
 	}
@@ -507,6 +528,9 @@ func (sv *RobotManageService) RobotRestartServer(robotID int64) error {
 		ID:     robotID,
 		Status: model.RobotStatusOffline,
 	}
-	respo.Update(&robot)
+	err = respo.Update(&robot)
+	if err != nil {
+		return err
+	}
 	return nil
 }

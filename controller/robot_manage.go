@@ -72,7 +72,11 @@ func (ct *RobotManage) RobotView(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	robot := service.NewRobotManageService(c).RobotView(req.ID)
+	robot, err := service.NewRobotManageService(c).RobotView(req.ID)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
 	if robot == nil {
 		resp.ToErrorResponse(errors.New("机器人不存在"))
 		return

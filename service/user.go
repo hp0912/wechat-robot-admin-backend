@@ -22,7 +22,7 @@ func NewUserService(ctx context.Context) *UserService {
 
 func (sv *UserService) SetupLogin(ctx *gin.Context, user *model.User) error {
 	session := sessions.Default(ctx)
-	session.Set("id", user.Id)
+	session.Set("id", user.ID)
 	session.Set("wechat_id", user.WeChatId)
 	session.Set("role", user.Role)
 	session.Set("status", user.Status)
@@ -35,6 +35,6 @@ func (sv *UserService) Logout(ctx *gin.Context) error {
 	return session.Save()
 }
 
-func (sv *UserService) LoginUser(ctx *gin.Context, id int64) *model.User {
+func (sv *UserService) LoginUser(ctx *gin.Context, id int64) (*model.User, error) {
 	return repository.NewUserRepo(sv.ctx, vars.DB).GetUserByID(id)
 }

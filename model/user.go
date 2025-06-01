@@ -3,7 +3,7 @@ package model
 import "gorm.io/gorm"
 
 type User struct {
-	Id          int64          `gorm:"primarykey" json:"id"`
+	ID          int64          `gorm:"primarykey" json:"id"`
 	WeChatId    string         `json:"wechat_id" gorm:"column:wechat_id;index"`
 	DisplayName string         `json:"display_name" gorm:"column:display_name;" validate:"max=20"`
 	Role        int            `json:"role" gorm:"type:int;default:1"`   // admin, common
