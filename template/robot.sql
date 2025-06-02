@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `chat_room_settings` (
   `chat_room_summary_model` VARCHAR(100) DEFAULT '' COMMENT '聊天总结使用的AI模型名称',
   -- 每日早报
   `news_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用每日早报功能',
-  `news_type` ENUM('text', 'image') NOT NULL DEFAULT 'text' COMMENT '是否启用每日早报功能',
+  `news_type` ENUM('', 'text', 'image') DEFAULT NULL COMMENT '每日早报类型：text-文本，image-图片',
   -- 每日早安
   `morning_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用早安问候功能'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
