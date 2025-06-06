@@ -43,6 +43,15 @@ func (u *User) GetUserByWeChatID(WxID string) (*model.User, error) {
 	return &user, nil
 }
 
+func (u *User) UserCount() (int64, error) {
+	var count int64
+	err := u.DB.WithContext(u.Ctx).Model(&model.User{}).Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
 func (u *User) Create(data *model.User) error {
 	return u.DB.WithContext(u.Ctx).Create(data).Error
 }
