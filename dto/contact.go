@@ -20,7 +20,6 @@ type GetContactsRequest struct {
 type GetContactsResponse struct {
 	ID            int64       `json:"id"`
 	WechatID      string      `json:"wechat_id"` // 添加索引长度
-	Owner         string      `json:"owner"`     // 联系人所有者
 	Alias         string      `json:"alias"`     // 微信号
 	Nickname      string      `json:"nickname"`
 	Avatar        string      `json:"avatar"`

@@ -1,6 +1,5 @@
 CREATE TABLE IF NOT EXISTS `global_settings` (
   `id` BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '公共配置表主键ID',
-  `owner` VARCHAR(64) DEFAULT '' COMMENT '所有者微信ID',
   -- 聊天模型AI设置
   `chat_ai_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI聊天功能',
   `chat_ai_trigger` VARCHAR(20) DEFAULT '' COMMENT '触发聊天AI的关键词',
@@ -42,7 +41,6 @@ CREATE TABLE IF NOT EXISTS `global_settings` (
 
 CREATE TABLE IF NOT EXISTS `friend_settings` (
   `id` BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '群聊配置表主键ID',
-  `owner` VARCHAR(64) DEFAULT '' COMMENT '所有者微信ID',
   `wechat_id` VARCHAR(64) DEFAULT '' COMMENT '好友微信ID',
   -- 聊天模型AI设置
   `chat_ai_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI聊天功能',
@@ -58,7 +56,6 @@ CREATE TABLE IF NOT EXISTS `friend_settings` (
 
 CREATE TABLE IF NOT EXISTS `chat_room_settings` (
   `id` BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '群聊配置表主键ID',
-  `owner` VARCHAR(64) DEFAULT '' COMMENT '所有者微信ID',
   `chat_room_id` VARCHAR(64) DEFAULT '' COMMENT '群聊微信ID',
   -- 聊天模型AI设置
   `chat_ai_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI聊天功能',
@@ -119,7 +116,6 @@ CREATE TABLE IF NOT EXISTS `messages` (
 
 CREATE TABLE IF NOT EXISTS `contacts` (
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `owner` VARCHAR(64) DEFAULT '' COMMENT '所有者微信ID',
   `wechat_id` VARCHAR(64) NOT NULL COMMENT '微信ID',
   `alias` VARCHAR(64) DEFAULT NULL COMMENT '微信号',
   `nickname` VARCHAR(64) DEFAULT NULL COMMENT '昵称',
@@ -144,7 +140,6 @@ CREATE TABLE IF NOT EXISTS `contacts` (
 
 CREATE TABLE IF NOT EXISTS `chat_room_members` (
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `owner` VARCHAR(64) DEFAULT '' COMMENT '所有者微信ID',
   `chat_room_id` VARCHAR(64) NOT NULL COMMENT '群ID',
   `wechat_id` VARCHAR(64) NOT NULL COMMENT '微信ID',
   `alias` VARCHAR(64) DEFAULT NULL COMMENT '微信号',
