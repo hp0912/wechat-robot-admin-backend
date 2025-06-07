@@ -78,10 +78,6 @@ func UserOwnerAuth() func(c *gin.Context) {
 			c.Abort()
 			return
 		}
-		if role.(int) == vars.RoleRootUser {
-			c.Next()
-			return
-		}
 		idStr := c.Query("id") // 获取字符串
 		robotId, err := strconv.ParseInt(idStr, 10, 64)
 		if err != nil {
@@ -112,6 +108,11 @@ func UserOwnerAuth() func(c *gin.Context) {
 			c.Abort()
 			return
 		}
+		c.Set("robot", robot)
+		if role.(int) == vars.RoleRootUser {
+			c.Next()
+			return
+		}
 		if robot.Owner != weChatId.(string) {
 			c.JSON(http.StatusOK, gin.H{
 				"code":    500,
@@ -121,8 +122,6 @@ func UserOwnerAuth() func(c *gin.Context) {
 			c.Abort()
 			return
 		}
-
-		c.Set("robot", robot)
 		c.Next()
 	}
 }
