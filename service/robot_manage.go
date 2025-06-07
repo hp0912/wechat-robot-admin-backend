@@ -110,6 +110,7 @@ func (sv *RobotManageService) DockerStartClientAndServer(ctx *gin.Context, robot
 		Image: "registry.cn-shenzhen.aliyuncs.com/houhou/wechat-robot-client:latest",
 		Env: []string{
 			fmt.Sprintf("GIN_MODE=%s", "release"),
+			fmt.Sprintf("WECHAT_CLIENT_PORT=%s", "9000"),
 			fmt.Sprintf("ROBOT_ID=%d", robot.ID),
 			fmt.Sprintf("ROBOT_CODE=%s", robot.RobotCode),
 			fmt.Sprintf("ROBOT_START_TIMEOUT=%s", "60"),
