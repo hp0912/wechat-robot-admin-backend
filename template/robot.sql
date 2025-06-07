@@ -1,6 +1,5 @@
 CREATE TABLE IF NOT EXISTS `global_settings` (
   `id` BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '公共配置表主键ID',
-  `owner` VARCHAR(64) DEFAULT '' COMMENT '所有者微信ID',
   -- 聊天模型AI设置
   `chat_ai_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI聊天功能',
   `chat_ai_trigger` VARCHAR(20) DEFAULT '' COMMENT '触发聊天AI的关键词',
@@ -42,7 +41,6 @@ CREATE TABLE IF NOT EXISTS `global_settings` (
 
 CREATE TABLE IF NOT EXISTS `friend_settings` (
   `id` BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '群聊配置表主键ID',
-  `owner` VARCHAR(64) DEFAULT '' COMMENT '所有者微信ID',
   `wechat_id` VARCHAR(64) DEFAULT '' COMMENT '好友微信ID',
   -- 聊天模型AI设置
   `chat_ai_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI聊天功能',
@@ -58,7 +56,6 @@ CREATE TABLE IF NOT EXISTS `friend_settings` (
 
 CREATE TABLE IF NOT EXISTS `chat_room_settings` (
   `id` BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '群聊配置表主键ID',
-  `owner` VARCHAR(64) DEFAULT '' COMMENT '所有者微信ID',
   `chat_room_id` VARCHAR(64) DEFAULT '' COMMENT '群聊微信ID',
   -- 聊天模型AI设置
   `chat_ai_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI聊天功能',
@@ -86,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `chat_room_settings` (
   `chat_room_summary_model` VARCHAR(100) DEFAULT '' COMMENT '聊天总结使用的AI模型名称',
   -- 每日早报
   `news_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用每日早报功能',
-  `news_type` ENUM('text', 'image') NOT NULL DEFAULT 'text' COMMENT '是否启用每日早报功能',
+  `news_type` ENUM('', 'text', 'image') DEFAULT NULL COMMENT '每日早报类型：text-文本，image-图片',
   -- 每日早安
   `morning_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用早安问候功能'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -97,36 +94,33 @@ CREATE TABLE IF NOT EXISTS `messages` (
   `client_msg_id` BIGINT NOT NULL,
   `type` INT NOT NULL,
   `app_msg_type` INT DEFAULT NULL,
-  `is_group` BOOLEAN DEFAULT FALSE COMMENT '是否为群聊消息',
-  `is_atme` BOOLEAN DEFAULT FALSE COMMENT '消息是否@我',
+  `is_chat_room` BOOLEAN DEFAULT FALSE COMMENT '是否为群聊消息',
+  `is_at_me` BOOLEAN DEFAULT FALSE COMMENT '消息是否@我',
   `is_recalled` BOOLEAN DEFAULT FALSE COMMENT '消息是否已经撤回',
   `content` TEXT,
   `display_full_content` TEXT,
   `message_source` TEXT,
-  `from_wxid` VARCHAR(255),
-  `sender_wxid` VARCHAR(255),
-  `to_wxid` VARCHAR(255),
+  `from_wxid` VARCHAR(64),
+  `sender_wxid` VARCHAR(64),
+  `reply_wxid` VARCHAR(64),
+  `to_wxid` VARCHAR(64),
   `attachment_url` VARCHAR(512),
   `created_at` BIGINT NOT NULL,
   `updated_at` BIGINT NOT NULL,
-  `deleted_at` DATETIME DEFAULT NULL,
   UNIQUE KEY `uniq_msg_id` (`msg_id`),
-  UNIQUE KEY `uniq_client_msg_id` (`client_msg_id`),
   KEY `idx_from_wxid` (`from_wxid`),
   KEY `idx_type` (`type`),
   KEY `idx_sender_wxid` (`sender_wxid`),
-  KEY `idx_created_at` (`created_at`),
-  KEY `idx_deleted_at` (`deleted_at`)
+  KEY `idx_created_at` (`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `contacts` (
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `owner` VARCHAR(64) DEFAULT '' COMMENT '所有者微信ID',
   `wechat_id` VARCHAR(64) NOT NULL COMMENT '微信ID',
   `alias` VARCHAR(64) DEFAULT NULL COMMENT '微信号',
   `nickname` VARCHAR(64) DEFAULT NULL COMMENT '昵称',
   `avatar` VARCHAR(255) DEFAULT NULL COMMENT '头像',
-  `type` ENUM('friend','group') NOT NULL COMMENT '联系人类型：friend-好友，group-群组',
+  `type` ENUM('friend','chat_room') NOT NULL COMMENT '联系人类型：friend-好友，chat_room-群组',
   `remark` VARCHAR(255) DEFAULT NULL COMMENT '备注',
   `pyinitial` VARCHAR(64) DEFAULT NULL COMMENT '昵称拼音首字母大写',
   `quan_pin` VARCHAR(255) DEFAULT NULL COMMENT '昵称拼音全拼小写',

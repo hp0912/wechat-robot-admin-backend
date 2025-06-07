@@ -78,10 +78,6 @@ func UserOwnerAuth() func(c *gin.Context) {
 			c.Abort()
 			return
 		}
-		if role.(int) == vars.RoleRootUser {
-			c.Next()
-			return
-		}
 		idStr := c.Query("id") // 获取字符串
 		robotId, err := strconv.ParseInt(idStr, 10, 64)
 		if err != nil {
@@ -93,7 +89,16 @@ func UserOwnerAuth() func(c *gin.Context) {
 			c.Abort()
 			return
 		}
-		robot := repository.NewRobotRepo(c.Request.Context(), vars.DB).GetByID(robotId)
+		robot, err := repository.NewRobotRepo(c.Request.Context(), vars.DB).GetByID(robotId)
+		if err != nil {
+			c.JSON(http.StatusOK, gin.H{
+				"code":    500,
+				"message": "获取机器人信息失败",
+				"data":    nil,
+			})
+			c.Abort()
+			return
+		}
 		if robot == nil {
 			c.JSON(http.StatusOK, gin.H{
 				"code":    500,
@@ -101,6 +106,11 @@ func UserOwnerAuth() func(c *gin.Context) {
 				"data":    nil,
 			})
 			c.Abort()
+			return
+		}
+		c.Set("robot", robot)
+		if role.(int) == vars.RoleRootUser {
+			c.Next()
 			return
 		}
 		if robot.Owner != weChatId.(string) {
@@ -112,8 +122,6 @@ func UserOwnerAuth() func(c *gin.Context) {
 			c.Abort()
 			return
 		}
-
-		c.Set("robot", robot)
 		c.Next()
 	}
 }

@@ -65,21 +65,39 @@ func (sv *WeChatService) WeChatAuth(ctx context.Context, code string) (*model.Us
 	if err != nil {
 		return nil, err
 	}
-	user := repository.NewUserRepo(ctx, vars.DB).GetUserByWeChatID(wechatId)
+	userRespo := repository.NewUserRepo(ctx, vars.DB)
+	user, err := userRespo.GetUserByWeChatID(wechatId)
+	if err != nil {
+		return nil, err
+	}
 	if user == nil {
+		userCount, err := userRespo.UserCount()
+		if err != nil {
+			return nil, fmt.Errorf("获取用户数量失败，请联系管理员: %w", err)
+		}
 		user = &model.User{
 			WeChatId:    wechatId,
 			DisplayName: fmt.Sprintf("微信用户-%s", utils.GetRandomString(4)),
-			Role:        vars.RoleCommonUser,
 			Status:      vars.UserStatusEnabled,
 			AvatarUrl:   vars.UserDefaultAvatar,
 			LastLoginAt: time.Now().Unix(),
 			CreatedAt:   time.Now().Unix(),
 		}
-		repository.NewUserRepo(ctx, vars.DB).Create(user)
+		if userCount == 0 {
+			user.Role = vars.RoleRootUser // 第一个用户设置为超级管理员
+		} else {
+			user.Role = vars.RoleCommonUser
+		}
+		err = userRespo.Create(user)
+		if err != nil {
+			return nil, fmt.Errorf("登录失败，请联系管理员: %w", err)
+		}
 	} else {
 		user.LastLoginAt = time.Now().Unix()
-		repository.NewUserRepo(ctx, vars.DB).Update(user)
+		err = userRespo.Update(user)
+		if err != nil {
+			return nil, fmt.Errorf("登录失败，请联系管理员: %w", err)
+		}
 	}
 	return user, nil
 }

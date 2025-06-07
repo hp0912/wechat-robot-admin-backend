@@ -5,25 +5,24 @@ import (
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/model"
 	"wechat-robot-admin-backend/pkg/appx"
-	"wechat-robot-admin-backend/vars"
 
 	"gorm.io/gorm"
 )
 
 type Robot struct {
-	Base[model.Robot]
+	Ctx context.Context
+	DB  *gorm.DB
 }
 
 func NewRobotRepo(ctx context.Context, db *gorm.DB) *Robot {
 	return &Robot{
-		Base[model.Robot]{
-			Ctx: ctx,
-			DB:  db,
-		}}
+		Ctx: ctx,
+		DB:  db,
+	}
 }
 
 func (r *Robot) RobotList(req dto.RobotListRequest, pager appx.Pager) ([]*model.Robot, int64, error) {
-	query := vars.DB.Model(&model.Robot{})
+	query := r.DB.WithContext(r.Ctx).Model(&model.Robot{})
 	if req.Owner != "" {
 		query = query.Where("owner = ?", req.Owner)
 	}
@@ -46,21 +45,46 @@ func (r *Robot) RobotList(req dto.RobotListRequest, pager appx.Pager) ([]*model.
 	return robots, total, nil
 }
 
-func (r *Robot) GetByOwner(owner string, unscoped bool, preloads ...string) []*model.Robot {
-	filter := func(tx *gorm.DB) *gorm.DB {
-		query := tx.Where("owner = ?", owner)
-		if unscoped {
-			query = query.Unscoped()
-		}
-		return query
+func (r *Robot) GetByID(id int64) (*model.Robot, error) {
+	var robot model.Robot
+	err := r.DB.WithContext(r.Ctx).Where("id = ?", id).First(&robot).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, nil
 	}
-	return r.List(preloads, filter)
+	if err != nil {
+		return nil, err
+	}
+	return &robot, nil
+}
+
+func (r *Robot) GetByOwner(owner string, unscoped bool) ([]*model.Robot, error) {
+	query := r.DB.WithContext(r.Ctx).Model(&model.Robot{}).Where("owner = ?", owner)
+	if unscoped {
+		query = query.Unscoped()
+	}
+	var robots []*model.Robot
+	if err := query.Find(&robots).Error; err != nil {
+		return nil, err
+	}
+	return robots, nil
 }
 
 func (r *Robot) GetMaxRedisDB() (uint, error) {
 	var maxDB uint
-	if err := vars.DB.Model(&model.Robot{}).Unscoped().Select("COALESCE(MAX(redis_db), 0)").Scan(&maxDB).Error; err != nil {
+	if err := r.DB.WithContext(r.Ctx).Model(&model.Robot{}).Unscoped().Select("COALESCE(MAX(redis_db), 0)").Scan(&maxDB).Error; err != nil {
 		return 0, err
 	}
 	return maxDB, nil
+}
+
+func (r *Robot) Create(data *model.Robot) error {
+	return r.DB.WithContext(r.Ctx).Create(data).Error
+}
+
+func (r *Robot) Update(data *model.Robot) error {
+	return r.DB.WithContext(r.Ctx).Where("id = ?", data.ID).Updates(data).Error
+}
+
+func (r *Robot) Delete(id int64) error {
+	return r.DB.WithContext(r.Ctx).Where("id = ?", id).Delete(&model.Robot{}).Error
 }

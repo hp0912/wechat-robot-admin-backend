@@ -21,7 +21,11 @@ func (ct *User) LoginUser(c *gin.Context) {
 	session := sessions.Default(c)
 	id := session.Get("id")
 	if value, ok := id.(int64); ok {
-		user := service.NewUserService(c.Request.Context()).LoginUser(c, value)
+		user, err := service.NewUserService(c.Request.Context()).LoginUser(c, value)
+		if err != nil {
+			resp.ToErrorResponse(err)
+			return
+		}
 		if user == nil {
 			resp.ToErrorResponse(errors.New("用户不存在"))
 			return

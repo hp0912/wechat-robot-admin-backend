@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"os"
 
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
@@ -45,6 +46,8 @@ func (Robot) TableName() string {
 }
 
 func (r *Robot) GetBaseURL() string {
-	// return fmt.Sprintf("http://client_%s:%d/api/v1/robot", r.RobotCode, 9000)
-	return fmt.Sprintf("http://127.0.0.1:9001/api/v1/robot") // TODO
+	if os.Getenv("DEV_ROBOT_CLIENT_URL") != "" {
+		return os.Getenv("DEV_ROBOT_CLIENT_URL")
+	}
+	return fmt.Sprintf("http://client_%s:%d/api/v1/robot", r.RobotCode, 9000)
 }

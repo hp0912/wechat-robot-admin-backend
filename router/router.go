@@ -123,6 +123,13 @@ func RegisterRouter(r *gin.Engine) error {
 		robot.GET("/view", middleware.UserOwnerAuth(), robotManageCtl.RobotView)
 		robot.POST("/restart-client", middleware.UserOwnerAuth(), robotManageCtl.RobotRestartClient)
 		robot.POST("/restart-server", middleware.UserOwnerAuth(), robotManageCtl.RobotRestartServer)
+		// 拉取最新镜像
+		robot.GET("/docker/image/pull", middleware.UserOwnerAuth(), robotManageCtl.RobotDockerImagePull)
+		// 删除客户端和服务端容器
+		robot.DELETE("/docker/container/remove", middleware.UserOwnerAuth(), robotManageCtl.RobotStopAndRemoveClientAndServer)
+		// 启动客户端和服务端容器
+		robot.POST("/docker/container/start", middleware.UserOwnerAuth(), robotManageCtl.RobotStartClientAndServer)
+		// 删除机器人
 		robot.DELETE("/remove", middleware.UserOwnerAuth(), robotManageCtl.RobotRemove)
 		// 机器人登陆、登出
 		robot.GET("/state", middleware.UserOwnerAuth(), robotLoginCtl.RobotState)

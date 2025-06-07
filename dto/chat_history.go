@@ -59,7 +59,7 @@ type ChatHistory struct {
 	ID                 int64          `json:"id"`
 	MsgId              int64          `json:"msg_id"`        // 消息Id
 	ClientMsgId        int64          `json:"client_msg_id"` // 客户端消息Id
-	IsGroup            bool           `json:"is_group"`
+	IsChatRoom         bool           `json:"is_chat_room"`
 	IsAtMe             bool           `json:"is_atme"` // @所有人 好的
 	IsRecalled         bool           `json:"is_recalled"`
 	Type               MessageType    `json:"type"`                 // 消息类型
