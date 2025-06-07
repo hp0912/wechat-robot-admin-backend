@@ -121,6 +121,10 @@ func (sv *RobotManageService) DockerStartClientAndServer(ctx *gin.Context, robot
 			fmt.Sprintf("MYSQL_ADMIN_DB=%s", vars.MysqlSettings.Db),
 			fmt.Sprintf("MYSQL_DB=%s", robot.RobotCode),
 			fmt.Sprintf("MYSQL_SCHEMA=%s", vars.MysqlSettings.Schema),
+			fmt.Sprintf("REDIS_HOST=%s", vars.RedisSettings.Host),
+			fmt.Sprintf("REDIS_PORT=%s", vars.RedisSettings.Port),
+			fmt.Sprintf("REDIS_PASSWORD=%s", vars.RedisSettings.Password),
+			fmt.Sprintf("REDIS_DB=%d", robot.RedisDB),
 		},
 	}
 
