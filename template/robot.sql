@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `messages` (
   `client_msg_id` BIGINT NOT NULL,
   `type` INT NOT NULL,
   `app_msg_type` INT DEFAULT NULL,
-  `is_group` BOOLEAN DEFAULT FALSE COMMENT '是否为群聊消息',
+  `is_chat_room` BOOLEAN DEFAULT FALSE COMMENT '是否为群聊消息',
   `is_at_me` BOOLEAN DEFAULT FALSE COMMENT '消息是否@我',
   `is_recalled` BOOLEAN DEFAULT FALSE COMMENT '消息是否已经撤回',
   `content` TEXT,
