@@ -3,8 +3,8 @@ package dto
 type ContactType string
 
 const (
-	ContactTypeFriend ContactType = "friend"
-	ContactTypeGroup  ContactType = "group"
+	ContactTypeFriend   ContactType = "friend"
+	ContactTypeChatRoom ContactType = "chat_room"
 )
 
 type SyncContactsRequest struct {

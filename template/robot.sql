@@ -120,7 +120,7 @@ CREATE TABLE IF NOT EXISTS `contacts` (
   `alias` VARCHAR(64) DEFAULT NULL COMMENT '微信号',
   `nickname` VARCHAR(64) DEFAULT NULL COMMENT '昵称',
   `avatar` VARCHAR(255) DEFAULT NULL COMMENT '头像',
-  `type` ENUM('friend','group') NOT NULL COMMENT '联系人类型：friend-好友，group-群组',
+  `type` ENUM('friend','chat_room') NOT NULL COMMENT '联系人类型：friend-好友，chat_room-群组',
   `remark` VARCHAR(255) DEFAULT NULL COMMENT '备注',
   `pyinitial` VARCHAR(64) DEFAULT NULL COMMENT '昵称拼音首字母大写',
   `quan_pin` VARCHAR(255) DEFAULT NULL COMMENT '昵称拼音全拼小写',
