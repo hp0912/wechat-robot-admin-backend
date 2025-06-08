@@ -50,7 +50,7 @@ func (sv *RobotManageService) getDockerClient() (*client.Client, error) {
 	return dockerClient, nil
 }
 
-func (sv *RobotManageService) DockerStartClientAndServer(ctx *gin.Context, robot *model.Robot) error {
+func (sv *RobotManageService) DockerStartWeChatClient(ctx *gin.Context, robot *model.Robot) error {
 	// 创建Docker客户端
 	dockerClient, err := sv.getDockerClient()
 	if err != nil {
@@ -58,54 +58,8 @@ func (sv *RobotManageService) DockerStartClientAndServer(ctx *gin.Context, robot
 	}
 	defer dockerClient.Close()
 
-	// 服务端容器配置
-	clientContainerName := fmt.Sprintf("client_%s", robot.RobotCode)
-	serverContainerName := fmt.Sprintf("server_%s", robot.RobotCode)
-	serverConfig := &container.Config{
-		Image: "registry.cn-shenzhen.aliyuncs.com/houhou/wechat-ipad:latest",
-		Env: []string{
-			fmt.Sprintf("WECHAT_PORT=%s", "9000"),
-			fmt.Sprintf("REDIS_HOST=%s", vars.RedisSettings.Host),
-			fmt.Sprintf("REDIS_PORT=%s", vars.RedisSettings.Port),
-			fmt.Sprintf("REDIS_PASSWORD=%s", vars.RedisSettings.Password),
-			fmt.Sprintf("REDIS_DB=%d", robot.RedisDB),
-			fmt.Sprintf("WECHAT_CLIENT_HOST=%s", fmt.Sprintf("%s:%d", clientContainerName, 9000)),
-		},
-	}
-
-	serverHostConfig := &container.HostConfig{
-		RestartPolicy: container.RestartPolicy{
-			Name: "always",
-		},
-	}
-
-	// 服务端网络配置
-	serverNetworkConfig := &network.NetworkingConfig{
-		EndpointsConfig: map[string]*network.EndpointSettings{
-			vars.DockerNetwork: {},
-		},
-	}
-
-	// 创建服务端容器
-	serverResp, err := dockerClient.ContainerCreate(
-		sv.ctx,
-		serverConfig,
-		serverHostConfig,
-		serverNetworkConfig,
-		nil,
-		serverContainerName,
-	)
-	if err != nil {
-		return fmt.Errorf("创建服务端容器失败: %v", err)
-	}
-
-	// 启动服务端容器
-	err = dockerClient.ContainerStart(sv.ctx, serverResp.ID, container.StartOptions{})
-	if err != nil {
-		return fmt.Errorf("启动服务端容器失败: %v", err)
-	}
-
 	// 客户端容器配置
+	clientContainerName := fmt.Sprintf("client_%s", robot.RobotCode)
 	clientConfig := &container.Config{
 		Image: "registry.cn-shenzhen.aliyuncs.com/houhou/wechat-robot-client:latest",
 		Env: []string{
@@ -164,7 +118,83 @@ func (sv *RobotManageService) DockerStartClientAndServer(ctx *gin.Context, robot
 	return nil
 }
 
-func (sv *RobotManageService) DockerStopAndRemoveClientAndServer(ctx *gin.Context, robot *model.Robot) error {
+func (sv *RobotManageService) DockerStartWeChatServer(ctx *gin.Context, robot *model.Robot) error {
+	// 创建Docker客户端
+	dockerClient, err := sv.getDockerClient()
+	if err != nil {
+		return err
+	}
+	defer dockerClient.Close()
+
+	// 服务端容器配置
+	clientContainerName := fmt.Sprintf("client_%s", robot.RobotCode)
+	serverContainerName := fmt.Sprintf("server_%s", robot.RobotCode)
+	serverConfig := &container.Config{
+		Image: "registry.cn-shenzhen.aliyuncs.com/houhou/wechat-ipad:latest",
+		Env: []string{
+			fmt.Sprintf("WECHAT_PORT=%s", "9000"),
+			fmt.Sprintf("REDIS_HOST=%s", vars.RedisSettings.Host),
+			fmt.Sprintf("REDIS_PORT=%s", vars.RedisSettings.Port),
+			fmt.Sprintf("REDIS_PASSWORD=%s", vars.RedisSettings.Password),
+			fmt.Sprintf("REDIS_DB=%d", robot.RedisDB),
+			fmt.Sprintf("WECHAT_CLIENT_HOST=%s", fmt.Sprintf("%s:%d", clientContainerName, 9000)),
+		},
+	}
+
+	serverHostConfig := &container.HostConfig{
+		RestartPolicy: container.RestartPolicy{
+			Name: "always",
+		},
+	}
+
+	// 服务端网络配置
+	serverNetworkConfig := &network.NetworkingConfig{
+		EndpointsConfig: map[string]*network.EndpointSettings{
+			vars.DockerNetwork: {},
+		},
+	}
+
+	// 创建服务端容器
+	serverResp, err := dockerClient.ContainerCreate(
+		sv.ctx,
+		serverConfig,
+		serverHostConfig,
+		serverNetworkConfig,
+		nil,
+		serverContainerName,
+	)
+	if err != nil {
+		return fmt.Errorf("创建服务端容器失败: %v", err)
+	}
+
+	// 启动服务端容器
+	err = dockerClient.ContainerStart(sv.ctx, serverResp.ID, container.StartOptions{})
+	if err != nil {
+		return fmt.Errorf("启动服务端容器失败: %v", err)
+	}
+
+	return nil
+}
+
+func (sv *RobotManageService) DockerStopAndRemoveWeChatClient(ctx *gin.Context, robot *model.Robot) error {
+	// 使用Docker SDK停止并删除容器
+	dockerClient, err := sv.getDockerClient()
+	if err != nil {
+		return err
+	}
+	defer dockerClient.Close()
+
+	// 停止并删除客户端容器
+	clientContainerName := fmt.Sprintf("client_%s", robot.RobotCode)
+	err = sv.stopAndRemoveContainer(dockerClient, clientContainerName)
+	if err != nil {
+		return fmt.Errorf("删除客户端容器失败: %v", err)
+	}
+
+	return nil
+}
+
+func (sv *RobotManageService) DockerStopAndRemoveWeChatServer(ctx *gin.Context, robot *model.Robot) error {
 	// 使用Docker SDK停止并删除容器
 	dockerClient, err := sv.getDockerClient()
 	if err != nil {
@@ -177,13 +207,6 @@ func (sv *RobotManageService) DockerStopAndRemoveClientAndServer(ctx *gin.Contex
 	err = sv.stopAndRemoveContainer(dockerClient, serverContainerName)
 	if err != nil {
 		return fmt.Errorf("删除服务端容器失败: %v", err)
-	}
-
-	// 停止并删除客户端容器
-	clientContainerName := fmt.Sprintf("client_%s", robot.RobotCode)
-	err = sv.stopAndRemoveContainer(dockerClient, clientContainerName)
-	if err != nil {
-		return fmt.Errorf("删除客户端容器失败: %v", err)
 	}
 
 	return nil
@@ -261,7 +284,12 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 		return err
 	}
 
-	err = sv.DockerStartClientAndServer(ctx, robot)
+	err = sv.DockerStartWeChatClient(ctx, robot)
+	if err != nil {
+		return err
+	}
+
+	err = sv.DockerStartWeChatServer(ctx, robot)
 	if err != nil {
 		return err
 	}
@@ -275,8 +303,25 @@ func (sv *RobotManageService) RobotView(robotID int64) (*model.Robot, error) {
 	return respo.GetByID(robotID)
 }
 
+// RobotStopAndRemoveWeChatClient 删除机器人客户端容器
+func (sv *RobotManageService) RobotStopAndRemoveWeChatClient(ctx *gin.Context, robotID int64) error {
+	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
+	robot, err := respo.GetByID(robotID)
+	if err != nil {
+		return err
+	}
+	if robot == nil {
+		return errors.New("机器人不存在")
+	}
+	err = sv.DockerStopAndRemoveWeChatClient(ctx, robot)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // RobotStopAndRemoveClientAndServer 删除机器人容器
-func (sv *RobotManageService) RobotStopAndRemoveClientAndServer(ctx *gin.Context, robotID int64) error {
+func (sv *RobotManageService) RobotStopAndRemoveWeChatServer(ctx *gin.Context, robotID int64) error {
 	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
 	robot, err := respo.GetByID(robotID)
 	if err != nil {
@@ -291,15 +336,15 @@ func (sv *RobotManageService) RobotStopAndRemoveClientAndServer(ctx *gin.Context
 	if err != nil {
 		log.Println("删除机器人容器前，机器人登出失败:", err)
 	}
-	err = sv.DockerStopAndRemoveClientAndServer(ctx, robot)
+	err = sv.DockerStopAndRemoveWeChatServer(ctx, robot)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-// RobotStartClientAndServer 启动机器人容器
-func (sv *RobotManageService) RobotStartClientAndServer(ctx *gin.Context, robotID int64) error {
+// RobotStartWeChatClient 启动机器人客户端容器
+func (sv *RobotManageService) RobotStartWeChatClient(ctx *gin.Context, robotID int64) error {
 	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
 	robot, err := respo.GetByID(robotID)
 	if err != nil {
@@ -308,7 +353,24 @@ func (sv *RobotManageService) RobotStartClientAndServer(ctx *gin.Context, robotI
 	if robot == nil {
 		return errors.New("机器人不存在")
 	}
-	err = sv.DockerStartClientAndServer(ctx, robot)
+	err = sv.DockerStartWeChatClient(ctx, robot)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// RobotStartWeChatServer 启动机器人服务端容器
+func (sv *RobotManageService) RobotStartWeChatServer(ctx *gin.Context, robotID int64) error {
+	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
+	robot, err := respo.GetByID(robotID)
+	if err != nil {
+		return err
+	}
+	if robot == nil {
+		return errors.New("机器人不存在")
+	}
+	err = sv.DockerStartWeChatServer(ctx, robot)
 	if err != nil {
 		return err
 	}
@@ -336,7 +398,12 @@ func (sv *RobotManageService) RobotRemove(ctx *gin.Context, robotID int64) error
 		return err
 	}
 
-	err = sv.DockerStopAndRemoveClientAndServer(ctx, robot)
+	err = sv.DockerStopAndRemoveWeChatClient(ctx, robot)
+	if err != nil {
+		return err
+	}
+
+	err = sv.DockerStopAndRemoveWeChatServer(ctx, robot)
 	if err != nil {
 		return err
 	}
