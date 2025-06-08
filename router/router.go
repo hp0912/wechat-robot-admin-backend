@@ -126,9 +126,11 @@ func RegisterRouter(r *gin.Engine) error {
 		// 拉取最新镜像
 		robot.GET("/docker/image/pull", middleware.UserOwnerAuth(), robotManageCtl.RobotDockerImagePull)
 		// 删除客户端和服务端容器
-		robot.DELETE("/docker/container/remove", middleware.UserOwnerAuth(), robotManageCtl.RobotStopAndRemoveClientAndServer)
+		robot.DELETE("/docker/container/client/remove", middleware.UserOwnerAuth(), robotManageCtl.RobotStopAndRemoveClient)
+		robot.DELETE("/docker/container/server/remove", middleware.UserOwnerAuth(), robotManageCtl.RobotStopAndRemoveServer)
 		// 启动客户端和服务端容器
-		robot.POST("/docker/container/start", middleware.UserOwnerAuth(), robotManageCtl.RobotStartClientAndServer)
+		robot.POST("/docker/container/client/start", middleware.UserOwnerAuth(), robotManageCtl.RobotStartClient)
+		robot.POST("/docker/container/server/start", middleware.UserOwnerAuth(), robotManageCtl.RobotStartServer)
 		// 删除机器人
 		robot.DELETE("/remove", middleware.UserOwnerAuth(), robotManageCtl.RobotRemove)
 		// 机器人登陆、登出
