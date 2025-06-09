@@ -80,6 +80,7 @@ func (sv *RobotManageService) DockerStartWeChatClient(ctx *gin.Context, robot *m
 			fmt.Sprintf("REDIS_PORT=%s", vars.RedisSettings.Port),
 			fmt.Sprintf("REDIS_PASSWORD=%s", vars.RedisSettings.Password),
 			fmt.Sprintf("REDIS_DB=%d", robot.RedisDB),
+			fmt.Sprintf("WORD_CLOUD_URL=%s", "http://word-cloud-server:9000/api/v1/word-cloud/gen"),
 		},
 	}
 
@@ -277,7 +278,7 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 		return err
 	}
 	// 插入一条公共配置记录
-	commonConf := fmt.Sprintf("INSERT INTO `%s`.`%s` (`chat_ai_enabled`, `chat_base_url`, `chat_api_key`, `chat_model`, `chat_prompt`, `friend_sync_cron`) VALUES (1, '%s', '%s', '%s', '%s', '0 * * * *');",
+	commonConf := fmt.Sprintf("INSERT INTO `%s`.`%s` (`chat_ai_enabled`, `chat_base_url`, `chat_api_key`, `chat_model`, `chat_prompt`, `friend_sync_cron`) VALUES (1, '%s', '%s', '%s', '%s', '55 * * * *');",
 		robot.RobotCode, "global_settings", "https://ai-api.houhoukang.com/", vars.OpenAIApiKey, "gpt-4o-mini", "我是一个聊天机器人。")
 	err = newDB.Exec(commonConf).Error
 	if err != nil {
