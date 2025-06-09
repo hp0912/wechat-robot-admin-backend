@@ -96,6 +96,7 @@ CREATE TABLE IF NOT EXISTS `messages` (
   `app_msg_type` INT DEFAULT NULL,
   `is_chat_room` BOOLEAN DEFAULT FALSE COMMENT '是否为群聊消息',
   `is_at_me` BOOLEAN DEFAULT FALSE COMMENT '消息是否@我',
+  `is_ai_context` BOOLEAN DEFAULT FALSE COMMENT '消息是否是AI的上下文',
   `is_recalled` BOOLEAN DEFAULT FALSE COMMENT '消息是否已经撤回',
   `content` TEXT,
   `display_full_content` TEXT,
