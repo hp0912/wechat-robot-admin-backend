@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"wechat-robot-admin-backend/template"
 	"wechat-robot-admin-backend/utils/docker"
 	"wechat-robot-admin-backend/vars"
 
@@ -18,6 +19,10 @@ func SetupVars() error {
 		return err
 	}
 	log.Println("MySQL连接成功")
+	if err := InitMysqlTables(); err != nil {
+		return err
+	}
+	log.Println("MySQL表初始化成功")
 	if err := InitDockerNetwork(); err != nil {
 		return err
 	}
@@ -43,10 +48,21 @@ func InitMySQLClient() (err error) {
 	return err
 }
 
+func InitMysqlTables() error {
+	if vars.DB == nil {
+		return fmt.Errorf("mysql client is not initialized")
+	}
+	err := vars.DB.Exec(fmt.Sprintf("USE `%s`;\n%s", vars.MysqlSettings.Db, template.AdminSqlTemplate)).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func InitDockerNetwork() error {
 	networkName := vars.DockerNetwork
 	if networkName == "" {
-		return fmt.Errorf("Docker network name is not set")
+		return fmt.Errorf("docker network name is not set")
 	}
 	if !docker.NetworkExists(networkName) {
 		err := docker.CreateNetwork(networkName)
