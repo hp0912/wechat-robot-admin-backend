@@ -37,6 +37,7 @@ func initController() {
 
 func RegisterRouter(r *gin.Engine) error {
 	r.Use(middleware.ErrorRecover)
+	r.Use(middleware.Cors)
 
 	initController()
 
