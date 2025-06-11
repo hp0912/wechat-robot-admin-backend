@@ -49,10 +49,25 @@ func InitMySQLClient() (err error) {
 }
 
 func InitMysqlTables() error {
-	if vars.DB == nil {
-		return fmt.Errorf("mysql client is not initialized")
+	// 配置不太一样，必须包含 multiStatements=true 以支持多条 SQL 语句执行
+	// 因此新建一个数据库连接
+	temporaryDsn := fmt.Sprintf("%s:%s@tcp(%s:%v)/%s?charset=utf8mb4&parseTime=True&loc=Local&multiStatements=true",
+		vars.MysqlSettings.User, vars.MysqlSettings.Password, vars.MysqlSettings.Host, vars.MysqlSettings.Port, vars.MysqlSettings.Db)
+	mysqlConfig := mysql.Config{
+		DSN: temporaryDsn,
 	}
-	err := vars.DB.Exec(fmt.Sprintf("USE `%s`;\n%s", vars.MysqlSettings.Db, template.AdminSqlTemplate)).Error
+	// gorm 配置
+	gormConfig := gorm.Config{}
+	temporaryDB, err := gorm.Open(mysql.New(mysqlConfig), &gormConfig)
+	if err != nil {
+		return err
+	}
+	db, err := temporaryDB.DB()
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+	err = temporaryDB.Exec(fmt.Sprintf("USE `%s`;\n%s", vars.MysqlSettings.Db, template.AdminSqlTemplate)).Error
 	if err != nil {
 		return err
 	}
