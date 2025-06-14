@@ -15,3 +15,5 @@ var WeChatServerToken string
 var SessionSecret string
 
 var OpenAIApiKey string
+
+var ThirdPartyApiKey string
