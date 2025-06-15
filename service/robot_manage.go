@@ -81,6 +81,7 @@ func (sv *RobotManageService) DockerStartWeChatClient(ctx *gin.Context, robot *m
 			fmt.Sprintf("REDIS_PASSWORD=%s", vars.RedisSettings.Password),
 			fmt.Sprintf("REDIS_DB=%d", robot.RedisDB),
 			fmt.Sprintf("WORD_CLOUD_URL=%s", "http://word-cloud-server:9000/api/v1/word-cloud/gen"),
+			fmt.Sprintf("THIRD_PARTY_API_KEY=%s", vars.ThirdPartyApiKey),
 		},
 	}
 
