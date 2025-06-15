@@ -332,12 +332,6 @@ func (sv *RobotManageService) RobotStopAndRemoveWeChatServer(ctx *gin.Context, r
 	if robot == nil {
 		return errors.New("机器人不存在")
 	}
-	// 先尝试退出登录
-	robotLoginService := NewRobotLoginService(sv.ctx)
-	err = robotLoginService.RobotLogout(robot)
-	if err != nil {
-		log.Println("删除机器人容器前，机器人登出失败:", err)
-	}
 	err = sv.DockerStopAndRemoveWeChatServer(ctx, robot)
 	if err != nil {
 		return err
@@ -389,11 +383,20 @@ func (sv *RobotManageService) RobotRemove(ctx *gin.Context, robotID int64) error
 	if robot == nil {
 		return errors.New("机器人不存在")
 	}
+
+	// 先尝试退出登录
+	robotLoginService := NewRobotLoginService(sv.ctx)
+	err = robotLoginService.RobotLogout(robot)
+	if err != nil {
+		log.Println("删除机器人容器前，机器人登出失败:", err)
+	}
+
 	// 删除机器人实例数据
 	err = respo.Delete(robotID)
 	if err != nil {
 		return err
 	}
+
 	// 删除机器人数据库
 	err = vars.DB.Exec(fmt.Sprintf("DROP DATABASE IF EXISTS `%s`;", robot.RobotCode)).Error
 	if err != nil {
