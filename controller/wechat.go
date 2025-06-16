@@ -20,6 +20,11 @@ func NewWeChatAuthController() *WeChat {
 	return &WeChat{}
 }
 
+func (w *WeChat) WeChatOfficialAccountAuthURL(c *gin.Context) {
+	ctx := c.Request.Context()
+	service.NewWeChatService(ctx).WeChatOfficialAccountAuthURL(ctx)
+}
+
 func (w *WeChat) WeChatAuth(c *gin.Context) {
 	req := &WeChatRequest{}
 	resp := appx.NewResponse(c)

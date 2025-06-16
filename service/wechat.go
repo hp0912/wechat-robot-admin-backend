@@ -60,6 +60,10 @@ func (sv *WeChatService) GetWeChatIdByCode(code string) (string, error) {
 	return resp.Data, nil
 }
 
+func (sv *WeChatService) WeChatOfficialAccountAuthURL(ctx context.Context) {
+
+}
+
 func (sv *WeChatService) WeChatAuth(ctx context.Context, code string) (*model.User, error) {
 	wechatId, err := sv.GetWeChatIdByCode(code)
 	if err != nil {

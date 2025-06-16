@@ -44,6 +44,7 @@ func RegisterRouter(r *gin.Engine) error {
 	api := r.Group("/api/v1")
 	{
 		oauth := api.Group("/oauth")
+		oauth.GET("/official-account/url", wechatCtl.WeChatOfficialAccountAuthURL)
 		oauth.POST("/wechat", wechatCtl.WeChatAuth)
 	}
 
