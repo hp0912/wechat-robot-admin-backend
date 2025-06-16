@@ -34,6 +34,7 @@ func loadEnvConfig() {
 
 	vars.WeChatServerAddress = os.Getenv("WECHAT_SERVER_ADDRESS")
 	vars.WeChatServerToken = os.Getenv("WECHAT_SERVER_TOKEN")
+	vars.WeChatOfficialAccountAuthURL = os.Getenv("WECHAT_OFFICIAL_ACCOUNT_AUTH_URL")
 
 	vars.OpenAIApiKey = os.Getenv("OPENAI_API_KEY")
 	vars.ThirdPartyApiKey = os.Getenv("THIRD_PARTY_API_KEY")
