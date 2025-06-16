@@ -2,6 +2,7 @@ package controller
 
 import (
 	"errors"
+	"fmt"
 	"wechat-robot-admin-backend/pkg/appx"
 	"wechat-robot-admin-backend/service"
 	"wechat-robot-admin-backend/vars"
@@ -22,7 +23,17 @@ func NewWeChatAuthController() *WeChat {
 
 func (w *WeChat) WeChatOfficialAccountAuthURL(c *gin.Context) {
 	ctx := c.Request.Context()
-	service.NewWeChatService(ctx).WeChatOfficialAccountAuthURL(ctx)
+	imageData, contentType, err := service.NewWeChatService(ctx).WeChatOfficialAccountAuthURL(ctx)
+	if err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+	// 设置响应头
+	c.Header("Content-Type", contentType)
+	c.Header("Cache-Control", "public, max-age=3600") // 缓存1小时
+	c.Header("Content-Length", fmt.Sprintf("%d", len(imageData)))
+	// 直接返回图片数据
+	c.Data(200, contentType, imageData)
 }
 
 func (w *WeChat) WeChatAuth(c *gin.Context) {

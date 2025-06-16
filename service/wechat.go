@@ -60,8 +60,40 @@ func (sv *WeChatService) GetWeChatIdByCode(code string) (string, error) {
 	return resp.Data, nil
 }
 
-func (sv *WeChatService) WeChatOfficialAccountAuthURL(ctx context.Context) {
-
+func (sv *WeChatService) WeChatOfficialAccountAuthURL(ctx context.Context) ([]byte, string, error) {
+	if vars.WeChatOfficialAccountAuthURL == "" {
+		return nil, "", errors.New("微信公众号授权URL未配置")
+	}
+	// 下载图片
+	client := http.Client{
+		Timeout: 10 * time.Second,
+	}
+	resp, err := client.Get(vars.WeChatOfficialAccountAuthURL)
+	if err != nil {
+		return nil, "", fmt.Errorf("下载图片失败: %w", err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return nil, "", fmt.Errorf("下载图片失败，状态码: %d", resp.StatusCode)
+	}
+	// 读取图片内容
+	imageData := make([]byte, 0)
+	buf := make([]byte, 1024)
+	for {
+		n, err := resp.Body.Read(buf)
+		if n > 0 {
+			imageData = append(imageData, buf[:n]...)
+		}
+		if err != nil {
+			break
+		}
+	}
+	// 获取Content-Type
+	contentType := resp.Header.Get("Content-Type")
+	if contentType == "" {
+		contentType = "image/png" // 默认类型
+	}
+	return imageData, contentType, nil
 }
 
 func (sv *WeChatService) WeChatAuth(ctx context.Context, code string) (*model.User, error) {

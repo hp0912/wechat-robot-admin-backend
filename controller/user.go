@@ -46,5 +46,4 @@ func (ct *User) Logout(c *gin.Context) {
 		return
 	}
 	resp.ToResponse(nil)
-	return
 }
