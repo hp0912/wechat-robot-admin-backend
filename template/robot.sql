@@ -158,3 +158,20 @@ CREATE TABLE IF NOT EXISTS `chat_room_members` (
   KEY `idx_chat_room_id` (`chat_room_id`),
   KEY `idx_wechat_id` (`wechat_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE IF NOT EXISTS `ai_task` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `contact_id` VARCHAR(64) NOT NULL COMMENT '联系人ID，私聊时为好友微信ID，群聊时为群聊ID + 下划线 +  群聊成员微信ID',
+  `message_id` BIGINT NOT NULL COMMENT '消息ID，关联messages表的msg_id',
+  `ai_provider_task_id` VARCHAR(64) DEFAULT NULL COMMENT 'AI服务商任务ID',
+  `ai_task_type` ENUM('long_text_tts') NOT NULL COMMENT '任务类型：long_text_tts-长文本转语音',
+  `ai_task_status` ENUM('pending', 'processing', 'completed', 'failed') NOT NULL COMMENT '任务状态：pending-待处理，processing-处理中，completed-已完成，failed-已失败',
+  `extra` JSON COMMENT '额外信息',
+  `created_at` BIGINT NOT NULL COMMENT '创建时间',
+  `updated_at` BIGINT NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_contact_id` (`contact_id`),
+  KEY `idx_message_id` (`message_id`),
+  KEY `idx_ai_provider_task_id` (`ai_provider_task_id`),
+  KEY `idx_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
