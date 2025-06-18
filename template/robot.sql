@@ -171,7 +171,7 @@ CREATE TABLE IF NOT EXISTS `ai_task` (
   `updated_at` BIGINT NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   KEY `idx_contact_id` (`contact_id`),
-  KEY `idx_message_id` (`message_id`),
-  KEY `idx_ai_provider_task_id` (`ai_provider_task_id`),
+  UNIQUE KEY  `uk_message_id` (`message_id`),
+  UNIQUE KEY  `uk_ai_provider_task_id` (`ai_provider_task_id`),
   KEY `idx_created_at` (`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
