@@ -19,6 +19,7 @@ var globalSettingsCtl *controller.GlobalSettings
 var friendSettingsCtl *controller.FriendSettings
 var chatRoomSettingsCtl *controller.ChatRoomSettings
 var messageCtl *controller.Message
+var aiCallbackCtl *controller.AICallback
 
 func initController() {
 	wechatCtl = controller.NewWeChatAuthController()
@@ -33,6 +34,7 @@ func initController() {
 	globalSettingsCtl = controller.NewGlobalSettingsController()
 	friendSettingsCtl = controller.NewFriendSettingsController()
 	chatRoomSettingsCtl = controller.NewChatRoomSettingsController()
+	aiCallbackCtl = controller.NewAICallbackController()
 }
 
 func RegisterRouter(r *gin.Engine) error {
@@ -114,6 +116,11 @@ func RegisterRouter(r *gin.Engine) error {
 		chatRoomSettings.Use(middleware.UserAuth())
 		chatRoomSettings.GET("", middleware.UserOwnerAuth(), chatRoomSettingsCtl.GetChatRoomSettings)
 		chatRoomSettings.POST("", middleware.UserOwnerAuth(), chatRoomSettingsCtl.SaveChatRoomSettings)
+	}
+
+	{
+		aiCallback := api.Group("/ai-callback")
+		aiCallback.POST("/voice/doubao-tts", aiCallbackCtl.DoubaoTTS)
 	}
 
 	{
