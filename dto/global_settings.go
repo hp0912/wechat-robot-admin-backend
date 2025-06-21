@@ -15,6 +15,9 @@ type GetGlobalSettingsResponse struct {
 	ImageAIEnabled            bool           `form:"image_ai_enabled" json:"image_ai_enabled"`
 	ImageModel                string         `form:"image_model" json:"image_model"`
 	ImageAISettings           map[string]any `form:"image_ai_settings" json:"image_ai_settings"`
+	TTSEnabled                bool           `form:"tts_enabled" json:"tts_enabled"`
+	TTSSettings               map[string]any `form:"tts_settings" json:"tts_settings"`
+	LTTSSettings              map[string]any `form:"ltts_settings" json:"ltts_settings"`
 	WelcomeEnabled            bool           `form:"welcome_enabled" json:"welcome_enabled"`
 	WelcomeType               string         `form:"welcome_type" json:"welcome_type"`
 	WelcomeText               string         `form:"welcome_text" json:"welcome_text"`
@@ -22,6 +25,8 @@ type GetGlobalSettingsResponse struct {
 	WelcomeEmojiLen           int64          `form:"welcome_emoji_len" json:"welcome_emoji_len"`
 	WelcomeImageURL           string         `form:"welcome_image_url" json:"welcome_image_url"`
 	WelcomeURL                string         `form:"welcome_url" json:"welcome_url"`
+	LeaveChatRoomAlertEnabled bool           `form:"leave_chat_room_alert_enabled" json:"leave_chat_room_alert_enabled"`
+	LeaveChatRoomAlertText    string         `form:"leave_chat_room_alert_text" json:"leave_chat_room_alert_text"`
 	ChatRoomRankingEnabled    bool           `form:"chat_room_ranking_enabled" json:"chat_room_ranking_enabled"`
 	ChatRoomRankingDailyCron  string         `form:"chat_room_ranking_daily_cron" json:"chat_room_ranking_daily_cron"`
 	ChatRoomRankingWeeklyCron string         `form:"chat_room_ranking_weekly_cron" json:"chat_room_ranking_weekly_cron"`
@@ -49,6 +54,9 @@ type SaveGlobalSettingsRequest struct {
 	ImageAIEnabled            bool           `form:"image_ai_enabled" json:"image_ai_enabled"`
 	ImageModel                string         `form:"image_model" json:"image_model"`
 	ImageAISettings           map[string]any `form:"image_ai_settings" json:"image_ai_settings"`
+	TTSEnabled                bool           `form:"tts_enabled" json:"tts_enabled"`
+	TTSSettings               map[string]any `form:"tts_settings" json:"tts_settings"`
+	LTTSSettings              map[string]any `form:"ltts_settings" json:"ltts_settings"`
 	WelcomeEnabled            bool           `form:"welcome_enabled" json:"welcome_enabled"`
 	WelcomeType               string         `form:"welcome_type" json:"welcome_type"`
 	WelcomeText               string         `form:"welcome_text" json:"welcome_text"`
@@ -56,6 +64,8 @@ type SaveGlobalSettingsRequest struct {
 	WelcomeEmojiLen           int64          `form:"welcome_emoji_len" json:"welcome_emoji_len"`
 	WelcomeImageURL           string         `form:"welcome_image_url" json:"welcome_image_url"`
 	WelcomeURL                string         `form:"welcome_url" json:"welcome_url"`
+	LeaveChatRoomAlertEnabled bool           `form:"leave_chat_room_alert_enabled" json:"leave_chat_room_alert_enabled"`
+	LeaveChatRoomAlertText    string         `form:"leave_chat_room_alert_text" json:"leave_chat_room_alert_text"`
 	ChatRoomRankingEnabled    bool           `form:"chat_room_ranking_enabled" json:"chat_room_ranking_enabled"`
 	ChatRoomRankingDailyCron  string         `form:"chat_room_ranking_daily_cron" json:"chat_room_ranking_daily_cron"`
 	ChatRoomRankingWeeklyCron string         `form:"chat_room_ranking_weekly_cron" json:"chat_room_ranking_weekly_cron"`

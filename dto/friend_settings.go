@@ -15,6 +15,9 @@ type GetFriendSettingsResponse struct {
 	ImageAIEnabled  bool           `form:"image_ai_enabled" json:"image_ai_enabled"`
 	ImageModel      string         `form:"image_model" json:"image_model"`
 	ImageAISettings map[string]any `form:"image_ai_settings" json:"image_ai_settings"`
+	TTSEnabled      bool           `form:"tts_enabled" json:"tts_enabled"`
+	TTSSettings     map[string]any `form:"tts_settings" json:"tts_settings"`
+	LTTSSettings    map[string]any `form:"ltts_settings" json:"ltts_settings"`
 }
 
 type SaveFriendSettingsRequest struct {
@@ -29,4 +32,7 @@ type SaveFriendSettingsRequest struct {
 	ImageAIEnabled  bool           `form:"image_ai_enabled" json:"image_ai_enabled"`
 	ImageModel      string         `form:"image_model" json:"image_model"`
 	ImageAISettings map[string]any `form:"image_ai_settings" json:"image_ai_settings"`
+	TTSEnabled      bool           `form:"tts_enabled" json:"tts_enabled"`
+	TTSSettings     map[string]any `form:"tts_settings" json:"tts_settings"`
+	LTTSSettings    map[string]any `form:"ltts_settings" json:"ltts_settings"`
 }
