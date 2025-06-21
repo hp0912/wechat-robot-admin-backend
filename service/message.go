@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/model"
+	"wechat-robot-admin-backend/vars"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-resty/resty/v2"
@@ -56,7 +57,7 @@ func (sv *MessageService) SendTextMessage(req dto.SendTextMessageRequest, robot 
 	return nil
 }
 
-func (sv *MessageService) SendImageMessage(ctx *gin.Context, req dto.SendImageMessageRequest, file multipart.File, header *multipart.FileHeader, robot *model.Robot) error {
+func (sv *MessageService) SendImageMessage(ctx *gin.Context, req dto.SendImageMessageRequest, file io.Reader, header *multipart.FileHeader, robot *model.Robot) error {
 	robotURL := fmt.Sprintf("%s/message/send/image", robot.GetBaseURL())
 	// 准备转发请求
 	var requestBody bytes.Buffer
@@ -95,7 +96,7 @@ func (sv *MessageService) SendImageMessage(ctx *gin.Context, req dto.SendImageMe
 	return nil
 }
 
-func (sv *MessageService) SendVideoMessage(ctx *gin.Context, req dto.SendVideoMessageRequest, file multipart.File, header *multipart.FileHeader, robot *model.Robot) error {
+func (sv *MessageService) SendVideoMessage(ctx *gin.Context, req dto.SendVideoMessageRequest, file io.Reader, header *multipart.FileHeader, robot *model.Robot) error {
 	robotURL := fmt.Sprintf("%s/message/send/video", robot.GetBaseURL())
 	// 准备转发请求
 	var requestBody bytes.Buffer
@@ -134,7 +135,7 @@ func (sv *MessageService) SendVideoMessage(ctx *gin.Context, req dto.SendVideoMe
 	return nil
 }
 
-func (sv *MessageService) SendVoiceMessage(ctx *gin.Context, req dto.SendVoiceMessageRequest, file multipart.File, header *multipart.FileHeader, robot *model.Robot) error {
+func (sv *MessageService) SendVoiceMessage(ctx *gin.Context, req dto.SendVoiceMessageRequest, file io.Reader, header *multipart.FileHeader, robot *model.Robot) error {
 	robotURL := fmt.Sprintf("%s/message/send/voice", robot.GetBaseURL())
 	// 准备转发请求
 	var requestBody bytes.Buffer
@@ -171,4 +172,56 @@ func (sv *MessageService) SendVoiceMessage(ctx *gin.Context, req dto.SendVoiceMe
 	defer robotResp.Body.Close()
 
 	return nil
+}
+
+func (sv *MessageService) GetTimbre() ([]string, error) {
+	var result dto.TimbreResponse
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetQueryParam("key", vars.ThirdPartyApiKey).
+		SetQueryParam("type", "list").
+		SetResult(&result).
+		Get("https://api.pearktrue.cn/api/dub")
+	if err != nil {
+		return nil, err
+	}
+	if result.Code != 200 {
+		return nil, fmt.Errorf("failed to get timbre: %s", result.Msg)
+	}
+	return result.Speakers, nil
+}
+
+func (sv *MessageService) SendAITTSMessage(ctx *gin.Context, req dto.RobotSendAITTSMessageRequest, robot *model.Robot) error {
+	var result dto.RobotSendAITTSMessageResponse
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetQueryParam("key", vars.ThirdPartyApiKey).
+		SetQueryParam("type", "mp3").
+		SetQueryParam("dub", req.Speaker).
+		SetQueryParam("text", req.Content).
+		SetResult(&result).
+		Get("https://api.pearktrue.cn/api/dub")
+	if err != nil {
+		return err
+	}
+	if result.Code != 200 {
+		return fmt.Errorf("failed to send AI TTS message: %s", result.Msg)
+	}
+	// 下载生成的音频文件
+	audioResp, err := http.Get(result.Audiopath)
+	if err != nil {
+		return fmt.Errorf("failed to download audio file: %v", err)
+	}
+	defer audioResp.Body.Close()
+
+	if audioResp.StatusCode != http.StatusOK {
+		return fmt.Errorf("failed to download audio file, status: %d", audioResp.StatusCode)
+	}
+	voiceReq := dto.SendVoiceMessageRequest{
+		ToWxid: req.ToWxid,
+	}
+	header := &multipart.FileHeader{
+		Filename: "ai_tts_audio.mp3",
+	}
+	return sv.SendVoiceMessage(ctx, voiceReq, audioResp.Body, header, robot)
 }

@@ -11,6 +11,10 @@ CREATE TABLE IF NOT EXISTS `global_settings` (
   `image_ai_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI绘图功能',
   `image_model` VARCHAR(255) DEFAULT '' COMMENT '绘图AI模型',
   `image_ai_settings` JSON COMMENT '绘图AI配置项',
+  -- 文本转语音AI设置
+  `tts_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI文本转语音功能',
+  `tts_settings` JSON COMMENT '文本转语音AI配置项',
+  `ltts_settings` JSON COMMENT '长文本转语音AI配置项',
   -- 欢迎新人
   `welcome_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用新成员加群欢迎功能',
   `welcome_type` ENUM('text','emoji', 'image', 'url') NOT NULL DEFAULT 'text' COMMENT '欢迎方式：text-文本，emoji-表情，image-图片，url-链接',
@@ -19,6 +23,9 @@ CREATE TABLE IF NOT EXISTS `global_settings` (
   `welcome_emoji_len` BIGINT DEFAULT 0 COMMENT '欢迎新成员的表情MD5长度',
   `welcome_image_url` VARCHAR(255) DEFAULT '' COMMENT '欢迎新成员的图片URL',
   `welcome_url` VARCHAR(255) DEFAULT '' COMMENT '欢迎新成员的URL',
+  -- 退出群聊提醒
+  `leave_chat_room_alert_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用群聊退出提醒功能',
+  `leave_chat_room_alert_text` VARCHAR(255) DEFAULT '' COMMENT '群聊退出提醒文本',
   -- 群聊排行榜
   `chat_room_ranking_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用群聊排行榜功能',
   `chat_room_ranking_daily_cron` VARCHAR(255) DEFAULT '' COMMENT '每日定时任务表达式',
@@ -51,7 +58,12 @@ CREATE TABLE IF NOT EXISTS `friend_settings` (
   -- 绘图模型AI设置
   `image_ai_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI绘图功能',
   `image_model` VARCHAR(255) DEFAULT '' COMMENT '绘图AI模型',
-  `image_ai_settings` JSON COMMENT '绘图AI配置项'
+  `image_ai_settings` JSON COMMENT '绘图AI配置项',
+   -- 文本转语音AI设置
+  `tts_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI文本转语音功能',
+  `tts_settings` JSON COMMENT '文本转语音AI配置项',
+  `ltts_settings` JSON COMMENT '长文本转语音AI配置项',
+  KEY `idx_wechat_id` (`wechat_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `chat_room_settings` (
@@ -68,6 +80,10 @@ CREATE TABLE IF NOT EXISTS `chat_room_settings` (
   `image_ai_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI绘图功能',
   `image_model` VARCHAR(255) DEFAULT '' COMMENT '绘图AI模型',
   `image_ai_settings` JSON COMMENT '绘图AI配置项',
+   -- 文本转语音AI设置
+  `tts_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI文本转语音功能',
+  `tts_settings` JSON COMMENT '文本转语音AI配置项',
+  `ltts_settings` JSON COMMENT '长文本转语音AI配置项',
   -- 欢迎新人
   `welcome_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用新成员加群欢迎功能',
   `welcome_type` ENUM('text','emoji', 'image', 'url') NOT NULL DEFAULT 'text' COMMENT '欢迎方式：text-文本，emoji-表情，image-图片，url-链接',
@@ -76,6 +92,9 @@ CREATE TABLE IF NOT EXISTS `chat_room_settings` (
   `welcome_emoji_len` BIGINT DEFAULT 0 COMMENT '欢迎新成员的表情MD5长度',
   `welcome_image_url` VARCHAR(255) DEFAULT '' COMMENT '欢迎新成员的图片URL',
   `welcome_url` VARCHAR(255) DEFAULT '' COMMENT '欢迎新成员的URL',
+    -- 退出群聊提醒
+  `leave_chat_room_alert_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用群聊退出提醒功能',
+  `leave_chat_room_alert_text` VARCHAR(255) DEFAULT '' COMMENT '群聊退出提醒文本',
   -- 群聊排行榜
   `chat_room_ranking_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用群聊排行榜功能',
   -- 群聊总结
@@ -85,7 +104,8 @@ CREATE TABLE IF NOT EXISTS `chat_room_settings` (
   `news_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用每日早报功能',
   `news_type` ENUM('', 'text', 'image') DEFAULT NULL COMMENT '每日早报类型：text-文本，image-图片',
   -- 每日早安
-  `morning_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用早安问候功能'
+  `morning_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用早安问候功能',
+  KEY `idx_chat_room_id` (`chat_room_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `messages` (
@@ -161,17 +181,17 @@ CREATE TABLE IF NOT EXISTS `chat_room_members` (
 
 CREATE TABLE IF NOT EXISTS `ai_task` (
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `contact_id` VARCHAR(64) NOT NULL COMMENT '联系人ID，私聊时为好友微信ID，群聊时为群聊ID + 下划线 +  群聊成员微信ID',
+  `contact_id` VARCHAR(64) NOT NULL COMMENT '联系人ID',
   `message_id` BIGINT NOT NULL COMMENT '消息ID，关联messages表的msg_id',
   `ai_provider_task_id` VARCHAR(64) DEFAULT NULL COMMENT 'AI服务商任务ID',
-  `ai_task_type` ENUM('long_text_tts') NOT NULL COMMENT '任务类型：long_text_tts-长文本转语音',
+  `ai_task_type` ENUM('tts', 'ltts') NOT NULL COMMENT 'ltts-长文本转语音',
   `ai_task_status` ENUM('pending', 'processing', 'completed', 'failed') NOT NULL COMMENT '任务状态：pending-待处理，processing-处理中，completed-已完成，failed-已失败',
   `extra` JSON COMMENT '额外信息',
   `created_at` BIGINT NOT NULL COMMENT '创建时间',
   `updated_at` BIGINT NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   KEY `idx_contact_id` (`contact_id`),
-  KEY `idx_message_id` (`message_id`),
-  KEY `idx_ai_provider_task_id` (`ai_provider_task_id`),
+  UNIQUE KEY  `uk_message_id` (`message_id`),
+  UNIQUE KEY  `uk_ai_provider_task_id` (`ai_provider_task_id`),
   KEY `idx_created_at` (`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

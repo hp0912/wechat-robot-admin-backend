@@ -3,6 +3,7 @@ package controller
 import (
 	"errors"
 	"path/filepath"
+	"unicode/utf8"
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/pkg/appx"
 	"wechat-robot-admin-backend/service"
@@ -199,6 +200,40 @@ func (ct *Message) SendVoiceMessage(c *gin.Context) {
 	}
 
 	err = service.NewMessageService(c).SendVoiceMessage(c, req, file, fileHeader, robot)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
+
+func (ct *Message) GetTimbre(c *gin.Context) {
+	resp := appx.NewResponse(c)
+	timbre, err := service.NewMessageService(c).GetTimbre()
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(timbre)
+}
+
+func (ct *Message) SendAITTSMessage(c *gin.Context) {
+	var req dto.RobotSendAITTSMessageRequest
+	resp := appx.NewResponse(c)
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if utf8.RuneCountInString(req.Content) > 260 {
+		resp.ToErrorResponse(errors.New("内容长度不能超过260个字符"))
+		return
+	}
+	err = service.NewMessageService(c).SendAITTSMessage(c, req, robot)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
