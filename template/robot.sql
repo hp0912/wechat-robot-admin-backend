@@ -181,7 +181,7 @@ CREATE TABLE IF NOT EXISTS `chat_room_members` (
 
 CREATE TABLE IF NOT EXISTS `ai_task` (
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `contact_id` VARCHAR(64) NOT NULL COMMENT '联系人ID，私聊时为好友微信ID，群聊时为群聊ID + 下划线 +  群聊成员微信ID',
+  `contact_id` VARCHAR(64) NOT NULL COMMENT '联系人ID',
   `message_id` BIGINT NOT NULL COMMENT '消息ID，关联messages表的msg_id',
   `ai_provider_task_id` VARCHAR(64) DEFAULT NULL COMMENT 'AI服务商任务ID',
   `ai_task_type` ENUM('tts', 'ltts') NOT NULL COMMENT 'ltts-长文本转语音',
