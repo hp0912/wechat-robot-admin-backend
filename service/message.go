@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/model"
+	"wechat-robot-admin-backend/vars"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-resty/resty/v2"
@@ -135,6 +136,78 @@ func (sv *MessageService) SendVideoMessage(ctx *gin.Context, req dto.SendVideoMe
 }
 
 func (sv *MessageService) SendVoiceMessage(ctx *gin.Context, req dto.SendVoiceMessageRequest, file multipart.File, header *multipart.FileHeader, robot *model.Robot) error {
+	robotURL := fmt.Sprintf("%s/message/send/voice", robot.GetBaseURL())
+	// 准备转发请求
+	var requestBody bytes.Buffer
+	writer := multipart.NewWriter(&requestBody)
+	// 创建文件表单字段
+	part, err := writer.CreateFormFile("voice", header.Filename)
+	if err != nil {
+		return err
+	}
+	// 复制文件内容
+	if _, err = io.Copy(part, file); err != nil {
+		return err
+	}
+	// 添加其他表单字段
+	if err := writer.WriteField("to_wxid", req.ToWxid); err != nil {
+		return err
+	}
+	// 关闭multipart writer
+	if err = writer.Close(); err != nil {
+		return err
+	}
+	robotRequest, err := http.NewRequest("POST", robotURL, &requestBody)
+	if err != nil {
+		return err
+	}
+	// 设置请求头
+	robotRequest.Header.Set("Content-Type", writer.FormDataContentType())
+	// 发送请求并获取响应
+	robotClient := &http.Client{}
+	robotResp, err := robotClient.Do(robotRequest)
+	if err != nil {
+		return err
+	}
+	defer robotResp.Body.Close()
+
+	return nil
+}
+
+func (sv *MessageService) GetTimbre() ([]string, error) {
+	var result dto.TimbreResponse
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetQueryParam("key", vars.ThirdPartyApiKey).
+		SetQueryParam("type", "list").
+		SetResult(&result).
+		Get("https://api.pearktrue.cn/api/dub")
+	if err != nil {
+		return nil, err
+	}
+	if result.Code != 200 {
+		return nil, fmt.Errorf("failed to get timbre: %s", result.Msg)
+	}
+	return result.Speakers, nil
+}
+
+func (sv *MessageService) SendAITTSMessage(ctx *gin.Context, speaker, message string, robot *model.Robot) error {
+	var result dto.RobotSendAITTSMessageResponse
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetQueryParam("key", vars.ThirdPartyApiKey).
+		SetQueryParam("type", "mp3").
+		SetQueryParam("dub", speaker).
+		SetQueryParam("text", message).
+		SetResult(&result).
+		Post("https://api.pearktrue.cn/api/dub")
+	if err != nil {
+		return err
+	}
+	if result.Code != 200 {
+		return fmt.Errorf("failed to send AI TTS message: %s", result.Msg)
+	}
+
 	robotURL := fmt.Sprintf("%s/message/send/voice", robot.GetBaseURL())
 	// 准备转发请求
 	var requestBody bytes.Buffer

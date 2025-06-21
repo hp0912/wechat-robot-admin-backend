@@ -95,6 +95,8 @@ func RegisterRouter(r *gin.Engine) error {
 		message.POST("/send/image", middleware.UserOwnerAuth(), messageCtl.SendImageMessage)
 		message.POST("/send/voice", middleware.UserOwnerAuth(), messageCtl.SendVoiceMessage)
 		message.POST("/send/video", middleware.UserOwnerAuth(), messageCtl.SendVideoMessage)
+		message.GET("/timbre", middleware.UserOwnerAuth(), messageCtl.GetTimbre)
+		message.POST("/send/ai/tts", middleware.UserOwnerAuth(), messageCtl.SendAITTSMessage)
 	}
 
 	{
