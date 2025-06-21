@@ -233,7 +233,7 @@ func (ct *Message) SendAITTSMessage(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("内容长度不能超过260个字符"))
 		return
 	}
-	err = service.NewMessageService(c).SendAITTSMessage(c, req.Speaker, req.Content, robot)
+	err = service.NewMessageService(c).SendAITTSMessage(c, req, robot)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
