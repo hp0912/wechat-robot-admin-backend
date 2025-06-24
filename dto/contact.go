@@ -34,5 +34,6 @@ type GetContactsResponse struct {
 	Signature     string      `json:"signature"`      // 个性签名
 	SnsBackground string      `json:"sns_background"` // 朋友圈背景图
 	CreatedAt     int64       `json:"created_at"`
+	LastActiveAt  int64       `json:"last_active_at"` // 最近活跃时间
 	UpdatedAt     int64       `json:"updated_at"`
 }
