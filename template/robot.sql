@@ -15,6 +15,10 @@ CREATE TABLE IF NOT EXISTS `global_settings` (
   `tts_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI文本转语音功能',
   `tts_settings` JSON COMMENT '文本转语音AI配置项',
   `ltts_settings` JSON COMMENT '长文本转语音AI配置项',
+  -- 拍一拍
+  `pat_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI拍一拍功能',
+  `pat_type` ENUM('text', 'voice') NOT NULL DEFAULT 'text' COMMENT '拍一拍方式：text-文本，voice-语音',
+  `pat_text` BOOLEAN DEFAULT FALSE COMMENT '拍一拍文本',
   -- 欢迎新人
   `welcome_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用新成员加群欢迎功能',
   `welcome_type` ENUM('text','emoji', 'image', 'url') NOT NULL DEFAULT 'text' COMMENT '欢迎方式：text-文本，emoji-表情，image-图片，url-链接',
@@ -84,6 +88,11 @@ CREATE TABLE IF NOT EXISTS `chat_room_settings` (
   `tts_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI文本转语音功能',
   `tts_settings` JSON COMMENT '文本转语音AI配置项',
   `ltts_settings` JSON COMMENT '长文本转语音AI配置项',
+    -- 拍一拍
+  `pat_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI拍一拍功能',
+  `pat_type` ENUM('text', 'voice') NOT NULL DEFAULT 'text' COMMENT '拍一拍方式：text-文本，voice-语音',
+  `pat_text` VARCHAR(255) DEFAULT '' COMMENT '拍一拍文本',
+  `pat_voice_timbre` VARCHAR(100) DEFAULT '' COMMENT '拍一拍音色',
   -- 欢迎新人
   `welcome_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用新成员加群欢迎功能',
   `welcome_type` ENUM('text','emoji', 'image', 'url') NOT NULL DEFAULT 'text' COMMENT '欢迎方式：text-文本，emoji-表情，image-图片，url-链接',
@@ -152,10 +161,12 @@ CREATE TABLE IF NOT EXISTS `contacts` (
   `signature` VARCHAR(255) DEFAULT NULL COMMENT '个性签名',
   `sns_background` VARCHAR(255) DEFAULT NULL COMMENT '朋友圈背景图',
   `created_at` BIGINT NOT NULL COMMENT '创建时间',
+  `last_active_at` BIGINT NOT NULL COMMENT '最近活跃时间',
   `updated_at` BIGINT NOT NULL COMMENT '更新时间',
   `deleted_at` DATETIME DEFAULT NULL COMMENT '软删除时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_wechat_id` (`wechat_id`),
+  KEY `idx_last_active_at` (`last_active_at`),
   KEY `idx_deleted_at` (`deleted_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
