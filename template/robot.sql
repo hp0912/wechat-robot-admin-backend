@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS `global_settings` (
   `chat_api_key` VARCHAR(255) DEFAULT '' COMMENT '聊天AI的API密钥',
   `chat_model` VARCHAR(100) DEFAULT '' COMMENT '聊天AI使用的模型名称',
   `chat_prompt` TEXT COMMENT '聊天AI系统提示词',
+  `max_completion_tokens` INT DEFAULT 0 COMMENT '最大回复',
   -- 绘图模型AI设置
   `image_ai_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI绘图功能',
   `image_model` VARCHAR(255) DEFAULT '' COMMENT '绘图AI模型',
@@ -59,6 +60,7 @@ CREATE TABLE IF NOT EXISTS `friend_settings` (
   `chat_api_key` VARCHAR(255) DEFAULT '' COMMENT '聊天AI的API密钥',
   `chat_model` VARCHAR(100) DEFAULT '' COMMENT '聊天AI使用的模型名称',
   `chat_prompt` TEXT COMMENT '聊天AI系统提示词',
+  `max_completion_tokens` INT DEFAULT 0 COMMENT '最大回复',
   -- 绘图模型AI设置
   `image_ai_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI绘图功能',
   `image_model` VARCHAR(255) DEFAULT '' COMMENT '绘图AI模型',
@@ -80,6 +82,7 @@ CREATE TABLE IF NOT EXISTS `chat_room_settings` (
   `chat_api_key` VARCHAR(255) DEFAULT '' COMMENT '聊天AI的API密钥',
   `chat_model` VARCHAR(100) DEFAULT '' COMMENT '聊天AI使用的模型名称',
   `chat_prompt` TEXT COMMENT '聊天AI系统提示词',
+  `max_completion_tokens` INT DEFAULT 0 COMMENT '最大回复',
   -- 绘图模型AI设置
   `image_ai_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI绘图功能',
   `image_model` VARCHAR(255) DEFAULT '' COMMENT '绘图AI模型',

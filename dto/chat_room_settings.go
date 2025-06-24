@@ -13,6 +13,7 @@ type GetChatRoomSettingsResponse struct {
 	ChatAPIKey                string         `form:"chat_api_key" json:"chat_api_key"`
 	ChatModel                 string         `form:"chat_model" json:"chat_model"`
 	ChatPrompt                string         `form:"chat_prompt" json:"chat_prompt"`
+	MaxCompletionTokens       int            `form:"max_completion_tokens" json:"max_completion_tokens"`
 	ImageAIEnabled            bool           `form:"image_ai_enabled" json:"image_ai_enabled"`
 	ImageModel                string         `form:"image_model" json:"image_model"`
 	ImageAISettings           map[string]any `form:"image_ai_settings" json:"image_ai_settings"`
@@ -46,6 +47,7 @@ type SaveChatRoomSettingsRequest struct {
 	ChatAPIKey                string         `form:"chat_api_key" json:"chat_api_key"`
 	ChatModel                 string         `form:"chat_model" json:"chat_model"`
 	ChatPrompt                string         `form:"chat_prompt" json:"chat_prompt"`
+	MaxCompletionTokens       int            `form:"max_completion_tokens" json:"max_completion_tokens"`
 	ImageAIEnabled            bool           `form:"image_ai_enabled" json:"image_ai_enabled"`
 	ImageModel                string         `form:"image_model" json:"image_model"`
 	ImageAISettings           map[string]any `form:"image_ai_settings" json:"image_ai_settings"`
