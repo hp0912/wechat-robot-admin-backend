@@ -13,6 +13,7 @@ type GetChatRoomSettingsResponse struct {
 	ChatAPIKey                string         `form:"chat_api_key" json:"chat_api_key"`
 	ChatModel                 string         `form:"chat_model" json:"chat_model"`
 	ChatPrompt                string         `form:"chat_prompt" json:"chat_prompt"`
+	MaxCompletionTokens       int            `form:"max_completion_tokens" json:"max_completion_tokens"`
 	ImageAIEnabled            bool           `form:"image_ai_enabled" json:"image_ai_enabled"`
 	ImageModel                string         `form:"image_model" json:"image_model"`
 	ImageAISettings           map[string]any `form:"image_ai_settings" json:"image_ai_settings"`
@@ -26,6 +27,9 @@ type GetChatRoomSettingsResponse struct {
 	WelcomeEmojiLen           int64          `form:"welcome_emoji_len" json:"welcome_emoji_len"`
 	WelcomeImageURL           string         `form:"welcome_image_url" json:"welcome_image_url"`
 	WelcomeURL                string         `form:"welcome_url" json:"welcome_url"`
+	PatEnabled                bool           `form:"pat_enabled" json:"pat_enabled"`
+	PatType                   string         `form:"pat_type" json:"pat_type"`
+	PatText                   string         `form:"pat_text" json:"pat_text"`
 	LeaveChatRoomAlertEnabled bool           `form:"leave_chat_room_alert_enabled" json:"leave_chat_room_alert_enabled"`
 	LeaveChatRoomAlertText    string         `form:"leave_chat_room_alert_text" json:"leave_chat_room_alert_text"`
 	ChatRoomRankingEnabled    bool           `form:"chat_room_ranking_enabled" json:"chat_room_ranking_enabled"`
@@ -46,6 +50,7 @@ type SaveChatRoomSettingsRequest struct {
 	ChatAPIKey                string         `form:"chat_api_key" json:"chat_api_key"`
 	ChatModel                 string         `form:"chat_model" json:"chat_model"`
 	ChatPrompt                string         `form:"chat_prompt" json:"chat_prompt"`
+	MaxCompletionTokens       int            `form:"max_completion_tokens" json:"max_completion_tokens"`
 	ImageAIEnabled            bool           `form:"image_ai_enabled" json:"image_ai_enabled"`
 	ImageModel                string         `form:"image_model" json:"image_model"`
 	ImageAISettings           map[string]any `form:"image_ai_settings" json:"image_ai_settings"`
@@ -59,6 +64,9 @@ type SaveChatRoomSettingsRequest struct {
 	WelcomeEmojiLen           int64          `form:"welcome_emoji_len" json:"welcome_emoji_len"`
 	WelcomeImageURL           string         `form:"welcome_image_url" json:"welcome_image_url"`
 	WelcomeURL                string         `form:"welcome_url" json:"welcome_url"`
+	PatEnabled                bool           `form:"pat_enabled" json:"pat_enabled"`
+	PatType                   string         `form:"pat_type" json:"pat_type"`
+	PatText                   string         `form:"pat_text" json:"pat_text"`
 	LeaveChatRoomAlertEnabled bool           `form:"leave_chat_room_alert_enabled" json:"leave_chat_room_alert_enabled"`
 	LeaveChatRoomAlertText    string         `form:"leave_chat_room_alert_text" json:"leave_chat_room_alert_text"`
 	ChatRoomRankingEnabled    bool           `form:"chat_room_ranking_enabled" json:"chat_room_ranking_enabled"`
