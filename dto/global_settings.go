@@ -29,6 +29,7 @@ type GetGlobalSettingsResponse struct {
 	PatEnabled                bool           `form:"pat_enabled" json:"pat_enabled"`
 	PatType                   string         `form:"pat_type" json:"pat_type"`
 	PatText                   string         `form:"pat_text" json:"pat_text"`
+	PatVoiceTimbre            string         `form:"pat_voice_timbre" json:"pat_voice_timbre"`
 	LeaveChatRoomAlertEnabled bool           `form:"leave_chat_room_alert_enabled" json:"leave_chat_room_alert_enabled"`
 	LeaveChatRoomAlertText    string         `form:"leave_chat_room_alert_text" json:"leave_chat_room_alert_text"`
 	ChatRoomRankingEnabled    bool           `form:"chat_room_ranking_enabled" json:"chat_room_ranking_enabled"`
@@ -72,6 +73,7 @@ type SaveGlobalSettingsRequest struct {
 	PatEnabled                bool           `form:"pat_enabled" json:"pat_enabled"`
 	PatType                   string         `form:"pat_type" json:"pat_type"`
 	PatText                   string         `form:"pat_text" json:"pat_text"`
+	PatVoiceTimbre            string         `form:"pat_voice_timbre" json:"pat_voice_timbre"`
 	LeaveChatRoomAlertEnabled bool           `form:"leave_chat_room_alert_enabled" json:"leave_chat_room_alert_enabled"`
 	LeaveChatRoomAlertText    string         `form:"leave_chat_room_alert_text" json:"leave_chat_room_alert_text"`
 	ChatRoomRankingEnabled    bool           `form:"chat_room_ranking_enabled" json:"chat_room_ranking_enabled"`
