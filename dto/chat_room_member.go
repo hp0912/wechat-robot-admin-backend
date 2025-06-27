@@ -1,6 +1,6 @@
 package dto
 
-type SyncChatRoomMemberRequest struct {
+type ChatRoomRequestBase struct {
 	ID         int64  `form:"id" json:"id"  binding:"required"`
 	ChatRoomID string `form:"chat_room_id" json:"chat_room_id" binding:"required"`
 }
@@ -9,6 +9,16 @@ type ChatRoomMemberRequest struct {
 	ID         int64  `form:"id" json:"id"  binding:"required"`
 	ChatRoomID string `form:"chat_room_id" json:"chat_room_id" binding:"required"`
 	Keyword    string `form:"keyword" json:"keyword"`
+}
+
+type ChatRoomOperateRequest struct {
+	ChatRoomRequestBase
+	Content string `form:"content" json:"content" binding:"required"`
+}
+
+type DelChatRoomMemberRequest struct {
+	ChatRoomRequestBase
+	MemberIDs []string `form:"member_ids" json:"member_ids" binding:"required"`
 }
 
 type ChatRoomMember struct {

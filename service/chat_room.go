@@ -54,3 +54,82 @@ func (sv *ChatRoomService) GetChatRoomMembers(req dto.ChatRoomMemberRequest, pag
 	}
 	return result.Data.Itmes, result.Data.Total, nil
 }
+
+func (sv *ChatRoomService) GroupSetChatRoomName(chatRoomID, content string, robot *model.Robot) error {
+	var result dto.Response[any]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]string{
+			"chat_room_id": chatRoomID,
+			"content":      content,
+		}).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/chat-room/name")
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (sv *ChatRoomService) GroupSetChatRoomRemarks(chatRoomID, content string, robot *model.Robot) error {
+	var result dto.Response[any]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]string{
+			"chat_room_id": chatRoomID,
+			"content":      content,
+		}).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/chat-room/remark")
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (sv *ChatRoomService) GroupSetChatRoomAnnouncement(chatRoomID, content string, robot *model.Robot) error {
+	var result dto.Response[any]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]string{
+			"chat_room_id": chatRoomID,
+			"content":      content,
+		}).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/chat-room/announcement")
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (sv *ChatRoomService) GroupDelChatRoomMember(chatRoomID string, memberIDs []string, robot *model.Robot) error {
+	var result dto.Response[any]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]any{
+			"chat_room_id": chatRoomID,
+			"member_ids":   memberIDs,
+		}).
+		SetResult(&result).
+		Delete(robot.GetBaseURL() + "/chat-room/members")
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (sv *ChatRoomService) GroupQuit(chatRoomID string, robot *model.Robot) error {
+	var result dto.Response[any]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]string{
+			"chat_room_id": chatRoomID,
+		}).
+		SetResult(&result).
+		Delete(robot.GetBaseURL() + "/chat-room/quit")
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
+}

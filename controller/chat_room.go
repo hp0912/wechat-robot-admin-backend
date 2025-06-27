@@ -17,7 +17,7 @@ func NewChatRoomController() *ChatRoom {
 }
 
 func (ct *ChatRoom) SyncChatRoomMembers(c *gin.Context) {
-	var req dto.SyncChatRoomMemberRequest
+	var req dto.ChatRoomRequestBase
 	resp := appx.NewResponse(c)
 	robot, err := appx.GetRobot(c)
 	if err != nil {
@@ -51,4 +51,104 @@ func (ct *ChatRoom) GetChatRoomMembers(c *gin.Context) {
 		return
 	}
 	resp.ToResponseList(data, total)
+}
+
+func (ct *ChatRoom) GroupSetChatRoomName(c *gin.Context) {
+	var req dto.ChatRoomOperateRequest
+	resp := appx.NewResponse(c)
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	err = service.NewChatRoomService(c).GroupSetChatRoomName(req.ChatRoomID, req.Content, robot)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
+
+func (ct *ChatRoom) GroupSetChatRoomRemarks(c *gin.Context) {
+	var req dto.ChatRoomOperateRequest
+	resp := appx.NewResponse(c)
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	err = service.NewChatRoomService(c).GroupSetChatRoomRemarks(req.ChatRoomID, req.Content, robot)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
+
+func (ct *ChatRoom) GroupSetChatRoomAnnouncement(c *gin.Context) {
+	var req dto.ChatRoomOperateRequest
+	resp := appx.NewResponse(c)
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	err = service.NewChatRoomService(c).GroupSetChatRoomAnnouncement(req.ChatRoomID, req.Content, robot)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
+
+func (ct *ChatRoom) GroupDelChatRoomMember(c *gin.Context) {
+	var req dto.DelChatRoomMemberRequest
+	resp := appx.NewResponse(c)
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	err = service.NewChatRoomService(c).GroupDelChatRoomMember(req.ChatRoomID, req.MemberIDs, robot)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
+
+func (ct *ChatRoom) GroupQuit(c *gin.Context) {
+	var req dto.ChatRoomRequestBase
+	resp := appx.NewResponse(c)
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	err = service.NewChatRoomService(c).GroupQuit(req.ChatRoomID, robot)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
 }
