@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"log"
+	"net/url"
 	"strconv"
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/model"
@@ -37,13 +38,18 @@ func (sv *ContactService) GetContacts(req dto.GetContactsRequest, pager appx.Pag
 		Itmes []*dto.GetContactsResponse `json:"items"`
 		Total int64                      `json:"total"`
 	}]
+	queryParams := url.Values{}
+	queryParams.Add("keyword", req.Keyword)
+	queryParams.Add("type", req.Type)
+	queryParams.Add("page_index", strconv.Itoa(pager.PageIndex))
+	queryParams.Add("page_size", "20")
+	for _, contactID := range req.ContactIDs {
+		queryParams.Add("contact_ids", contactID)
+	}
 	// 获取联系人列表
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
-		SetQueryParam("keyword", req.Keyword).
-		SetQueryParam("type", req.Type).
-		SetQueryParam("page_index", strconv.Itoa(pager.PageIndex)).
-		SetQueryParam("page_size", "20").
+		SetQueryParamsFromValues(queryParams).
 		SetResult(&result).
 		Get(robot.GetBaseURL() + "/contacts")
 	if err = result.CheckError(err); err != nil {

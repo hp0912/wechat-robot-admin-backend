@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"strconv"
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/model"
 
@@ -22,7 +21,7 @@ func (s *MomentsService) FriendCircleGetList(req dto.MomentsGetListRequest, robo
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetQueryParam("frist_page_md5", req.FristPageMd5).
-		SetQueryParam("max_id", strconv.FormatInt(req.MaxID, 10)).
+		SetQueryParam("max_id", req.MaxID).
 		SetResult(&result).
 		Get(robot.GetBaseURL() + "/moments/list")
 	if err = result.CheckError(err); err != nil {
