@@ -89,6 +89,10 @@ func (sv *RobotManageService) DockerStartWeChatClient(ctx *gin.Context, robot *m
 		RestartPolicy: container.RestartPolicy{
 			Name: "always",
 		},
+		LogConfig: container.LogConfig{
+			Type:   "json-file",
+			Config: map[string]string{"max-size": "50m", "max-file": "3"},
+		},
 	}
 
 	// 客户端网络配置
@@ -146,6 +150,10 @@ func (sv *RobotManageService) DockerStartWeChatServer(ctx *gin.Context, robot *m
 	serverHostConfig := &container.HostConfig{
 		RestartPolicy: container.RestartPolicy{
 			Name: "always",
+		},
+		LogConfig: container.LogConfig{
+			Type:   "json-file",
+			Config: map[string]string{"max-size": "50m", "max-file": "3"},
 		},
 	}
 

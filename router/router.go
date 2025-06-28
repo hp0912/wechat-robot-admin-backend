@@ -19,6 +19,7 @@ var globalSettingsCtl *controller.GlobalSettings
 var friendSettingsCtl *controller.FriendSettings
 var chatRoomSettingsCtl *controller.ChatRoomSettings
 var messageCtl *controller.Message
+var momentsCtl *controller.Moments
 var aiCallbackCtl *controller.AICallback
 
 func initController() {
@@ -35,6 +36,7 @@ func initController() {
 	friendSettingsCtl = controller.NewFriendSettingsController()
 	chatRoomSettingsCtl = controller.NewChatRoomSettingsController()
 	aiCallbackCtl = controller.NewAICallbackController()
+	momentsCtl = controller.NewMomentsController()
 }
 
 func RegisterRouter(r *gin.Engine) error {
@@ -102,6 +104,13 @@ func RegisterRouter(r *gin.Engine) error {
 		message.POST("/send/video", middleware.UserOwnerAuth(), messageCtl.SendVideoMessage)
 		message.GET("/timbre", middleware.UserOwnerAuth(), messageCtl.GetTimbre)
 		message.POST("/send/ai/tts", middleware.UserOwnerAuth(), messageCtl.SendAITTSMessage)
+	}
+
+	{
+		moments := api.Group("/moments")
+		moments.Use(middleware.UserAuth())
+		moments.GET("/list", middleware.UserOwnerAuth(), momentsCtl.FriendCircleGetList)
+		moments.GET("/down-media", middleware.UserOwnerAuth(), momentsCtl.FriendCircleDownFriendCircleMedia)
 	}
 
 	{
