@@ -23,6 +23,7 @@ type MomentsGetListResponse struct {
 
 type SnsObject struct {
 	Id                   *uint64              `json:"Id,omitempty"`
+	IdStr                string               `json:"IdStr,omitempty"`
 	Username             *string              `json:"Username,omitempty"`
 	Nickname             *string              `json:"Nickname,omitempty"`
 	CreateTime           *uint32              `json:"CreateTime,omitempty"`

@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"strconv"
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/model"
 
@@ -26,6 +27,12 @@ func (s *MomentsService) FriendCircleGetList(req dto.MomentsGetListRequest, robo
 		Get(robot.GetBaseURL() + "/moments/list")
 	if err = result.CheckError(err); err != nil {
 		return dto.MomentsGetListResponse{}, err
+	}
+	for _, ObjectItem := range result.Data.ObjectList {
+		if ObjectItem.Id != nil {
+			ObjectItem.IdStr = strconv.FormatUint(*ObjectItem.Id, 10)
+			ObjectItem.Id = nil
+		}
 	}
 	return result.Data, nil
 }
