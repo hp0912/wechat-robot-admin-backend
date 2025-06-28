@@ -13,7 +13,7 @@ type SyncContactsRequest struct {
 
 type GetContactsRequest struct {
 	ID         int64    `form:"id" json:"id"`
-	ContactIDs []string `form:"contact_ids[]" json:"contact_ids"`
+	ContactIDs []string `form:"contact_ids" json:"contact_ids"`
 	Type       string   `form:"type" json:"type"`
 	Keyword    string   `form:"keyword" json:"keyword"`
 }

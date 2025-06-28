@@ -2,8 +2,8 @@ package dto
 
 type MomentsGetListRequest struct {
 	ID           int64  `form:"id" json:"id"  binding:"required"`
-	FristPageMd5 string `json:"frist_page_md5" binding:"required"`
-	MaxID        string `json:"max_id" binding:"required"`
+	FristPageMd5 string `form:"frist_page_md5" json:"frist_page_md5"`
+	MaxID        string `form:"max_id" json:"max_id" binding:"required"`
 }
 
 type MomentsGetListResponse struct {
