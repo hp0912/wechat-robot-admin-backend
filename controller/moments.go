@@ -1,7 +1,9 @@
 package controller
 
 import (
+	"encoding/base64"
 	"errors"
+	"net/http"
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/pkg/appx"
 	"wechat-robot-admin-backend/service"
@@ -52,5 +54,10 @@ func (ct *Moments) FriendCircleDownFriendCircleMedia(c *gin.Context) {
 		resp.ToErrorResponse(err)
 		return
 	}
-	resp.ToResponse(data)
+	videoBytes, err := base64.StdEncoding.DecodeString(data)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Failed to decode video")
+		return
+	}
+	c.Data(http.StatusOK, "video/mp4", videoBytes)
 }

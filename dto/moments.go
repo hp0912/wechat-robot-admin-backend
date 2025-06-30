@@ -107,6 +107,6 @@ type SnsWeAppInfo struct {
 
 type MomentsDownFriendCircleMediaRequest struct {
 	ID  int64  `form:"id" json:"id"  binding:"required"`
-	Url string `json:"url" binding:"required"`
-	Key string `json:"key"`
+	Url string `form:"url" json:"url" binding:"required"`
+	Key string `form:"key" json:"key"`
 }
