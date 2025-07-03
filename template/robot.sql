@@ -147,6 +147,23 @@ CREATE TABLE IF NOT EXISTS `messages` (
   KEY `idx_created_at` (`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+CREATE TABLE IF NOT EXISTS `system_messages` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `msg_id` BIGINT NOT NULL,
+  `client_msg_id` BIGINT NOT NULL,
+  `type` INT NOT NULL,
+  `description` VARCHAR(255) DEFAULT NULL COMMENT '备注',
+  `content` TEXT,
+  `from_wxid` VARCHAR(64),
+  `to_wxid` VARCHAR(64),
+  `created_at` BIGINT NOT NULL,
+  `updated_at` BIGINT NOT NULL,
+  UNIQUE KEY `uniq_msg_id` (`msg_id`),
+  KEY `idx_from_wxid` (`from_wxid`),
+  KEY `idx_type` (`type`),
+  KEY `idx_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 CREATE TABLE IF NOT EXISTS `contacts` (
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `wechat_id` VARCHAR(64) NOT NULL COMMENT '微信ID',
