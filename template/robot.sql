@@ -152,6 +152,7 @@ CREATE TABLE IF NOT EXISTS `system_messages` (
   `msg_id` BIGINT NOT NULL,
   `client_msg_id` BIGINT NOT NULL,
   `type` INT NOT NULL,
+  `image_url` VARCHAR(512) DEFAULT NULL COMMENT '图片URL',
   `description` VARCHAR(255) DEFAULT NULL COMMENT '备注',
   `content` TEXT,
   `from_wxid` VARCHAR(64),
