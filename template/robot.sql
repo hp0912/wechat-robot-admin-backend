@@ -156,6 +156,7 @@ CREATE TABLE IF NOT EXISTS `system_messages` (
   `content` TEXT,
   `from_wxid` VARCHAR(64),
   `to_wxid` VARCHAR(64),
+  `is_read` BOOLEAN DEFAULT FALSE COMMENT '是否已读',
   `created_at` BIGINT NOT NULL,
   `updated_at` BIGINT NOT NULL,
   UNIQUE KEY `uniq_msg_id` (`msg_id`),
