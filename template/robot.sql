@@ -157,6 +157,7 @@ CREATE TABLE IF NOT EXISTS `system_messages` (
   `content` TEXT,
   `from_wxid` VARCHAR(64),
   `to_wxid` VARCHAR(64),
+  `status` INT NOT NULL DEFAULT 0 COMMENT '消息状态：0-未处理，1-已处理',
   `is_read` BOOLEAN DEFAULT FALSE COMMENT '是否已读',
   `created_at` BIGINT NOT NULL,
   `updated_at` BIGINT NOT NULL,
