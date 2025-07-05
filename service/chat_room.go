@@ -55,19 +55,19 @@ func (sv *ChatRoomService) GetChatRoomMembers(req dto.ChatRoomMemberRequest, pag
 	return result.Data.Itmes, result.Data.Total, nil
 }
 
-func (sv *ChatRoomService) GroupConsentToJoin(url string, robot *model.Robot) (string, error) {
+func (sv *ChatRoomService) GroupConsentToJoin(id int64, robot *model.Robot) error {
 	var result dto.Response[string]
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
-		SetBody(map[string]string{
-			"url": url,
+		SetBody(map[string]int64{
+			"system_message_id": id,
 		}).
 		SetResult(&result).
 		Post(robot.GetBaseURL() + "/chat-room/join")
 	if err = result.CheckError(err); err != nil {
-		return "", err
+		return err
 	}
-	return result.Data, nil
+	return nil
 }
 
 func (sv *ChatRoomService) GroupSetChatRoomName(chatRoomID, content string, robot *model.Robot) error {

@@ -17,8 +17,8 @@ type ChatRoomOperateRequest struct {
 }
 
 type ChatRoomJoinRequest struct {
-	ID  int64  `form:"id" json:"id"  binding:"required"`
-	URL string `form:"url" json:"url" binding:"required"`
+	ID              int64 `form:"id" json:"id"  binding:"required"`
+	SystemMessageID int64 `form:"system_message_id" json:"system_message_id"`
 }
 
 type DelChatRoomMemberRequest struct {

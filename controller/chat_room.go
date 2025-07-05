@@ -65,12 +65,12 @@ func (ct *ChatRoom) GroupConsentToJoin(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	data, err := service.NewChatRoomService(c).GroupConsentToJoin(req.URL, robot)
+	err = service.NewChatRoomService(c).GroupConsentToJoin(req.SystemMessageID, robot)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
 	}
-	resp.ToResponse(data)
+	resp.ToResponse(nil)
 }
 
 func (ct *ChatRoom) GroupSetChatRoomName(c *gin.Context) {
