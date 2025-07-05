@@ -40,7 +40,6 @@ func (sv *ChatRoomService) GetChatRoomMembers(req dto.ChatRoomMemberRequest, pag
 		Itmes []*dto.ChatRoomMember `json:"items"`
 		Total int64                 `json:"total"`
 	}]
-	// 获取联系人列表
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetQueryParam("chat_room_id", req.ChatRoomID).
@@ -53,6 +52,36 @@ func (sv *ChatRoomService) GetChatRoomMembers(req dto.ChatRoomMemberRequest, pag
 		return nil, 0, err
 	}
 	return result.Data.Itmes, result.Data.Total, nil
+}
+
+func (sv *ChatRoomService) GetNotLeftMembers(req dto.ChatRoomMemberRequest, robot *model.Robot) ([]*dto.ChatRoomMember, error) {
+	var result dto.Response[[]*dto.ChatRoomMember]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetQueryParam("chat_room_id", req.ChatRoomID).
+		SetQueryParam("keyword", req.Keyword).
+		SetResult(&result).
+		Get(robot.GetBaseURL() + "/chat-room/not-left-members")
+	if err = result.CheckError(err); err != nil {
+		return nil, err
+	}
+	return result.Data, nil
+}
+
+func (sv *ChatRoomService) InviteChatRoomMember(chatRoomID string, contactIDs []string, robot *model.Robot) error {
+	var result dto.Response[string]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]any{
+			"chat_room_id": chatRoomID,
+			"contact_ids":  contactIDs,
+		}).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/chat-room/invite")
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (sv *ChatRoomService) GroupConsentToJoin(id int64, robot *model.Robot) error {
