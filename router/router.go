@@ -114,6 +114,7 @@ func RegisterRouter(r *gin.Engine) error {
 		systemMessage := api.Group("/system-messages")
 		systemMessage.Use(middleware.UserAuth())
 		systemMessage.GET("", middleware.UserOwnerAuth(), systemMessageCtl.GetRecentMonthMessages)
+		systemMessage.POST("/mark-as-read", middleware.UserOwnerAuth(), systemMessageCtl.MarkAsReadBatch)
 	}
 
 	{

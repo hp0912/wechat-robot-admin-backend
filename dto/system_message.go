@@ -15,3 +15,8 @@ type SystemMessage struct {
 	CreatedAt   int64  `json:"created_at"`
 	UpdatedAt   int64  `json:"updated_at"`
 }
+
+type MarkAsReadBatchRequest struct {
+	ID               int64   `form:"id" json:"id"  binding:"required"`
+	SystemMessageIDs []int64 `form:"system_message_ids" json:"system_message_ids" binding:"required"`
+}
