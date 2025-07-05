@@ -57,3 +57,35 @@ func (sv *ContactService) GetContacts(req dto.GetContactsRequest, pager appx.Pag
 	}
 	return result.Data.Itmes, result.Data.Total, nil
 }
+
+func (sv *ContactService) FriendPassVerify(id int64, robot *model.Robot) error {
+	var result dto.Response[any]
+	// 通过好友验证
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]int64{
+			"system_message_id": id,
+		}).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/contact/friend/pass-verify")
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (sv *ContactService) FriendDelete(contactID string, robot *model.Robot) error {
+	var result dto.Response[any]
+	// 删除好友
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]string{
+			"contact_id": contactID,
+		}).
+		SetResult(&result).
+		Delete(robot.GetBaseURL() + "/contact/friend")
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
+}

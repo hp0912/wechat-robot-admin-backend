@@ -19,6 +19,7 @@ var globalSettingsCtl *controller.GlobalSettings
 var friendSettingsCtl *controller.FriendSettings
 var chatRoomSettingsCtl *controller.ChatRoomSettings
 var messageCtl *controller.Message
+var systemMessageCtl *controller.SystemMessage
 var momentsCtl *controller.Moments
 var aiCallbackCtl *controller.AICallback
 
@@ -69,7 +70,9 @@ func RegisterRouter(r *gin.Engine) error {
 		contact := api.Group("/contact")
 		contact.Use(middleware.UserAuth())
 		contact.GET("/list", middleware.UserOwnerAuth(), contactCtl.GetContacts)
+		contact.POST("/friend/pass-verify", middleware.UserOwnerAuth(), contactCtl.FriendPassVerify)
 		contact.POST("/sync", middleware.UserOwnerAuth(), contactCtl.SyncContacts)
+		contact.DELETE("/friend", middleware.UserOwnerAuth(), contactCtl.FriendDelete)
 	}
 
 	{
@@ -105,6 +108,13 @@ func RegisterRouter(r *gin.Engine) error {
 		message.POST("/send/video", middleware.UserOwnerAuth(), messageCtl.SendVideoMessage)
 		message.GET("/timbre", middleware.UserOwnerAuth(), messageCtl.GetTimbre)
 		message.POST("/send/ai/tts", middleware.UserOwnerAuth(), messageCtl.SendAITTSMessage)
+	}
+
+	{
+		systemMessage := api.Group("/system-messages")
+		systemMessage.Use(middleware.UserAuth())
+		systemMessage.GET("", middleware.UserOwnerAuth(), systemMessageCtl.GetRecentMonthMessages)
+		systemMessage.POST("/mark-as-read", middleware.UserOwnerAuth(), systemMessageCtl.MarkAsReadBatch)
 	}
 
 	{
