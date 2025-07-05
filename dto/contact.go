@@ -38,3 +38,13 @@ type GetContactsResponse struct {
 	LastActiveAt  int64       `json:"last_active_at"` // 最近活跃时间
 	UpdatedAt     int64       `json:"updated_at"`
 }
+
+type FriendPassVerifyRequest struct {
+	ID              int64 `form:"id" json:"id"`
+	SystemMessageID int64 `form:"system_message_id" json:"system_message_id"`
+}
+
+type FriendDeleteRequest struct {
+	ID        int64  `form:"id" json:"id"`
+	ContactID string `form:"contact_id" json:"contact_id"`
+}

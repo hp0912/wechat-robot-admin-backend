@@ -70,7 +70,9 @@ func RegisterRouter(r *gin.Engine) error {
 		contact := api.Group("/contact")
 		contact.Use(middleware.UserAuth())
 		contact.GET("/list", middleware.UserOwnerAuth(), contactCtl.GetContacts)
+		contact.POST("/friend/pass-verify", middleware.UserOwnerAuth(), contactCtl.FriendPassVerify)
 		contact.POST("/sync", middleware.UserOwnerAuth(), contactCtl.SyncContacts)
+		contact.DELETE("/friend", middleware.UserOwnerAuth(), contactCtl.FriendDelete)
 	}
 
 	{

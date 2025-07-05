@@ -52,3 +52,43 @@ func (ct *Contact) GetContacts(c *gin.Context) {
 	}
 	resp.ToResponseList(data, total)
 }
+
+func (ct *Contact) FriendPassVerify(c *gin.Context) {
+	var req dto.FriendPassVerifyRequest
+	resp := appx.NewResponse(c)
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	err = service.NewContactService(c).FriendPassVerify(req.SystemMessageID, robot)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
+
+func (ct *Contact) FriendDelete(c *gin.Context) {
+	var req dto.FriendDeleteRequest
+	resp := appx.NewResponse(c)
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	err = service.NewContactService(c).FriendDelete(req.ContactID, robot)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
