@@ -53,6 +53,46 @@ func (ct *ChatRoom) GetChatRoomMembers(c *gin.Context) {
 	resp.ToResponseList(data, total)
 }
 
+func (ct *ChatRoom) GetNotLeftMembers(c *gin.Context) {
+	var req dto.ChatRoomMemberRequest
+	resp := appx.NewResponse(c)
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	data, err := service.NewChatRoomService(c).GetNotLeftMembers(req, robot)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(data)
+}
+
+func (ct *ChatRoom) InviteChatRoomMember(c *gin.Context) {
+	var req dto.InviteChatRoomMemberRequest
+	resp := appx.NewResponse(c)
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	err = service.NewChatRoomService(c).InviteChatRoomMember(req.ChatRoomID, req.ContactIDs, robot)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
+
 func (ct *ChatRoom) GroupConsentToJoin(c *gin.Context) {
 	var req dto.ChatRoomJoinRequest
 	resp := appx.NewResponse(c)

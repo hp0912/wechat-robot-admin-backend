@@ -16,6 +16,12 @@ type ChatRoomOperateRequest struct {
 	Content string `form:"content" json:"content" binding:"required"`
 }
 
+type InviteChatRoomMemberRequest struct {
+	ID         int64    `form:"id" json:"id"  binding:"required"`
+	ChatRoomID string   `form:"chat_room_id" json:"chat_room_id" binding:"required"`
+	ContactIDs []string `form:"contact_ids" json:"contact_ids" binding:"required"`
+}
+
 type ChatRoomJoinRequest struct {
 	ID              int64 `form:"id" json:"id"  binding:"required"`
 	SystemMessageID int64 `form:"system_message_id" json:"system_message_id"`
