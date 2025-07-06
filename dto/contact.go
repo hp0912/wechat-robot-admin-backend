@@ -12,7 +12,7 @@ type SyncContactsRequest struct {
 }
 
 type GetContactsRequest struct {
-	ID         int64    `form:"id" json:"id"`
+	ID         int64    `form:"id" json:"id" binding:"required"`
 	ContactIDs []string `form:"contact_ids" json:"contact_ids"`
 	Type       string   `form:"type" json:"type"`
 	Keyword    string   `form:"keyword" json:"keyword"`
@@ -40,12 +40,47 @@ type GetContactsResponse struct {
 	UpdatedAt     int64       `json:"updated_at"`
 }
 
+type FriendSearchRequest struct {
+	ID          int64  `form:"id" json:"id" binding:"required"`
+	ToUserName  string `form:"to_username" json:"to_username" binding:"required"`
+	FromScene   int    `form:"from_scene" json:"from_scene"`
+	SearchScene int    `form:"search_scene" json:"search_scene"`
+}
+
+type FriendSearchResponse struct {
+	UserName       string `json:"username"`
+	NickName       string `json:"nickname"`
+	Avatar         string `json:"avatar"`
+	AntispamTicket string `json:"antispam_ticket"`
+}
+
+type FriendSendRequestRequest struct {
+	ID            int64  `form:"id" json:"id" binding:"required"`
+	V1            string `form:"v1" json:"V1" binding:"required"`
+	V2            string `form:"v2" json:"V2"`
+	Opcode        int    `form:"opcode" json:"Opcode"`
+	Scene         int    `form:"scene" json:"Scene"`
+	VerifyContent string `form:"verify_content" json:"verify_content"`
+}
+
+type FriendSendRequestFromChatRoomRequest struct {
+	ID               int64  `form:"id" json:"id" binding:"required"`
+	ChatRoomMemberID int64  `form:"chat_room_member_id" json:"chat_room_member_id" binding:"required"`
+	VerifyContent    string `form:"verify_content" json:"verify_content"`
+}
+
+type FriendSetRemarksRequest struct {
+	ID      int64  `form:"id" json:"id" binding:"required"`
+	ToWxid  string `form:"to_wxid" json:"to_wxid" binding:"required"`
+	Remarks string `form:"remarks" json:"remarks" binding:"required"`
+}
+
 type FriendPassVerifyRequest struct {
-	ID              int64 `form:"id" json:"id"`
+	ID              int64 `form:"id" json:"id" binding:"required"`
 	SystemMessageID int64 `form:"system_message_id" json:"system_message_id"`
 }
 
 type FriendDeleteRequest struct {
-	ID        int64  `form:"id" json:"id"`
+	ID        int64  `form:"id" json:"id" binding:"required"`
 	ContactID string `form:"contact_id" json:"contact_id"`
 }
