@@ -72,6 +72,7 @@ func RegisterRouter(r *gin.Engine) error {
 		contact.GET("/list", middleware.UserOwnerAuth(), contactCtl.GetContacts)
 		contact.POST("/friend/search", middleware.UserOwnerAuth(), contactCtl.FriendSearch)
 		contact.POST("/friend/add", middleware.UserOwnerAuth(), contactCtl.FriendSendRequest)
+		contact.POST("/friend/add-from-chat-room", middleware.UserOwnerAuth(), contactCtl.FriendSendRequestFromChatRoom)
 		contact.POST("/friend/remark", middleware.UserOwnerAuth(), contactCtl.FriendSetRemarks)
 		contact.POST("/friend/pass-verify", middleware.UserOwnerAuth(), contactCtl.FriendPassVerify)
 		contact.POST("/sync", middleware.UserOwnerAuth(), contactCtl.SyncContacts)

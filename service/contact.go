@@ -94,6 +94,22 @@ func (sv *ContactService) FriendSendRequest(req dto.FriendSendRequestRequest, ro
 	return nil
 }
 
+func (sv *ContactService) FriendSendRequestFromChatRoom(req dto.FriendSendRequestFromChatRoomRequest, robot *model.Robot) error {
+	var result dto.Response[any]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]any{
+			"chat_room_member_id": req.ChatRoomMemberID,
+			"verify_content":      req.VerifyContent,
+		}).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/contact/friend/add-from-chat-room")
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (sv *ContactService) FriendSetRemarks(req dto.FriendSetRemarksRequest, robot *model.Robot) error {
 	var result dto.Response[any]
 	_, err := resty.New().R().

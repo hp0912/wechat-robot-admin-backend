@@ -56,6 +56,12 @@ type FriendSendRequestRequest struct {
 	VerifyContent string `form:"verify_content" json:"VerifyContent"`
 }
 
+type FriendSendRequestFromChatRoomRequest struct {
+	ID               int64  `form:"id" json:"id" binding:"required"`
+	ChatRoomMemberID int64  `form:"chat_room_member_id" json:"chat_room_member_id" binding:"required"`
+	VerifyContent    string `form:"verify_content" json:"VerifyContent"`
+}
+
 type FriendSetRemarksRequest struct {
 	ID      int64  `form:"id" json:"id" binding:"required"`
 	ToWxid  string `form:"to_wxid" json:"to_wxid" binding:"required"`
