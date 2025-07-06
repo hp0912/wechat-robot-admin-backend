@@ -58,8 +58,8 @@ func (sv *ContactService) GetContacts(req dto.GetContactsRequest, pager appx.Pag
 	return result.Data.Itmes, result.Data.Total, nil
 }
 
-func (sv *ContactService) FriendSearch(req dto.FriendSearchRequest, robot *model.Robot) error {
-	var result dto.Response[any]
+func (sv *ContactService) FriendSearch(req dto.FriendSearchRequest, robot *model.Robot) (dto.FriendSearchResponse, error) {
+	var result dto.Response[dto.FriendSearchResponse]
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetBody(map[string]any{
@@ -70,9 +70,9 @@ func (sv *ContactService) FriendSearch(req dto.FriendSearchRequest, robot *model
 		SetResult(&result).
 		Post(robot.GetBaseURL() + "/contact/friend/search")
 	if err = result.CheckError(err); err != nil {
-		return err
+		return dto.FriendSearchResponse{}, err
 	}
-	return nil
+	return result.Data, nil
 }
 
 func (sv *ContactService) FriendSendRequest(req dto.FriendSendRequestRequest, robot *model.Robot) error {

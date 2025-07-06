@@ -65,12 +65,12 @@ func (ct *Contact) FriendSearch(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	err = service.NewContactService(c).FriendSearch(req, robot)
+	friend, err := service.NewContactService(c).FriendSearch(req, robot)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
 	}
-	resp.ToResponse(nil)
+	resp.ToResponse(friend)
 }
 
 func (ct *Contact) FriendSendRequest(c *gin.Context) {
