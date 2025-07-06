@@ -58,6 +58,58 @@ func (sv *ContactService) GetContacts(req dto.GetContactsRequest, pager appx.Pag
 	return result.Data.Itmes, result.Data.Total, nil
 }
 
+func (sv *ContactService) FriendSearch(req dto.FriendSearchRequest, robot *model.Robot) error {
+	var result dto.Response[any]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]any{
+			"to_username":  req.ToUserName,
+			"from_scene":   req.FromScene,
+			"search_scene": req.SearchScene,
+		}).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/contact/friend/search")
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (sv *ContactService) FriendSendRequest(req dto.FriendSendRequestRequest, robot *model.Robot) error {
+	var result dto.Response[any]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]any{
+			"v1":             req.V1,
+			"v2":             req.V2,
+			"opcode":         req.Opcode,
+			"scene":          req.Scene,
+			"verify_content": req.VerifyContent,
+		}).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/contact/friend/add")
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (sv *ContactService) FriendSetRemarks(req dto.FriendSetRemarksRequest, robot *model.Robot) error {
+	var result dto.Response[any]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]any{
+			"to_wxid": req.ToWxid,
+			"remarks": req.Remarks,
+		}).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/contact/friend/remark")
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (sv *ContactService) FriendPassVerify(id int64, robot *model.Robot) error {
 	var result dto.Response[any]
 	// 通过好友验证
