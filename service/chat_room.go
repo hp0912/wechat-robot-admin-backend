@@ -68,6 +68,21 @@ func (sv *ChatRoomService) GetNotLeftMembers(req dto.ChatRoomMemberRequest, robo
 	return result.Data, nil
 }
 
+func (sv *ChatRoomService) CreateChatRoom(contactIDs []string, robot *model.Robot) error {
+	var result dto.Response[string]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string][]string{
+			"contact_ids": contactIDs,
+		}).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/chat-room/create")
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (sv *ChatRoomService) InviteChatRoomMember(chatRoomID string, contactIDs []string, robot *model.Robot) error {
 	var result dto.Response[string]
 	_, err := resty.New().R().

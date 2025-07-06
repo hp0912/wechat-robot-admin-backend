@@ -183,6 +183,7 @@ CREATE TABLE IF NOT EXISTS `contacts` (
   `city` VARCHAR(64) DEFAULT NULL COMMENT '城市',
   `signature` VARCHAR(255) DEFAULT NULL COMMENT '个性签名',
   `sns_background` VARCHAR(255) DEFAULT NULL COMMENT '朋友圈背景图',
+  `chat_room_owner` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '群聊所有者微信ID',
   `created_at` BIGINT NOT NULL COMMENT '创建时间',
   `last_active_at` BIGINT NOT NULL COMMENT '最近活跃时间',
   `updated_at` BIGINT NOT NULL COMMENT '更新时间',
