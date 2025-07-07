@@ -21,6 +21,7 @@ var chatRoomSettingsCtl *controller.ChatRoomSettings
 var messageCtl *controller.Message
 var systemMessageCtl *controller.SystemMessage
 var momentsCtl *controller.Moments
+var wxAppCtl *controller.WXApp
 var aiCallbackCtl *controller.AICallback
 
 func initController() {
@@ -38,6 +39,7 @@ func initController() {
 	chatRoomSettingsCtl = controller.NewChatRoomSettingsController()
 	aiCallbackCtl = controller.NewAICallbackController()
 	momentsCtl = controller.NewMomentsController()
+	wxAppCtl = controller.NewWXAppController()
 }
 
 func RegisterRouter(r *gin.Engine) error {
@@ -181,6 +183,13 @@ func RegisterRouter(r *gin.Engine) error {
 		robot.POST("/login", middleware.UserOwnerAuth(), robotLoginCtl.RobotLogin)
 		robot.POST("/login-check", middleware.UserOwnerAuth(), robotLoginCtl.RobotLoginCheck)
 		robot.DELETE("/logout", middleware.UserOwnerAuth(), robotLoginCtl.RobotLogout)
+	}
+
+	{
+		robot := api.Group("/wxapp")
+		robot.Use(middleware.UserAuth())
+
+		robot.POST("/qrcode-auth-login", middleware.UserOwnerAuth(), wxAppCtl.WxappQrcodeAuthLogin)
 	}
 
 	return nil
