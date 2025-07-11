@@ -39,5 +39,13 @@ type RobotLoginCheckResponse struct {
 	ExpiredTime             int          `json:"expiredTime"`  // 过期时间(秒)
 	HeadImgUrl              string       `json:"headImgUrl"`   // 头像
 	NickName                string       `json:"nickName"`     // 昵称
+	Ticket                  string       `json:"ticket"`       // 登录票据
 	AcctSectResp            AcctSectResp `json:"acctSectResp"` // 账号信息-登录成功之后才有
+}
+
+type RobotLogin2FARequest struct {
+	Uuid   string `form:"uuid" json:"uuid" binding:"required"`
+	Code   string `form:"code" json:"code" binding:"required"`
+	Ticket string `form:"ticket" json:"ticket" binding:"required"`
+	Data64 string `form:"data64" json:"data64"`
 }

@@ -49,6 +49,24 @@ func (sv *RobotLoginService) RobotLoginCheck(robot *model.Robot, uuid string) (d
 	return result.Data, nil
 }
 
+// RobotLogin2FA 新设备登陆双重认证
+func (sv *RobotLoginService) RobotLogin2FA(robot *model.Robot, req dto.RobotLogin2FARequest) error {
+	var result dto.Response[dto.RobotLoginCheckResponse]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]string{
+			"uuid":   req.Uuid,
+			"code":   req.Code,
+			"ticket": req.Ticket,
+		}).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/login/2fa")
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
+}
+
 // RobotLogout 机器人登出
 func (sv *RobotLoginService) RobotLogout(robot *model.Robot) (err error) {
 	var resp dto.Response[struct{}]

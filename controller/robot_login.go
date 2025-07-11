@@ -51,6 +51,26 @@ func (ct *RobotLogin) RobotLoginCheck(c *gin.Context) {
 	resp.ToResponse(data)
 }
 
+func (ct *RobotLogin) RobotLogin2FA(c *gin.Context) {
+	var req dto.RobotLogin2FARequest
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	err = service.NewRobotLoginService(c).RobotLogin2FA(robot, req)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
+
 func (ct *RobotLogin) RobotLogout(c *gin.Context) {
 	resp := appx.NewResponse(c)
 	robot, err := appx.GetRobot(c)

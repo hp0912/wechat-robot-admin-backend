@@ -182,6 +182,7 @@ func RegisterRouter(r *gin.Engine) error {
 		robot.GET("/state", middleware.UserOwnerAuth(), robotLoginCtl.RobotState)
 		robot.POST("/login", middleware.UserOwnerAuth(), robotLoginCtl.RobotLogin)
 		robot.POST("/login-check", middleware.UserOwnerAuth(), robotLoginCtl.RobotLoginCheck)
+		robot.POST("/login/2fa", middleware.UserOwnerAuth(), robotLoginCtl.RobotLogin2FA)
 		robot.DELETE("/logout", middleware.UserOwnerAuth(), robotLoginCtl.RobotLogout)
 	}
 
