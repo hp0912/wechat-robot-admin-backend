@@ -44,8 +44,9 @@ type RobotLoginCheckResponse struct {
 }
 
 type RobotLogin2FARequest struct {
+	ID     int64  `form:"id" json:"id" binding:"required"`
 	Uuid   string `form:"uuid" json:"uuid" binding:"required"`
 	Code   string `form:"code" json:"code" binding:"required"`
 	Ticket string `form:"ticket" json:"ticket" binding:"required"`
-	Data64 string `form:"data64" json:"data64"`
+	Data62 string `form:"data62" json:"data62"`
 }
