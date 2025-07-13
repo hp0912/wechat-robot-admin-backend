@@ -57,7 +57,7 @@ func (s *MomentsService) FriendCircleDownFriendCircleMedia(req dto.MomentsDownFr
 	return result.Data, nil
 }
 
-func (s *MomentsService) FriendCircleUpload(file io.Reader, header *multipart.FileHeader, robot *model.Robot) (resp dto.FriendCircleUploadResponse, err error) {
+func (s *MomentsService) FriendCircleUpload(file io.Reader, header *multipart.FileHeader, robot *model.Robot) (resp dto.FriendCircleMedia, err error) {
 	robotURL := fmt.Sprintf("%s/moments/upload-media", robot.GetBaseURL())
 	// 准备转发请求
 	var requestBody bytes.Buffer
@@ -92,7 +92,7 @@ func (s *MomentsService) FriendCircleUpload(file io.Reader, header *multipart.Fi
 	}
 	defer robotResp.Body.Close()
 	// 解析响应体为结构体
-	var result dto.Response[dto.FriendCircleUploadResponse]
+	var result dto.Response[dto.FriendCircleMedia]
 	if err = json.NewDecoder(robotResp.Body).Decode(&result); err != nil {
 		return
 	}
@@ -103,4 +103,17 @@ func (s *MomentsService) FriendCircleUpload(file io.Reader, header *multipart.Fi
 	// 返回解析后的数据
 	resp = result.Data
 	return
+}
+
+func (s *MomentsService) FriendCirclePost(req dto.MomentPostRequest, robot *model.Robot) (dto.MomentPostResponse, error) {
+	var result dto.Response[dto.MomentPostResponse]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(req).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/moments/post")
+	if err = result.CheckError(err); err != nil {
+		return dto.MomentPostResponse{}, err
+	}
+	return result.Data, nil
 }

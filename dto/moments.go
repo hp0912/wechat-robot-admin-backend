@@ -246,7 +246,7 @@ type MomentsDownFriendCircleMediaRequest struct {
 	Key string `form:"key" json:"key"`
 }
 
-type FriendCircleUploadResponse struct {
+type FriendCircleMedia struct {
 	StartPos      *uint32         `json:"StartPos,omitempty"`
 	TotalLen      *uint32         `json:"TotalLen,omitempty"`
 	ClientId      *string         `json:"ClientId,omitempty"`
@@ -260,4 +260,18 @@ type FriendCircleUploadResponse struct {
 type SnsBufferUrl struct {
 	Url  *string `json:"Url,omitempty"`
 	Type *uint32 `json:"Type,omitempty"`
+}
+
+type MomentPostRequest struct {
+	ID         int64               `form:"id" json:"id" binding:"required"`
+	Content    string              `form:"content" json:"content"`
+	MediaList  []FriendCircleMedia `form:"media_list" json:"media_list"`
+	ShareType  string              `form:"share_type" json:"share_type" binding:"required"`
+	ShareWith  []string            `form:"share_with" json:"share_with"`
+	DoNotShare []string            `form:"donot_share" json:"donot_share"`
+}
+
+type MomentPostResponse struct {
+	SnsObject *SnsObject `json:"SnsObject,omitempty"`
+	SpamTips  *string    `json:"SpamTips,omitempty"`
 }

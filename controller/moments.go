@@ -123,7 +123,7 @@ func (ct *Moments) FriendCircleUpload(c *gin.Context) {
 }
 
 func (ct *Moments) FriendCirclePost(c *gin.Context) {
-	var req dto.MomentsGetListRequest
+	var req dto.MomentPostRequest
 	resp := appx.NewResponse(c)
 	robot, err := appx.GetRobot(c)
 	if err != nil {
@@ -134,7 +134,7 @@ func (ct *Moments) FriendCirclePost(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	data, err := service.NewMomentsService(c).FriendCircleGetList(req, robot)
+	data, err := service.NewMomentsService(c).FriendCirclePost(req, robot)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
