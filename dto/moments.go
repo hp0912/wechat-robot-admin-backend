@@ -4,20 +4,20 @@ import "encoding/xml"
 
 type TimelineObject struct {
 	XMLName                xml.Name      `xml:"TimelineObject"`
-	ID                     string        `xml:"id"`
+	ID                     uint64        `xml:"id"`
 	Username               string        `xml:"username"`
-	CreateTime             string        `xml:"createTime"`
+	CreateTime             uint32        `xml:"createTime"`
 	ContentDesc            string        `xml:"contentDesc"`
-	ContentDescShowType    int           `xml:"contentDescShowType"`
-	ContentDescScene       int           `xml:"contentDescScene"`
-	Private                string        `xml:"private"`
-	SightFolded            int           `xml:"sightFolded,omitempty"`
-	ShowFlag               int           `xml:"showFlag,omitempty"`
+	ContentDescShowType    uint32        `xml:"contentDescShowType"`
+	ContentDescScene       uint32        `xml:"contentDescScene"`
+	Private                uint32        `xml:"private"`
+	SightFolded            uint32        `xml:"sightFolded,omitempty"`
+	ShowFlag               uint32        `xml:"showFlag,omitempty"`
 	ContentAttr            string        `xml:"contentattr,omitempty"`
 	SourceUserName         string        `xml:"sourceUserName"`
 	SourceNickName         string        `xml:"sourceNickName"`
 	PublicUserName         string        `xml:"publicUserName"`
-	PublicBrandContactType int           `xml:"publicBrandContactType,omitempty"`
+	PublicBrandContactType uint32        `xml:"publicBrandContactType,omitempty"`
 	StatisticsData         string        `xml:"statisticsData"`
 	StatExtStr             string        `xml:"statExtStr,omitempty"`
 	CanvasInfoXML          string        `xml:"canvasInfoXml,omitempty"`
@@ -35,15 +35,15 @@ type AppInfo struct {
 	AppName       string `xml:"appName,omitempty"`
 	InstallUrl    string `xml:"installUrl,omitempty"`
 	FromUrl       string `xml:"fromUrl,omitempty"`
-	IsForceUpdate int    `xml:"isForceUpdate,omitempty"`
-	IsHidden      int    `xml:"isHidden,omitempty"`
+	IsForceUpdate uint32 `xml:"isForceUpdate,omitempty"`
+	IsHidden      uint32 `xml:"isHidden,omitempty"`
 }
 
 type WeappInfo struct {
 	AppUserName      string `xml:"appUserName"`
 	PagePath         string `xml:"pagePath"`
 	Version          string `xml:"version"`
-	IsHidden         int    `xml:"isHidden"`
+	IsHidden         uint32 `xml:"isHidden"`
 	DebugMode        string `xml:"debugMode"`
 	ShareActionId    string `xml:"shareActionId"`
 	IsGame           string `xml:"isGame"`
@@ -53,7 +53,7 @@ type WeappInfo struct {
 }
 
 type ContentObject struct {
-	ContentStyle    string    `xml:"contentStyle"`
+	ContentStyle    uint32    `xml:"contentStyle"`
 	ContentSubStyle string    `xml:"contentSubStyle,omitempty"`
 	Title           string    `xml:"title"`
 	Description     string    `xml:"description"`
@@ -244,4 +244,36 @@ type MomentsDownFriendCircleMediaRequest struct {
 	ID  int64  `form:"id" json:"id"  binding:"required"`
 	Url string `form:"url" json:"url" binding:"required"`
 	Key string `form:"key" json:"key"`
+}
+
+type FriendCircleMedia struct {
+	StartPos      *uint32         `json:"StartPos,omitempty"`
+	TotalLen      *uint32         `json:"TotalLen,omitempty"`
+	ClientId      *string         `json:"ClientId,omitempty"`
+	BufferUrl     *SnsBufferUrl   `json:"BufferUrl,omitempty"`
+	ThumbUrlCount *uint32         `json:"ThumbUrlCount,omitempty"`
+	ThumbUrls     []*SnsBufferUrl `json:"ThumbUrls,omitempty"`
+	Id            *uint64         `json:"Id,omitempty"`
+	IdStr         *string         `json:"IdStr,omitempty"`
+	Type          *uint32         `json:"Type,omitempty"`
+}
+
+type SnsBufferUrl struct {
+	Url  *string `json:"Url,omitempty"`
+	Type *uint32 `json:"Type,omitempty"`
+}
+
+type MomentPostRequest struct {
+	ID         int64               `form:"id" json:"id" binding:"required"`
+	Content    string              `form:"content" json:"content"`
+	MediaList  []FriendCircleMedia `form:"media_list" json:"media_list"`
+	ShareType  string              `form:"share_type" json:"share_type" binding:"required"`
+	Range      string              `form:"range" json:"range"`
+	ShareWith  []string            `form:"share_with" json:"share_with"`
+	DoNotShare []string            `form:"donot_share" json:"donot_share"`
+}
+
+type MomentPostResponse struct {
+	SnsObject *SnsObject `json:"SnsObject,omitempty"`
+	SpamTips  *string    `json:"SpamTips,omitempty"`
 }

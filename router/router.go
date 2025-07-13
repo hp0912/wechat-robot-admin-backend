@@ -131,6 +131,8 @@ func RegisterRouter(r *gin.Engine) error {
 		moments.Use(middleware.UserAuth())
 		moments.GET("/list", middleware.UserOwnerAuth(), momentsCtl.FriendCircleGetList)
 		moments.GET("/down-media", middleware.UserOwnerAuth(), momentsCtl.FriendCircleDownFriendCircleMedia)
+		moments.POST("/upload-media", middleware.UserOwnerAuth(), momentsCtl.FriendCircleUpload)
+		moments.POST("/post", middleware.UserOwnerAuth(), momentsCtl.FriendCirclePost)
 	}
 
 	{
