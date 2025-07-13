@@ -100,6 +100,11 @@ func (s *MomentsService) FriendCircleUpload(file io.Reader, header *multipart.Fi
 	if err = result.CheckError(nil); err != nil {
 		return
 	}
+	if result.Data.Id != nil {
+		idStr := strconv.FormatUint(*result.Data.Id, 10)
+		result.Data.IdStr = &idStr
+		result.Data.Id = nil
+	}
 	// 返回解析后的数据
 	resp = result.Data
 	return

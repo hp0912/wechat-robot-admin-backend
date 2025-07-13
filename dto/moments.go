@@ -254,6 +254,7 @@ type FriendCircleMedia struct {
 	ThumbUrlCount *uint32         `json:"ThumbUrlCount,omitempty"`
 	ThumbUrls     []*SnsBufferUrl `json:"ThumbUrls,omitempty"`
 	Id            *uint64         `json:"Id,omitempty"`
+	IdStr         *string         `json:"IdStr,omitempty"`
 	Type          *uint32         `json:"Type,omitempty"`
 }
 
@@ -267,6 +268,7 @@ type MomentPostRequest struct {
 	Content    string              `form:"content" json:"content"`
 	MediaList  []FriendCircleMedia `form:"media_list" json:"media_list"`
 	ShareType  string              `form:"share_type" json:"share_type" binding:"required"`
+	Range      string              `form:"range" json:"range"`
 	ShareWith  []string            `form:"share_with" json:"share_with"`
 	DoNotShare []string            `form:"donot_share" json:"donot_share"`
 }
