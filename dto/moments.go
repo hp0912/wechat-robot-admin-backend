@@ -245,3 +245,19 @@ type MomentsDownFriendCircleMediaRequest struct {
 	Url string `form:"url" json:"url" binding:"required"`
 	Key string `form:"key" json:"key"`
 }
+
+type FriendCircleUploadResponse struct {
+	StartPos      *uint32         `json:"StartPos,omitempty"`
+	TotalLen      *uint32         `json:"TotalLen,omitempty"`
+	ClientId      *string         `json:"ClientId,omitempty"`
+	BufferUrl     *SnsBufferUrl   `json:"BufferUrl,omitempty"`
+	ThumbUrlCount *uint32         `json:"ThumbUrlCount,omitempty"`
+	ThumbUrls     []*SnsBufferUrl `json:"ThumbUrls,omitempty"`
+	Id            *uint64         `json:"Id,omitempty"`
+	Type          *uint32         `json:"Type,omitempty"`
+}
+
+type SnsBufferUrl struct {
+	Url  *string `json:"Url,omitempty"`
+	Type *uint32 `json:"Type,omitempty"`
+}

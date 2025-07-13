@@ -119,8 +119,8 @@ func (ct *Message) SendVideoMessage(c *gin.Context) {
 	defer file.Close()
 
 	// 检查文件大小
-	if fileHeader.Size > 50*1024*1024 { // 限制为50MB
-		resp.ToErrorResponse(errors.New("文件大小不能超过50MB"))
+	if fileHeader.Size > 100*1024*1024 { // 限制为100MB
+		resp.ToErrorResponse(errors.New("文件大小不能超过100MB"))
 		return
 	}
 
