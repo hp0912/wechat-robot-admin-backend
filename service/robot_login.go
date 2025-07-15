@@ -56,6 +56,7 @@ func (sv *RobotLoginService) RobotLogin2FA(robot *model.Robot, req dto.RobotLogi
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetBody(map[string]string{
 			"uuid":   req.Uuid,
+			"data62": req.Data62,
 			"code":   req.Code,
 			"ticket": req.Ticket,
 		}).

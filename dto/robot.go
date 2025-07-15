@@ -22,6 +22,7 @@ type RobotLoginResponse struct {
 	AutoLogin  bool   `json:"auto_login"`  // 自动登陆
 	AwkenLogin bool   `json:"awken_login"` // 微信登录凭证
 	Uuid       string `json:"uuid"`
+	Data62     string `json:"data62"`
 }
 
 type AcctSectResp struct {
@@ -48,5 +49,5 @@ type RobotLogin2FARequest struct {
 	Uuid   string `form:"uuid" json:"uuid" binding:"required"`
 	Code   string `form:"code" json:"code" binding:"required"`
 	Ticket string `form:"ticket" json:"ticket" binding:"required"`
-	Data62 string `form:"data62" json:"data62"`
+	Data62 string `form:"data62" json:"data62" binding:"required"`
 }
