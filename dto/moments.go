@@ -264,13 +264,13 @@ type SnsBufferUrl struct {
 }
 
 type MomentPostRequest struct {
-	ID         int64               `form:"id" json:"id" binding:"required"`
-	Content    string              `form:"content" json:"content"`
-	MediaList  []FriendCircleMedia `form:"media_list" json:"media_list"`
-	ShareType  string              `form:"share_type" json:"share_type" binding:"required"`
-	Range      string              `form:"range" json:"range"`
-	ShareWith  []string            `form:"share_with" json:"share_with"`
-	DoNotShare []string            `form:"donot_share" json:"donot_share"`
+	ID           int64               `form:"id" json:"id" binding:"required"`
+	Content      string              `form:"content" json:"content"`
+	MediaList    []FriendCircleMedia `form:"media_list" json:"media_list"`
+	WithUserList []string            `form:"with_user_list" json:"with_user_list"`
+	ShareType    string              `form:"share_type" json:"share_type" binding:"required"`
+	ShareWith    []string            `form:"share_with" json:"share_with"`
+	DoNotShare   []string            `form:"donot_share" json:"donot_share"`
 }
 
 type MomentPostResponse struct {
