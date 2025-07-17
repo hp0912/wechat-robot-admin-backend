@@ -588,7 +588,7 @@ func (sv *RobotManageService) RobotRestart(robotID int64, restartType string) er
 	}
 
 	// 重启容器
-	timeout := 30
+	timeout := 60
 	err = dockerClient.ContainerRestart(sv.ctx, containers[0].ID, container.StopOptions{
 		Timeout: &timeout,
 	})
@@ -604,18 +604,5 @@ func (sv *RobotManageService) RobotRestartClient(robotID int64) error {
 }
 
 func (sv *RobotManageService) RobotRestartServer(robotID int64) error {
-	err := sv.RobotRestart(robotID, "server")
-	if err != nil {
-		return err
-	}
-	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
-	robot := model.Robot{
-		ID:     robotID,
-		Status: model.RobotStatusOffline,
-	}
-	err = respo.Update(&robot)
-	if err != nil {
-		return err
-	}
-	return nil
+	return sv.RobotRestart(robotID, "server")
 }
