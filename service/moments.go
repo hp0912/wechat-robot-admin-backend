@@ -35,9 +35,22 @@ func (s *MomentsService) FriendCircleGetList(req dto.MomentsGetListRequest, robo
 		return dto.MomentsGetListResponse{}, err
 	}
 	for _, ObjectItem := range result.Data.ObjectList {
+		if ObjectItem == nil {
+			continue
+		}
 		if ObjectItem.Id != nil {
 			ObjectItem.IdStr = strconv.FormatUint(*ObjectItem.Id, 10)
 			ObjectItem.Id = nil
+		}
+		if ObjectItem.TimelineObject == nil {
+			continue
+		}
+		medias := ObjectItem.TimelineObject.ContentObject.MediaList.Media
+		for i := range medias {
+			medias[i].IDStr = strconv.FormatUint(medias[i].ID, 10)
+			if medias[i].Type == 6 {
+				medias[i].VideoDurationStr = strconv.FormatFloat(medias[i].VideoDuration, 'f', -1, 64)
+			}
 		}
 	}
 	return result.Data, nil
