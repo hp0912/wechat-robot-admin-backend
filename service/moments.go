@@ -118,12 +118,26 @@ func (s *MomentsService) FriendCircleUpload(file io.Reader, header *multipart.Fi
 		result.Data.IdStr = &idStr
 		result.Data.Id = nil
 	}
+	if result.Data.VideoDuration > 0 {
+		videoDurationStr := strconv.FormatFloat(result.Data.VideoDuration, 'f', -1, 64)
+		result.Data.VideoDurationStr = videoDurationStr
+		result.Data.VideoDuration = 0
+	}
 	// 返回解析后的数据
 	resp = result.Data
 	return
 }
 
 func (s *MomentsService) FriendCirclePost(req dto.MomentPostRequest, robot *model.Robot) (dto.MomentPostResponse, error) {
+	for i := range req.MediaList {
+		if req.MediaList[i].IdStr != nil && *req.MediaList[i].IdStr != "" {
+			mediaId, err := strconv.ParseUint(*req.MediaList[i].IdStr, 10, 64)
+			if err != nil {
+				return dto.MomentPostResponse{}, fmt.Errorf("invalid media ID: %v", err)
+			}
+			req.MediaList[i].Id = &mediaId
+		}
+	}
 	var result dto.Response[dto.MomentPostResponse]
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
@@ -132,6 +146,39 @@ func (s *MomentsService) FriendCirclePost(req dto.MomentPostRequest, robot *mode
 		Post(robot.GetBaseURL() + "/moments/post")
 	if err = result.CheckError(err); err != nil {
 		return dto.MomentPostResponse{}, err
+	}
+	return result.Data, nil
+}
+
+func (s *MomentsService) FriendCircleOperation(req dto.MomentOpRequest, robot *model.Robot) (dto.MomentOpResponse, error) {
+	var result dto.Response[dto.MomentOpResponse]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]any{
+			"Id":        req.MomentID,
+			"Type":      req.Type,
+			"CommentId": req.CommentId,
+		}).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/moments/operate")
+	if err = result.CheckError(err); err != nil {
+		return dto.MomentOpResponse{}, err
+	}
+	return result.Data, nil
+}
+
+func (s *MomentsService) FriendCirclePrivacySettings(req dto.MomentPrivacySettingsRequest, robot *model.Robot) (dto.MomentPrivacySettingsResponse, error) {
+	var result dto.Response[dto.MomentPrivacySettingsResponse]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]uint32{
+			"Function": req.Function,
+			"Value":    req.Value,
+		}).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/moments/privacy-settings")
+	if err = result.CheckError(err); err != nil {
+		return dto.MomentPrivacySettingsResponse{}, err
 	}
 	return result.Data, nil
 }
