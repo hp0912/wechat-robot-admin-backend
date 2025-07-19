@@ -74,9 +74,9 @@ type Media struct {
 	Private          uint32          `xml:"private"`
 	UserData         string          `xml:"userData,omitempty"`
 	SubType          uint32          `xml:"subType,omitempty"`
-	VideoSize        VideoSize       `xml:"videoSize,omitempty"`
-	HD               URL             `xml:"hd"`
-	UHD              URL             `xml:"uhd"`
+	VideoSize        *VideoSize      `xml:"videoSize,omitempty"`
+	HD               *URL            `xml:"hd,omitempty"`
+	UHD              *URL            `xml:"uhd,omitempty"`
 	URL              URL             `xml:"url"`
 	Thumb            Thumb           `xml:"thumb"`
 	Size             Size            `xml:"size"`
@@ -249,15 +249,16 @@ type MomentsDownFriendCircleMediaRequest struct {
 }
 
 type FriendCircleMedia struct {
-	ClientId      *string         `json:"ClientId,omitempty"`
-	BufferUrl     *SnsBufferUrl   `json:"BufferUrl,omitempty"`
-	ThumbUrlCount *uint32         `json:"ThumbUrlCount,omitempty"`
-	ThumbUrls     []*SnsBufferUrl `json:"ThumbUrls,omitempty"`
-	Id            *uint64         `json:"Id,omitempty"`
-	IdStr         *string         `json:"IdStr,omitempty"`
-	Type          *uint32         `json:"Type,omitempty"`
-	Size          Size            `xml:"size"`
-	VideoDuration string          `xml:"videoDuration,omitempty"`
+	ClientId         *string         `json:"ClientId,omitempty"`
+	BufferUrl        *SnsBufferUrl   `json:"BufferUrl,omitempty"`
+	ThumbUrlCount    *uint32         `json:"ThumbUrlCount,omitempty"`
+	ThumbUrls        []*SnsBufferUrl `json:"ThumbUrls,omitempty"`
+	Id               *uint64         `json:"Id,omitempty"`
+	IdStr            *string         `json:"IdStr,omitempty"`
+	Type             *uint32         `json:"Type,omitempty"`
+	Size             Size            `json:"Size"`
+	VideoDuration    float64         `json:"VideoDuration,omitempty"`
+	VideoDurationStr string          `json:"VideoDurationStr,omitempty"`
 }
 
 type SnsBufferUrl struct {
