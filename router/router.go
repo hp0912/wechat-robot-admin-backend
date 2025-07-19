@@ -133,6 +133,8 @@ func RegisterRouter(r *gin.Engine) error {
 		moments.GET("/down-media", middleware.UserOwnerAuth(), momentsCtl.FriendCircleDownFriendCircleMedia)
 		moments.POST("/upload-media", middleware.UserOwnerAuth(), momentsCtl.FriendCircleUpload)
 		moments.POST("/post", middleware.UserOwnerAuth(), momentsCtl.FriendCirclePost)
+		moments.POST("/operate", middleware.UserOwnerAuth(), momentsCtl.FriendCircleOperation)
+		moments.POST("/privacy-settings", middleware.UserOwnerAuth(), momentsCtl.FriendCirclePrivacySettings)
 	}
 
 	{

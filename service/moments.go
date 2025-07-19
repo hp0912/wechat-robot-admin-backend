@@ -149,3 +149,36 @@ func (s *MomentsService) FriendCirclePost(req dto.MomentPostRequest, robot *mode
 	}
 	return result.Data, nil
 }
+
+func (s *MomentsService) FriendCircleOperation(req dto.MomentOpRequest, robot *model.Robot) (dto.MomentOpResponse, error) {
+	var result dto.Response[dto.MomentOpResponse]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]any{
+			"Id":        req.MomentID,
+			"Type":      req.Type,
+			"CommentId": req.CommentId,
+		}).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/moments/operate")
+	if err = result.CheckError(err); err != nil {
+		return dto.MomentOpResponse{}, err
+	}
+	return result.Data, nil
+}
+
+func (s *MomentsService) FriendCirclePrivacySettings(req dto.MomentPrivacySettingsRequest, robot *model.Robot) (dto.MomentPrivacySettingsResponse, error) {
+	var result dto.Response[dto.MomentPrivacySettingsResponse]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]uint32{
+			"Function": req.Function,
+			"Value":    req.Value,
+		}).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/moments/privacy-settings")
+	if err = result.CheckError(err); err != nil {
+		return dto.MomentPrivacySettingsResponse{}, err
+	}
+	return result.Data, nil
+}

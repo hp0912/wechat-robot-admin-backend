@@ -280,3 +280,32 @@ type MomentPostResponse struct {
 	SnsObject *SnsObject `json:"SnsObject,omitempty"`
 	SpamTips  *string    `json:"SpamTips,omitempty"`
 }
+
+type MomentOpRequest struct {
+	ID        int64  `form:"id" json:"id" binding:"required"`
+	MomentID  string `form:"MomentID" json:"MomentID" binding:"required"`
+	Type      uint32 `form:"Type" json:"Type" binding:"required"`
+	CommentId uint32 `form:"CommentId" json:"CommentId"`
+}
+
+type MomentOpResponse struct {
+	OpCount   *uint32 `json:"opCount,omitempty"`
+	OpRetList []int32 `json:"opRetList,omitempty"`
+}
+
+type MomentPrivacySettingsRequest struct {
+	ID       int64  `form:"id" json:"id" binding:"required"`
+	Function uint32 `form:"Function" json:"Function"`
+	Value    uint32 `form:"Value" json:"Value"`
+}
+
+type MomentPrivacySettingsResponse struct {
+	Ret      *int32    `json:"ret,omitempty"`
+	OplogRet *OplogRet `json:"oplogRet,omitempty"`
+}
+
+type OplogRet struct {
+	Count  *uint32 `json:"count,omitempty"`
+	Ret    []byte  `json:"ret,omitempty"`
+	ErrMsg []byte  `json:"errMsg,omitempty"`
+}

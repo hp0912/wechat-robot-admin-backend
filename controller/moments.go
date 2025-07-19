@@ -141,3 +141,43 @@ func (ct *Moments) FriendCirclePost(c *gin.Context) {
 	}
 	resp.ToResponse(data)
 }
+
+func (ct *Moments) FriendCircleOperation(c *gin.Context) {
+	var req dto.MomentOpRequest
+	resp := appx.NewResponse(c)
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	data, err := service.NewMomentsService(c).FriendCircleOperation(req, robot)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(data)
+}
+
+func (ct *Moments) FriendCirclePrivacySettings(c *gin.Context) {
+	var req dto.MomentPrivacySettingsRequest
+	resp := appx.NewResponse(c)
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	data, err := service.NewMomentsService(c).FriendCirclePrivacySettings(req, robot)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(data)
+}
