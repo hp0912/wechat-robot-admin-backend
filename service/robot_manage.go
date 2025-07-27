@@ -136,7 +136,7 @@ func (sv *RobotManageService) DockerStartWeChatServer(ctx *gin.Context, robot *m
 	clientContainerName := fmt.Sprintf("client_%s", robot.RobotCode)
 	serverContainerName := fmt.Sprintf("server_%s", robot.RobotCode)
 	serverConfig := &container.Config{
-		Image: "registry.cn-shenzhen.aliyuncs.com/houhou/wechat-ipad:latest",
+		Image: "registry.cn-shenzhen.aliyuncs.com/houhou/wechat-ipad:1.0.3",
 		Env: []string{
 			fmt.Sprintf("WECHAT_PORT=%s", "9000"),
 			fmt.Sprintf("REDIS_HOST=%s", vars.RedisSettings.Host),
@@ -438,7 +438,7 @@ func (sv *RobotManageService) RobotDockerImagePull(ctx *gin.Context, progressCha
 	defer dockerClient.Close()
 	// 定义需要拉取的镜像列表
 	images := []string{
-		"registry.cn-shenzhen.aliyuncs.com/houhou/wechat-ipad:latest",
+		"registry.cn-shenzhen.aliyuncs.com/houhou/wechat-ipad:1.0.3",
 		"registry.cn-shenzhen.aliyuncs.com/houhou/wechat-robot-client:latest",
 	}
 	// 逐个拉取镜像
