@@ -56,6 +56,67 @@ func (s *MomentsService) FriendCircleGetList(req dto.MomentsGetListRequest, robo
 	return result.Data, nil
 }
 
+func (s *MomentsService) FriendCircleGetDetail(req dto.FriendCircleGetDetailRequest, robot *model.Robot) (dto.SnsUserPageResponse, error) {
+	maxID, err := strconv.ParseUint(req.Maxid, 10, 64)
+	if err != nil {
+		return dto.SnsUserPageResponse{}, fmt.Errorf("invalid Maxid: %v", err)
+	}
+
+	var result dto.Response[dto.SnsUserPageResponse]
+	_, err = resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]any{
+			"Towxid":       req.Towxid,
+			"Fristpagemd5": req.Fristpagemd5,
+			"Maxid":        maxID,
+		}).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/moments/get-detail")
+	if err = result.CheckError(err); err != nil {
+		return dto.SnsUserPageResponse{}, err
+	}
+	return result.Data, nil
+}
+
+func (s *MomentsService) FriendCircleGetIdDetail(req dto.FriendCircleGetIdDetailRequest, robot *model.Robot) (dto.SnsObjectDetailResponse, error) {
+	momentId, err := strconv.ParseUint(req.MomentId, 10, 64)
+	if err != nil {
+		return dto.SnsObjectDetailResponse{}, fmt.Errorf("invalid momentId: %v", err)
+	}
+
+	var result dto.Response[dto.SnsObjectDetailResponse]
+	_, err = resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]any{
+			"Towxid": req.Towxid,
+			"Id":     momentId,
+		}).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/moments/get-id-detail")
+	if err = result.CheckError(err); err != nil {
+		return dto.SnsObjectDetailResponse{}, err
+	}
+	return result.Data, nil
+}
+
+func (s *MomentsService) FriendCircleComment(req dto.FriendCircleCommentRequest, robot *model.Robot) (dto.SnsCommentResponse, error) {
+	var result dto.Response[dto.SnsCommentResponse]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]any{
+			"Type":           req.Type,
+			"Id":             req.MomentId,
+			"ReplyCommnetId": req.ReplyCommnetId,
+			"Content":        req.Content,
+		}).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/moments/comment")
+	if err = result.CheckError(err); err != nil {
+		return dto.SnsCommentResponse{}, err
+	}
+	return result.Data, nil
+}
+
 func (s *MomentsService) FriendCircleDownFriendCircleMedia(req dto.MomentsDownFriendCircleMediaRequest, robot *model.Robot) (string, error) {
 	var result dto.Response[string]
 	_, err := resty.New().R().

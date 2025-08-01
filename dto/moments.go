@@ -309,3 +309,53 @@ type OplogRet struct {
 	Ret    []byte  `json:"ret,omitempty"`
 	ErrMsg []byte  `json:"errMsg,omitempty"`
 }
+
+type FriendCircleCommentRequest struct {
+	ID             int64  `form:"id" json:"id" binding:"required"`
+	Type           uint32 `form:"Type" json:"Type" binding:"required"`
+	MomentId       string `form:"MomentId" json:"MomentId" binding:"required"`
+	ReplyCommnetId uint32 `form:"ReplyCommnetId" json:"ReplyCommnetId"`
+	Content        string `form:"Content" json:"Content"`
+}
+
+type FriendCircleGetDetailRequest struct {
+	ID           int64  `form:"id" json:"id" binding:"required"`
+	Towxid       string `form:"Towxid" json:"Towxid" binding:"required"`
+	Fristpagemd5 string `form:"Fristpagemd5" json:"Fristpagemd5"`
+	Maxid        string `form:"Maxid" json:"Maxid"`
+}
+
+type FriendCircleGetIdDetailRequest struct {
+	ID       int64  `form:"id" json:"id" binding:"required"`
+	Towxid   string `form:"Towxid" json:"Towxid" binding:"required"`
+	MomentId string `form:"MomentId" json:"MomentId" binding:"required"`
+}
+
+type SnsCommentResponse struct {
+	SnsObject *SnsObject `json:"snsObject,omitempty"`
+}
+
+type SnsUserInfo struct {
+	SnsFlag       *uint32 `protobuf:"varint,1,opt,name=SnsFlag" json:"SnsFlag,omitempty"`
+	SnsBgimgId    *string `protobuf:"bytes,2,opt,name=SnsBgimgId" json:"SnsBgimgId,omitempty"`
+	SnsBgobjectId *uint64 `protobuf:"varint,3,opt,name=SnsBgobjectId" json:"SnsBgobjectId,omitempty"`
+	SnsFlagEx     *uint32 `protobuf:"varint,4,opt,name=SnsFlagEx" json:"SnsFlagEx,omitempty"`
+}
+
+type SnsUserPageResponse struct {
+	FristPageMd5          *string            `json:"FristPageMd5,omitempty"`
+	ObjectCount           *uint32            `json:"ObjectCount,omitempty"`
+	ObjectList            []*SnsObject       `json:"ObjectList,omitempty"`
+	ObjectTotalCount      []uint32           `json:"ObjectTotalCount,omitempty"`
+	SnsUserInfo           []*SnsUserInfo     `json:"SnsUserInfo,omitempty"`
+	NewRequestTime        []uint32           `json:"NewRequestTime,omitempty"`
+	ObjectCountForSameMd5 []uint32           `json:"ObjectCountForSameMd5,omitempty"`
+	ServerConfig          []*SnsServerConfig `json:"ServerConfig,omitempty"`
+	LimitedId             []uint64           `json:"LimitedId,omitempty"`
+	ContinueId            []uint64           `json:"ContinueId,omitempty"`
+	RetTips               []string           `json:"RetTips,omitempty"`
+}
+
+type SnsObjectDetailResponse struct {
+	Object *SnsObject `json:"object,omitempty"`
+}
