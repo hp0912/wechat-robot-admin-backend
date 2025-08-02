@@ -61,45 +61,38 @@ func (s *MomentsService) FriendCircleGetList(req dto.MomentsGetListRequest, robo
 }
 
 func (s *MomentsService) FriendCircleGetDetail(req dto.FriendCircleGetDetailRequest, robot *model.Robot) (dto.SnsUserPageResponse, error) {
-	maxID, err := strconv.ParseUint(req.Maxid, 10, 64)
-	if err != nil {
-		return dto.SnsUserPageResponse{}, fmt.Errorf("invalid Maxid: %v", err)
-	}
-
 	var result dto.Response[dto.SnsUserPageResponse]
-	_, err = resty.New().R().
+	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
-		SetBody(map[string]any{
-			"Towxid":       req.Towxid,
-			"Fristpagemd5": req.Fristpagemd5,
-			"Maxid":        maxID,
-		}).
+		SetQueryParam("Towxid", req.Towxid).
+		SetQueryParam("Fristpagemd5", req.Fristpagemd5).
+		SetQueryParam("Maxid", req.Maxid).
 		SetResult(&result).
-		Post(robot.GetBaseURL() + "/moments/get-detail")
+		Get(robot.GetBaseURL() + "/moments/get-detail")
 	if err = result.CheckError(err); err != nil {
 		return dto.SnsUserPageResponse{}, err
+	}
+	for _, ObjectItem := range result.Data.ObjectList {
+		s.FormatSnsObject(ObjectItem)
 	}
 	return result.Data, nil
 }
 
 func (s *MomentsService) FriendCircleGetIdDetail(req dto.FriendCircleGetIdDetailRequest, robot *model.Robot) (dto.SnsObjectDetailResponse, error) {
-	momentId, err := strconv.ParseUint(req.MomentId, 10, 64)
-	if err != nil {
-		return dto.SnsObjectDetailResponse{}, fmt.Errorf("invalid momentId: %v", err)
-	}
-
 	var result dto.Response[dto.SnsObjectDetailResponse]
-	_, err = resty.New().R().
+	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
-		SetBody(map[string]any{
-			"Towxid": req.Towxid,
-			"Id":     momentId,
-		}).
+		SetQueryParam("Towxid", req.Towxid).
+		SetQueryParam("Id", req.MomentId).
 		SetResult(&result).
-		Post(robot.GetBaseURL() + "/moments/get-id-detail")
+		Get(robot.GetBaseURL() + "/moments/get-id-detail")
 	if err = result.CheckError(err); err != nil {
 		return dto.SnsObjectDetailResponse{}, err
 	}
+	if result.Data.Object == nil {
+		return result.Data, nil
+	}
+	s.FormatSnsObject(result.Data.Object)
 	return result.Data, nil
 }
 
