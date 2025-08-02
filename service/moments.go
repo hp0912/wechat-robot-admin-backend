@@ -23,6 +23,26 @@ func NewMomentsService(ctx context.Context) *MomentsService {
 	return &MomentsService{ctx: ctx}
 }
 
+func (s *MomentsService) FormatSnsObject(snsObject *dto.SnsObject) {
+	if snsObject == nil {
+		return
+	}
+	if snsObject.Id != nil {
+		snsObject.IdStr = strconv.FormatUint(*snsObject.Id, 10)
+		snsObject.Id = nil
+	}
+	if snsObject.TimelineObject == nil {
+		return
+	}
+	medias := snsObject.TimelineObject.ContentObject.MediaList.Media
+	for i := range medias {
+		medias[i].IDStr = strconv.FormatUint(medias[i].ID, 10)
+		if medias[i].Type == 6 {
+			medias[i].VideoDurationStr = strconv.FormatFloat(medias[i].VideoDuration, 'f', -1, 64)
+		}
+	}
+}
+
 func (s *MomentsService) FriendCircleGetList(req dto.MomentsGetListRequest, robot *model.Robot) (dto.MomentsGetListResponse, error) {
 	var result dto.Response[dto.MomentsGetListResponse]
 	_, err := resty.New().R().
@@ -35,23 +55,7 @@ func (s *MomentsService) FriendCircleGetList(req dto.MomentsGetListRequest, robo
 		return dto.MomentsGetListResponse{}, err
 	}
 	for _, ObjectItem := range result.Data.ObjectList {
-		if ObjectItem == nil {
-			continue
-		}
-		if ObjectItem.Id != nil {
-			ObjectItem.IdStr = strconv.FormatUint(*ObjectItem.Id, 10)
-			ObjectItem.Id = nil
-		}
-		if ObjectItem.TimelineObject == nil {
-			continue
-		}
-		medias := ObjectItem.TimelineObject.ContentObject.MediaList.Media
-		for i := range medias {
-			medias[i].IDStr = strconv.FormatUint(medias[i].ID, 10)
-			if medias[i].Type == 6 {
-				medias[i].VideoDurationStr = strconv.FormatFloat(medias[i].VideoDuration, 'f', -1, 64)
-			}
-		}
+		s.FormatSnsObject(ObjectItem)
 	}
 	return result.Data, nil
 }
@@ -99,7 +103,7 @@ func (s *MomentsService) FriendCircleGetIdDetail(req dto.FriendCircleGetIdDetail
 	return result.Data, nil
 }
 
-func (s *MomentsService) FriendCircleComment(req dto.FriendCircleCommentRequest, robot *model.Robot) (dto.SnsCommentResponse, error) {
+func (s *MomentsService) FriendCircleComment(req dto.FriendCircleCommentRequest, robot *model.Robot) (dto.SnsObject, error) {
 	var result dto.Response[dto.SnsCommentResponse]
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
@@ -112,9 +116,13 @@ func (s *MomentsService) FriendCircleComment(req dto.FriendCircleCommentRequest,
 		SetResult(&result).
 		Post(robot.GetBaseURL() + "/moments/comment")
 	if err = result.CheckError(err); err != nil {
-		return dto.SnsCommentResponse{}, err
+		return dto.SnsObject{}, err
 	}
-	return result.Data, nil
+	if result.Data.SnsObject == nil {
+		return dto.SnsObject{}, nil
+	}
+	s.FormatSnsObject(result.Data.SnsObject)
+	return *result.Data.SnsObject, nil
 }
 
 func (s *MomentsService) FriendCircleDownFriendCircleMedia(req dto.MomentsDownFriendCircleMediaRequest, robot *model.Robot) (string, error) {
