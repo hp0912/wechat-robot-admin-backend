@@ -244,3 +244,36 @@ CREATE TABLE IF NOT EXISTS `moment_settings` (
   `comment_prompt` TEXT COMMENT '评论系统提示词',
   `max_completion_tokens` INT DEFAULT 0 COMMENT '评论最大回复'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE IF NOT EXISTS `moments` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `wechat_id` VARCHAR(64),
+  `moment_id` BIGINT NOT NULL,
+  `type` INT NOT NULL,
+  `app_msg_type` INT DEFAULT NULL,
+  `content` TEXT,
+  `message_source` TEXT,
+  `img_buf` TEXT,
+  `status` INT NOT NULL DEFAULT 0,
+  `img_status` INT NOT NULL DEFAULT 0,
+  `push_content` TEXT,
+  `message_seq` INT NOT NULL DEFAULT 0,
+  `created_at` BIGINT NOT NULL,
+  `updated_at` BIGINT NOT NULL,
+  UNIQUE KEY `uniq_moment_id` (`moment_id`),
+  KEY `idx_wechat_id` (`wechat_id`),
+  KEY `idx_type` (`type`),
+  KEY `idx_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE IF NOT EXISTS `moment_comments` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `wechat_id` VARCHAR(64),
+  `moment_id` BIGINT NOT NULL,
+  `comment` TEXT NOT NULL,
+  `created_at` BIGINT NOT NULL,
+  `updated_at` BIGINT NOT NULL,
+  UNIQUE KEY `uniq_moment_id` (`moment_id`),
+  KEY `idx_wechat_id` (`wechat_id`),
+  KEY `idx_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
