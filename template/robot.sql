@@ -233,6 +233,7 @@ CREATE TABLE IF NOT EXISTS `ai_task` (
 
 CREATE TABLE IF NOT EXISTS `moment_settings` (
   `id` BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '表主键ID',
+  `sync_key` TEXT COMMENT '朋友圈同步的key',
   `auto_like` BOOLEAN DEFAULT FALSE COMMENT '开启自动点赞',
   `auto_comment` BOOLEAN DEFAULT FALSE COMMENT '开启自动评论',
   `whitelist` TEXT COMMENT '自动点赞、评论白名单',
