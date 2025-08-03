@@ -249,7 +249,7 @@ CREATE TABLE IF NOT EXISTS `moment_settings` (
 CREATE TABLE IF NOT EXISTS `moments` (
   `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
   `wechat_id` VARCHAR(64),
-  `moment_id` BIGINT NOT NULL,
+  `moment_id` BIGINT UNSIGNED NOT NULL,
   `type` INT NOT NULL,
   `app_msg_type` INT DEFAULT NULL,
   `content` TEXT,
