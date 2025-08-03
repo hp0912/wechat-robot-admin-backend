@@ -270,7 +270,7 @@ CREATE TABLE IF NOT EXISTS `moments` (
 CREATE TABLE IF NOT EXISTS `moment_comments` (
   `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
   `wechat_id` VARCHAR(64),
-  `moment_id` BIGINT NOT NULL,
+  `moment_id` BIGINT UNSIGNED NOT NULL,
   `comment` TEXT NOT NULL,
   `created_at` BIGINT NOT NULL,
   `updated_at` BIGINT NOT NULL,
