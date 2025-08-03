@@ -42,7 +42,11 @@ func (sv *ContactService) GetContacts(req dto.GetContactsRequest, pager appx.Pag
 	queryParams.Add("keyword", req.Keyword)
 	queryParams.Add("type", req.Type)
 	queryParams.Add("page_index", strconv.Itoa(pager.PageIndex))
-	queryParams.Add("page_size", "20")
+	if pager.PageSize > 0 {
+		queryParams.Add("page_size", strconv.Itoa(pager.PageSize))
+	} else {
+		queryParams.Add("page_size", "20")
+	}
 	for _, contactID := range req.ContactIDs {
 		queryParams.Add("contact_ids", contactID)
 	}

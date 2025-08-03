@@ -38,6 +38,41 @@ func (ct *Moments) FriendCircleGetList(c *gin.Context) {
 	resp.ToResponse(data)
 }
 
+func (ct *Moments) GetFriendCircleSettings(c *gin.Context) {
+	resp := appx.NewResponse(c)
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	data, err := service.NewMomentsService(c).GetFriendCircleSettings(robot)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(data)
+}
+
+func (ct *Moments) SaveFriendCircleSettings(c *gin.Context) {
+	var req dto.MomentSettings
+	resp := appx.NewResponse(c)
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	err = service.NewMomentsService(c).SaveFriendCircleSettings(req, robot)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
+
 func (ct *Moments) FriendCircleGetDetail(c *gin.Context) {
 	var req dto.FriendCircleGetDetailRequest
 	resp := appx.NewResponse(c)
