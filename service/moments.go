@@ -60,6 +60,31 @@ func (s *MomentsService) FriendCircleGetList(req dto.MomentsGetListRequest, robo
 	return result.Data, nil
 }
 
+func (s *MomentsService) GetFriendCircleSettings(robot *model.Robot) (dto.MomentSettings, error) {
+	var result dto.Response[dto.MomentSettings]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetResult(&result).
+		Get(robot.GetBaseURL() + "/moments/settings")
+	if err = result.CheckError(err); err != nil {
+		return dto.MomentSettings{}, err
+	}
+	return result.Data, nil
+}
+
+func (s *MomentsService) SaveFriendCircleSettings(req dto.MomentSettings, robot *model.Robot) error {
+	var result dto.Response[dto.MomentSettings]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(req).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/moments/settings")
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s *MomentsService) FriendCircleGetDetail(req dto.FriendCircleGetDetailRequest, robot *model.Robot) (dto.SnsUserPageResponse, error) {
 	var result dto.Response[dto.SnsUserPageResponse]
 	_, err := resty.New().R().

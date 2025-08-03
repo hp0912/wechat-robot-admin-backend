@@ -359,3 +359,17 @@ type SnsUserPageResponse struct {
 type SnsObjectDetailResponse struct {
 	Object *SnsObject `json:"object,omitempty"`
 }
+
+type MomentSettings struct {
+	ID                  int64  `json:"id"`
+	AutoLike            bool   `json:"auto_like"`
+	AutoComment         bool   `json:"auto_comment"`
+	Whitelist           string `json:"whitelist"`
+	Blacklist           string `json:"blacklist"`
+	AIBaseURL           string `json:"ai_base_url"`
+	AIAPIKey            string `json:"ai_api_key"`
+	WorkflowModel       string `json:"workflow_model"`
+	CommentModel        string `json:"comment_model"`
+	CommentPrompt       string `json:"comment_prompt"`
+	MaxCompletionTokens int    `json:"max_completion_tokens"`
+}
