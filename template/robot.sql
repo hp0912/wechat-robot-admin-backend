@@ -274,7 +274,7 @@ CREATE TABLE IF NOT EXISTS `moment_comments` (
   `comment` TEXT NOT NULL,
   `created_at` BIGINT NOT NULL,
   `updated_at` BIGINT NOT NULL,
-  UNIQUE KEY `uniq_moment_id` (`moment_id`),
+  UNIQUE KEY `uniq_moment_id` (`moment_id`), # 唯一索引确保每条朋友圈只会被评论一次
   KEY `idx_wechat_id` (`wechat_id`),
   KEY `idx_created_at` (`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
