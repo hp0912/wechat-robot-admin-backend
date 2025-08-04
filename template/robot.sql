@@ -5,7 +5,9 @@ CREATE TABLE IF NOT EXISTS `global_settings` (
   `chat_ai_trigger` VARCHAR(20) DEFAULT '' COMMENT '触发聊天AI的关键词',
   `chat_base_url` VARCHAR(255) DEFAULT '' COMMENT '聊天AI的基础URL地址',
   `chat_api_key` VARCHAR(255) DEFAULT '' COMMENT '聊天AI的API密钥',
+  `workflow_model` VARCHAR(100) DEFAULT '' COMMENT '工作流AI模型名称',
   `chat_model` VARCHAR(100) DEFAULT '' COMMENT '聊天AI使用的模型名称',
+  `image_recognition_model` VARCHAR(100) DEFAULT '' COMMENT '图像识别模型名称',
   `chat_prompt` TEXT COMMENT '聊天AI系统提示词',
   `max_completion_tokens` INT DEFAULT 0 COMMENT '最大回复',
   -- 绘图模型AI设置
@@ -58,7 +60,9 @@ CREATE TABLE IF NOT EXISTS `friend_settings` (
   `chat_ai_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI聊天功能',
   `chat_base_url` VARCHAR(255) DEFAULT '' COMMENT '聊天AI的基础URL地址',
   `chat_api_key` VARCHAR(255) DEFAULT '' COMMENT '聊天AI的API密钥',
+  `workflow_model` VARCHAR(100) DEFAULT '' COMMENT '工作流AI模型名称',
   `chat_model` VARCHAR(100) DEFAULT '' COMMENT '聊天AI使用的模型名称',
+  `image_recognition_model` VARCHAR(100) DEFAULT '' COMMENT '图像识别模型名称',
   `chat_prompt` TEXT COMMENT '聊天AI系统提示词',
   `max_completion_tokens` INT DEFAULT 0 COMMENT '最大回复',
   -- 绘图模型AI设置
@@ -80,7 +84,9 @@ CREATE TABLE IF NOT EXISTS `chat_room_settings` (
   `chat_ai_trigger` VARCHAR(20) DEFAULT '' COMMENT '触发聊天AI的关键词',
   `chat_base_url` VARCHAR(255) DEFAULT '' COMMENT '聊天AI的基础URL地址',
   `chat_api_key` VARCHAR(255) DEFAULT '' COMMENT '聊天AI的API密钥',
+  `workflow_model` VARCHAR(100) DEFAULT '' COMMENT '工作流AI模型名称',
   `chat_model` VARCHAR(100) DEFAULT '' COMMENT '聊天AI使用的模型名称',
+  `image_recognition_model` VARCHAR(100) DEFAULT '' COMMENT '图像识别模型名称',
   `chat_prompt` TEXT COMMENT '聊天AI系统提示词',
   `max_completion_tokens` INT DEFAULT 0 COMMENT '最大回复',
   -- 绘图模型AI设置

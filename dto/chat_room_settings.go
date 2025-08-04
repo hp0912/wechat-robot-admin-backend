@@ -11,7 +11,9 @@ type GetChatRoomSettingsResponse struct {
 	ChatAITrigger             string         `form:"chat_ai_trigger" json:"chat_ai_trigger"`
 	ChatBaseURL               string         `form:"chat_base_url" json:"chat_base_url"`
 	ChatAPIKey                string         `form:"chat_api_key" json:"chat_api_key"`
+	WorkflowModel             string         `form:"workflow_model" json:"workflow_model"`
 	ChatModel                 string         `form:"chat_model" json:"chat_model"`
+	ImageRecognitionModel     string         `form:"image_recognition_model" json:"image_recognition_model"`
 	ChatPrompt                string         `form:"chat_prompt" json:"chat_prompt"`
 	MaxCompletionTokens       int            `form:"max_completion_tokens" json:"max_completion_tokens"`
 	ImageAIEnabled            bool           `form:"image_ai_enabled" json:"image_ai_enabled"`
@@ -49,7 +51,9 @@ type SaveChatRoomSettingsRequest struct {
 	ChatAITrigger             string         `form:"chat_ai_trigger" json:"chat_ai_trigger"`
 	ChatBaseURL               string         `form:"chat_base_url" json:"chat_base_url"`
 	ChatAPIKey                string         `form:"chat_api_key" json:"chat_api_key"`
+	WorkflowModel             string         `form:"workflow_model" json:"workflow_model"`
 	ChatModel                 string         `form:"chat_model" json:"chat_model"`
+	ImageRecognitionModel     string         `form:"image_recognition_model" json:"image_recognition_model"`
 	ChatPrompt                string         `form:"chat_prompt" json:"chat_prompt"`
 	MaxCompletionTokens       int            `form:"max_completion_tokens" json:"max_completion_tokens"`
 	ImageAIEnabled            bool           `form:"image_ai_enabled" json:"image_ai_enabled"`
