@@ -287,8 +287,8 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 		return err
 	}
 	// 插入一条公共配置记录
-	commonConf := fmt.Sprintf("INSERT INTO `%s`.`%s` (`chat_ai_enabled`, `chat_base_url`, `chat_api_key`, `chat_model`, `chat_prompt`, `friend_sync_cron`) VALUES (0, '%s', '%s', '%s', '%s', '55 * * * *');",
-		robot.RobotCode, "global_settings", "https://ai-api.houhoukang.com/", vars.OpenAIApiKey, "gpt-4o-mini", "我是一个聊天机器人。")
+	commonConf := fmt.Sprintf("INSERT INTO `%s`.`%s` (`chat_ai_enabled`, `chat_base_url`, `chat_api_key`, `workflow_model`, `chat_model`, `image_recognition_model`, `chat_prompt`, `friend_sync_cron`) VALUES (0, '%s', '%s', 'gpt-4o-mini', 'gpt-4o-mini', 'gpt-4o-mini', '%s', '55 * * * *');",
+		robot.RobotCode, "global_settings", "https://ai-api.houhoukang.com/", vars.OpenAIApiKey, "我是一个聊天机器人。")
 	err = newDB.Exec(commonConf).Error
 	if err != nil {
 		return err
