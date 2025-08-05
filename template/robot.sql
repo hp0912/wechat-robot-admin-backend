@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS `global_settings` (
   `pat_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI拍一拍功能',
   `pat_type` ENUM('text', 'voice') NOT NULL DEFAULT 'text' COMMENT '拍一拍方式：text-文本，voice-语音',
   `pat_text` VARCHAR(255) DEFAULT '' COMMENT '拍一拍文本',
+  `pat_voice_timbre` VARCHAR(100) DEFAULT '' COMMENT '拍一拍音色',
   -- 欢迎新人
   `welcome_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用新成员加群欢迎功能',
   `welcome_type` ENUM('text','emoji', 'image', 'url') NOT NULL DEFAULT 'text' COMMENT '欢迎方式：text-文本，emoji-表情，image-图片，url-链接',
