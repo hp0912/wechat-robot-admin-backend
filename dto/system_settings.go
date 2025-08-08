@@ -10,8 +10,6 @@ type SystemSettingsRequest struct {
 	AutoVerifyUser             *bool   `json:"auto_verify_user"`
 	VerifyUserDelay            int     `json:"verify_user_delay"`
 	AutoChatroomInvite         *bool   `json:"auto_chatroom_invite"`
-	CreatedAt                  int64   `json:"created_at"`
-	UpdatedAt                  int64   `json:"updated_at"`
 }
 
 type SystemSettings struct {

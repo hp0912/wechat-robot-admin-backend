@@ -32,7 +32,16 @@ func (s *SystemSettingService) SaveSystemSettings(req dto.SystemSettingsRequest,
 	var result dto.Response[dto.SystemSettings]
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
-		SetBody(req).
+		SetBody(dto.SystemSettings{
+			ID:                         req.SystemSettingsID,
+			OfflineNotificationEnabled: req.OfflineNotificationEnabled,
+			NotificationType:           req.NotificationType,
+			PushPlusURL:                req.PushPlusURL,
+			PushPlusToken:              req.PushPlusToken,
+			AutoVerifyUser:             req.AutoVerifyUser,
+			VerifyUserDelay:            req.VerifyUserDelay,
+			AutoChatroomInvite:         req.AutoChatroomInvite,
+		}).
 		SetResult(&result).
 		Post(robot.GetBaseURL() + "/system-settings")
 	if err = result.CheckError(err); err != nil {

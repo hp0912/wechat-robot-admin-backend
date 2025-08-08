@@ -294,5 +294,7 @@ CREATE TABLE IF NOT EXISTS `system_settings` (
   `push_plus_token` VARCHAR(255) DEFAULT '' COMMENT 'Push Plus的Token',
   `auto_verify_user` BOOLEAN DEFAULT FALSE COMMENT '自动通过好友验证',
   `verify_user_delay` INT DEFAULT 60 COMMENT '自动通过好友验证延迟时间(秒)',
-  `auto_chatroom_invite` BOOLEAN DEFAULT FALSE COMMENT '自动邀请进群'
+  `auto_chatroom_invite` BOOLEAN DEFAULT FALSE COMMENT '自动邀请进群',
+  `created_at` BIGINT NOT NULL,
+  `updated_at` BIGINT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
