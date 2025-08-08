@@ -28,7 +28,7 @@ func (s *SystemSettingService) GetSystemSettings(robot *model.Robot) (dto.System
 	return result.Data, nil
 }
 
-func (s *SystemSettingService) SaveSystemSettings(req dto.SystemSettings, robot *model.Robot) error {
+func (s *SystemSettingService) SaveSystemSettings(req dto.SystemSettingsRequest, robot *model.Robot) error {
 	var result dto.Response[dto.SystemSettings]
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").

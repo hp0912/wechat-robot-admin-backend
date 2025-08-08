@@ -31,7 +31,7 @@ func (ct *SystemSettings) GetSystemSettings(c *gin.Context) {
 }
 
 func (ct *SystemSettings) SaveSystemSettings(c *gin.Context) {
-	var req dto.SystemSettings
+	var req dto.SystemSettingsRequest
 	resp := appx.NewResponse(c)
 	robot, err := appx.GetRobot(c)
 	if err != nil {
