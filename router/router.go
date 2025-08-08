@@ -21,6 +21,7 @@ var chatRoomSettingsCtl *controller.ChatRoomSettings
 var messageCtl *controller.Message
 var systemMessageCtl *controller.SystemMessage
 var momentsCtl *controller.Moments
+var systemSettingsCtl *controller.SystemSettings
 var wxAppCtl *controller.WXApp
 var aiCallbackCtl *controller.AICallback
 
@@ -39,6 +40,8 @@ func initController() {
 	chatRoomSettingsCtl = controller.NewChatRoomSettingsController()
 	aiCallbackCtl = controller.NewAICallbackController()
 	momentsCtl = controller.NewMomentsController()
+	systemMessageCtl = controller.NewSystemMessageController()
+	systemSettingsCtl = controller.NewSystemSettingsController()
 	wxAppCtl = controller.NewWXAppController()
 }
 
@@ -124,6 +127,13 @@ func RegisterRouter(r *gin.Engine) error {
 		systemMessage.Use(middleware.UserAuth())
 		systemMessage.GET("", middleware.UserOwnerAuth(), systemMessageCtl.GetRecentMonthMessages)
 		systemMessage.POST("/mark-as-read", middleware.UserOwnerAuth(), systemMessageCtl.MarkAsReadBatch)
+	}
+
+	{
+		systemSettings := api.Group("/system-settings")
+		systemSettings.Use(middleware.UserAuth())
+		systemSettings.GET("", middleware.UserOwnerAuth(), systemSettingsCtl.GetSystemSettings)
+		systemSettings.POST("", middleware.UserOwnerAuth(), systemSettingsCtl.SaveSystemSettings)
 	}
 
 	{
