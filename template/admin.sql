@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `wechat_id` varchar(64) DEFAULT NULL,
   `display_name` varchar(64) DEFAULT NULL,
+  `api_token` varchar(128) DEFAULT NULL,
   `role` bigint DEFAULT '1',
   `status` bigint DEFAULT '1',
   `avatar_url` varchar(500) DEFAULT '',
@@ -10,6 +11,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `deleted_at` DATETIME DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_user_we_chat_id` (`wechat_id`),
+  KEY `idx_user_api_token` (`api_token`),
   KEY `idx_user_deleted_at` (`deleted_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
