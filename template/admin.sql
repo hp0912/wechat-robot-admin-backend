@@ -10,8 +10,8 @@ CREATE TABLE IF NOT EXISTS `user` (
   `created_at` bigint DEFAULT NULL,
   `deleted_at` DATETIME DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `idx_user_we_chat_id` (`wechat_id`),
-  KEY `idx_user_api_token` (`api_token`),
+  UNIQUE KEY `uk_user_we_chat_id` (`wechat_id`),
+  UNIQUE KEY `uk_user_api_token` (`api_token`),
   KEY `idx_user_deleted_at` (`deleted_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 

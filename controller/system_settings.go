@@ -17,12 +17,17 @@ func NewSystemSettingsController() *SystemSettings {
 
 func (ct *SystemSettings) GetSystemSettings(c *gin.Context) {
 	resp := appx.NewResponse(c)
+	user, err := appx.GetLoginUser(c)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
 	robot, err := appx.GetRobot(c)
 	if err != nil {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	data, err := service.NewSystemSettingService(c).GetSystemSettings(robot)
+	data, err := service.NewSystemSettingService(c).GetSystemSettings(user, robot)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
@@ -38,11 +43,16 @@ func (ct *SystemSettings) SaveSystemSettings(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
+	user, err := appx.GetLoginUser(c)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
 	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	err = service.NewSystemSettingService(c).SaveSystemSettings(req, robot)
+	err = service.NewSystemSettingService(c).SaveSystemSettings(req, user, robot)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return

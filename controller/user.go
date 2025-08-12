@@ -21,7 +21,7 @@ func (ct *User) LoginUser(c *gin.Context) {
 	session := sessions.Default(c)
 	id := session.Get("id")
 	if value, ok := id.(int64); ok {
-		user, err := service.NewUserService(c.Request.Context()).LoginUser(c, value)
+		user, err := service.NewUserService(c.Request.Context()).LoginUser(value)
 		if err != nil {
 			resp.ToErrorResponse(err)
 			return
@@ -36,6 +36,21 @@ func (ct *User) LoginUser(c *gin.Context) {
 		resp.To401Response(errors.New("登陆信息已失效"))
 		return
 	}
+}
+
+func (ct *User) RefreshUserApiToken(c *gin.Context) {
+	resp := appx.NewResponse(c)
+	user, err := appx.GetLoginUser(c)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	apiToken, err := service.NewUserService(c).RefreshUserApiToken(user.ID)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(apiToken)
 }
 
 func (ct *User) Logout(c *gin.Context) {
