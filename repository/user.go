@@ -43,6 +43,18 @@ func (u *User) GetUserByWeChatID(WxID string) (*model.User, error) {
 	return &user, nil
 }
 
+func (u *User) GetUserByApiToken(token string) (*model.User, error) {
+	var user model.User
+	err := u.DB.WithContext(u.Ctx).Where("api_token = ?", token).First(&user).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
 func (u *User) UserCount() (int64, error) {
 	var count int64
 	err := u.DB.WithContext(u.Ctx).Model(&model.User{}).Count(&count).Error
