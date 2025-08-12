@@ -61,6 +61,7 @@ func RegisterRouter(r *gin.Engine) error {
 	{
 		user := api.Group("/user")
 		user.GET("/self", userCtl.LoginUser)
+		user.POST("/api-token/refresh", middleware.UserAuth(), userCtl.RefreshUserApiToken)
 		user.DELETE("/logout", userCtl.Logout)
 	}
 

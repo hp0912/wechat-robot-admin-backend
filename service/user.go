@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type UserService struct {
@@ -35,6 +36,18 @@ func (sv *UserService) Logout(ctx *gin.Context) error {
 	return session.Save()
 }
 
-func (sv *UserService) LoginUser(ctx *gin.Context, id int64) (*model.User, error) {
+func (sv *UserService) LoginUser(id int64) (*model.User, error) {
 	return repository.NewUserRepo(sv.ctx, vars.DB).GetUserByID(id)
+}
+
+func (sv *UserService) RefreshUserApiToken(id int64) (string, error) {
+	apiToken := uuid.New().String()
+	err := repository.NewUserRepo(sv.ctx, vars.DB).Update(&model.User{
+		ID:       id,
+		ApiToken: &apiToken,
+	})
+	if err != nil {
+		return "", err
+	}
+	return apiToken, nil
 }

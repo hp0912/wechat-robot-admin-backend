@@ -1,3 +1,5 @@
+-- 机器人实例库，跟机器人 code 有关
+-- use `机器人 code`;
 CREATE TABLE IF NOT EXISTS `system_settings` (
   `id` BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '表主键ID',
   `offline_notification_enabled` BOOLEAN DEFAULT FALSE COMMENT '启用离线通知',

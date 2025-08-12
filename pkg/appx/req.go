@@ -68,6 +68,18 @@ func InitPager(c *gin.Context) Pager {
 	return pager
 }
 
+func GetLoginUser(c *gin.Context) (*model.User, error) {
+	_user, exists := c.Get("login_user")
+	if !exists {
+		return nil, errors.New("用户未登录")
+	}
+	user, ok := _user.(*model.User)
+	if !ok {
+		return nil, errors.New("用户未登录")
+	}
+	return user, nil
+}
+
 func GetRobot(c *gin.Context) (*model.Robot, error) {
 	_robot, exists := c.Get("robot")
 	if !exists {
