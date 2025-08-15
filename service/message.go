@@ -7,6 +7,7 @@ import (
 	"io"
 	"mime/multipart"
 	"net/http"
+	"strconv"
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/model"
 	"wechat-robot-admin-backend/vars"
@@ -171,6 +172,58 @@ func (sv *MessageService) SendVoiceMessage(ctx *gin.Context, req dto.SendVoiceMe
 	}
 	defer robotResp.Body.Close()
 
+	return nil
+}
+
+func (sv *MessageService) SendFileMessage(ctx *gin.Context, req dto.SendFileMessageRequest, chunk io.Reader, header *multipart.FileHeader, robot *model.Robot) error {
+	robotURL := fmt.Sprintf("%s/message/send/file", robot.GetBaseURL())
+	var requestBody bytes.Buffer
+	writer := multipart.NewWriter(&requestBody)
+
+	// 分片文件字段名与前端一致: chunk
+	part, err := writer.CreateFormFile("chunk", header.Filename)
+	if err != nil {
+		return err
+	}
+	if _, err = io.Copy(part, chunk); err != nil {
+		return err
+	}
+	// 追加其他字段
+	if err = writer.WriteField("to_wxid", req.ToWxid); err != nil {
+		return err
+	}
+	if err = writer.WriteField("filename", req.Filename); err != nil {
+		return err
+	}
+	if err = writer.WriteField("file_hash", req.FileHash); err != nil {
+		return err
+	}
+	if err = writer.WriteField("file_size", strconv.FormatInt(req.FileSize, 10)); err != nil {
+		return err
+	}
+	if err = writer.WriteField("chunk_index", strconv.Itoa(req.ChunkIndex)); err != nil {
+		return err
+	}
+	if err = writer.WriteField("total_chunks", strconv.Itoa(req.TotalChunks)); err != nil {
+		return err
+	}
+	if err = writer.Close(); err != nil {
+		return err
+	}
+	robotRequest, err := http.NewRequest("POST", robotURL, &requestBody)
+	if err != nil {
+		return err
+	}
+	robotRequest.Header.Set("Content-Type", writer.FormDataContentType())
+	robotClient := &http.Client{}
+	robotResp, err := robotClient.Do(robotRequest)
+	if err != nil {
+		return err
+	}
+	defer robotResp.Body.Close()
+	if robotResp.StatusCode != http.StatusOK {
+		return fmt.Errorf("robot service returned status %d", robotResp.StatusCode)
+	}
 	return nil
 }
 
