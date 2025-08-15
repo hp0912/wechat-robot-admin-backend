@@ -207,6 +207,10 @@ func (ct *Message) SendVoiceMessage(c *gin.Context) {
 	resp.ToResponse(nil)
 }
 
+func (ct *Message) SendFileMessage(c *gin.Context) {
+
+}
+
 func (ct *Message) GetTimbre(c *gin.Context) {
 	resp := appx.NewResponse(c)
 	timbre, err := service.NewMessageService(c).GetTimbre()
