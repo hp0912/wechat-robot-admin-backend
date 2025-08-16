@@ -1,5 +1,10 @@
 package dto
 
+type CommonResponse struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
+
 type SKBuiltinStringT struct {
 	String *string `json:"string,omitempty"`
 }

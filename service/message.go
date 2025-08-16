@@ -3,6 +3,7 @@ package service
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -192,6 +193,9 @@ func (sv *MessageService) SendFileMessage(ctx *gin.Context, req dto.SendFileMess
 	if err = writer.WriteField("to_wxid", req.ToWxid); err != nil {
 		return err
 	}
+	if err = writer.WriteField("client_app_data_id", req.ClientAppDataId); err != nil {
+		return err
+	}
 	if err = writer.WriteField("filename", req.Filename); err != nil {
 		return err
 	}
@@ -224,6 +228,21 @@ func (sv *MessageService) SendFileMessage(ctx *gin.Context, req dto.SendFileMess
 	if robotResp.StatusCode != http.StatusOK {
 		return fmt.Errorf("robot service returned status %d", robotResp.StatusCode)
 	}
+	var respBody []byte
+	respBody, err = io.ReadAll(robotResp.Body)
+	if err != nil {
+		return err
+	}
+
+	var result dto.CommonResponse
+	if err = json.Unmarshal(respBody, &result); err != nil {
+		return err
+	}
+
+	if result.Code != 200 {
+		return fmt.Errorf("上传文件失败: %s", result.Message)
+	}
+
 	return nil
 }
 
