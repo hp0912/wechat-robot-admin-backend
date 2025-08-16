@@ -18,3 +18,5 @@ var SessionSecret string
 var OpenAIApiKey string
 
 var ThirdPartyApiKey string
+
+var UploadFileChunkSize int64 = 50000

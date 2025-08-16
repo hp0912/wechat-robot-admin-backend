@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var probeCtl *controller.Probe
 var wechatCtl *controller.WeChat
 var userCtl *controller.User
 var robotLoginCtl *controller.RobotLogin
@@ -26,6 +27,7 @@ var wxAppCtl *controller.WXApp
 var aiCallbackCtl *controller.AICallback
 
 func initController() {
+	probeCtl = controller.NewProbeController()
 	wechatCtl = controller.NewWeChatAuthController()
 	userCtl = controller.NewUserController()
 	robotLoginCtl = controller.NewRobotLoginController()
@@ -52,6 +54,11 @@ func RegisterRouter(r *gin.Engine) error {
 	initController()
 
 	api := r.Group("/api/v1")
+	{
+		probe := api.Group("/probe")
+		probe.GET("", probeCtl.Probe)
+	}
+
 	{
 		oauth := api.Group("/oauth")
 		oauth.GET("/official-account/url", wechatCtl.WeChatOfficialAccountAuthURL)
@@ -119,6 +126,7 @@ func RegisterRouter(r *gin.Engine) error {
 		message.POST("/send/image", middleware.UserOwnerAuth(), messageCtl.SendImageMessage)
 		message.POST("/send/voice", middleware.UserOwnerAuth(), messageCtl.SendVoiceMessage)
 		message.POST("/send/video", middleware.UserOwnerAuth(), messageCtl.SendVideoMessage)
+		message.POST("/send/file", middleware.UserOwnerAuth(), messageCtl.SendFileMessage)
 		message.GET("/timbre", middleware.UserOwnerAuth(), messageCtl.GetTimbre)
 		message.POST("/send/ai/tts", middleware.UserOwnerAuth(), messageCtl.SendAITTSMessage)
 	}

@@ -3,10 +3,12 @@ package service
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"mime/multipart"
 	"net/http"
+	"strconv"
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/model"
 	"wechat-robot-admin-backend/vars"
@@ -170,6 +172,76 @@ func (sv *MessageService) SendVoiceMessage(ctx *gin.Context, req dto.SendVoiceMe
 		return err
 	}
 	defer robotResp.Body.Close()
+
+	return nil
+}
+
+func (sv *MessageService) SendFileMessage(ctx *gin.Context, req dto.SendFileMessageRequest, chunk io.Reader, fileHeader *multipart.FileHeader, robot *model.Robot) error {
+	robotURL := fmt.Sprintf("%s/message/send/file", robot.GetBaseURL())
+	var requestBody bytes.Buffer
+	writer := multipart.NewWriter(&requestBody)
+
+	// 分片文件字段名与前端一致: chunk
+	part, err := writer.CreateFormFile("chunk", fileHeader.Filename)
+	if err != nil {
+		return err
+	}
+	if _, err = io.Copy(part, chunk); err != nil {
+		return err
+	}
+	// 追加其他字段
+	if err = writer.WriteField("to_wxid", req.ToWxid); err != nil {
+		return err
+	}
+	if err = writer.WriteField("client_app_data_id", req.ClientAppDataId); err != nil {
+		return err
+	}
+	if err = writer.WriteField("filename", req.Filename); err != nil {
+		return err
+	}
+	if err = writer.WriteField("file_hash", req.FileHash); err != nil {
+		return err
+	}
+	if err = writer.WriteField("file_size", strconv.FormatInt(req.FileSize, 10)); err != nil {
+		return err
+	}
+	if err = writer.WriteField("chunk_index", strconv.FormatInt(req.ChunkIndex, 10)); err != nil {
+		return err
+	}
+	if err = writer.WriteField("total_chunks", strconv.FormatInt(req.TotalChunks, 10)); err != nil {
+		return err
+	}
+	if err = writer.Close(); err != nil {
+		return err
+	}
+	robotRequest, err := http.NewRequest("POST", robotURL, &requestBody)
+	if err != nil {
+		return err
+	}
+	robotRequest.Header.Set("Content-Type", writer.FormDataContentType())
+	robotClient := &http.Client{}
+	robotResp, err := robotClient.Do(robotRequest)
+	if err != nil {
+		return err
+	}
+	defer robotResp.Body.Close()
+	if robotResp.StatusCode != http.StatusOK {
+		return fmt.Errorf("robot service returned status %d", robotResp.StatusCode)
+	}
+	var respBody []byte
+	respBody, err = io.ReadAll(robotResp.Body)
+	if err != nil {
+		return err
+	}
+
+	var result dto.CommonResponse
+	if err = json.Unmarshal(respBody, &result); err != nil {
+		return err
+	}
+
+	if result.Code != 200 {
+		return fmt.Errorf("上传文件失败: %s", result.Message)
+	}
 
 	return nil
 }

@@ -7,6 +7,7 @@ import (
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/pkg/appx"
 	"wechat-robot-admin-backend/service"
+	"wechat-robot-admin-backend/vars"
 
 	"github.com/gin-gonic/gin"
 )
@@ -204,6 +205,51 @@ func (ct *Message) SendVoiceMessage(c *gin.Context) {
 		resp.ToErrorResponse(err)
 		return
 	}
+	resp.ToResponse(nil)
+}
+
+func (ct *Message) SendFileMessage(c *gin.Context) {
+	resp := appx.NewResponse(c)
+	// 取得分片内容
+	file, fileHeader, err := c.Request.FormFile("chunk")
+	if err != nil {
+		resp.ToErrorResponse(errors.New("获取上传文件失败"))
+		return
+	}
+	defer file.Close()
+
+	if fileHeader.Size > vars.UploadFileChunkSize {
+		resp.ToErrorResponse(errors.New("单个分片大小不能超过50KB"))
+		return
+	}
+
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+
+	var req dto.SendFileMessageRequest
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+
+	// 基本参数校验（额外）
+	if req.ChunkIndex < 0 || req.TotalChunks <= 0 || req.FileSize <= 0 || req.ChunkIndex >= req.TotalChunks {
+		resp.ToErrorResponse(errors.New("分片参数错误"))
+		return
+	}
+	if len(req.FileHash) == 0 || len(req.Filename) == 0 {
+		resp.ToErrorResponse(errors.New("缺少文件信息"))
+		return
+	}
+
+	if err = service.NewMessageService(c).SendFileMessage(c, req, file, fileHeader, robot); err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+
 	resp.ToResponse(nil)
 }
 
