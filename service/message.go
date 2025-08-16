@@ -176,13 +176,13 @@ func (sv *MessageService) SendVoiceMessage(ctx *gin.Context, req dto.SendVoiceMe
 	return nil
 }
 
-func (sv *MessageService) SendFileMessage(ctx *gin.Context, req dto.SendFileMessageRequest, chunk io.Reader, robot *model.Robot) error {
+func (sv *MessageService) SendFileMessage(ctx *gin.Context, req dto.SendFileMessageRequest, chunk io.Reader, fileHeader *multipart.FileHeader, robot *model.Robot) error {
 	robotURL := fmt.Sprintf("%s/message/send/file", robot.GetBaseURL())
 	var requestBody bytes.Buffer
 	writer := multipart.NewWriter(&requestBody)
 
 	// 分片文件字段名与前端一致: chunk
-	part, err := writer.CreateFormFile("chunk", req.Filename)
+	part, err := writer.CreateFormFile("chunk", fileHeader.Filename)
 	if err != nil {
 		return err
 	}
