@@ -201,10 +201,10 @@ func (sv *MessageService) SendFileMessage(ctx *gin.Context, req dto.SendFileMess
 	if err = writer.WriteField("file_size", strconv.FormatInt(req.FileSize, 10)); err != nil {
 		return err
 	}
-	if err = writer.WriteField("chunk_index", strconv.Itoa(req.ChunkIndex)); err != nil {
+	if err = writer.WriteField("chunk_index", strconv.FormatInt(req.ChunkIndex, 10)); err != nil {
 		return err
 	}
-	if err = writer.WriteField("total_chunks", strconv.Itoa(req.TotalChunks)); err != nil {
+	if err = writer.WriteField("total_chunks", strconv.FormatInt(req.TotalChunks, 10)); err != nil {
 		return err
 	}
 	if err = writer.Close(); err != nil {
