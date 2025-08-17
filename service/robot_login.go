@@ -68,6 +68,21 @@ func (sv *RobotLoginService) RobotLogin2FA(robot *model.Robot, req dto.RobotLogi
 	return nil
 }
 
+func (sv *RobotLoginService) LoginNewDeviceVerify(robot *model.Robot, ticket string) (*dto.SilderOCR, error) {
+	var result dto.Response[dto.SilderOCR]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]string{
+			"ticket": ticket,
+		}).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/login/new-device-verify")
+	if err = result.CheckError(err); err != nil {
+		return nil, err
+	}
+	return &result.Data, nil
+}
+
 // RobotLogout 机器人登出
 func (sv *RobotLoginService) RobotLogout(robot *model.Robot) (err error) {
 	var resp dto.Response[struct{}]

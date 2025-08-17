@@ -51,3 +51,17 @@ type RobotLogin2FARequest struct {
 	Ticket string `form:"ticket" json:"ticket" binding:"required"`
 	Data62 string `form:"data62" json:"data62" binding:"required"`
 }
+
+type NewDeviceVerifyRequest struct {
+	Ticket string `form:"ticket" json:"ticket" binding:"required"`
+}
+
+type SilderOCR struct {
+	Flag    int    `json:"flag"`
+	Data    string `json:"data"`
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+	URL     string `json:"url"`
+	Remark  string `json:"remark"`
+	Success bool   `json:"Success"`
+}
