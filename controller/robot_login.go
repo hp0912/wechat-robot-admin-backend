@@ -17,13 +17,20 @@ func NewRobotLoginController() *RobotLogin {
 }
 
 func (ct *RobotLogin) RobotLogin(c *gin.Context) {
+	var req struct {
+		LoginType string `form:"login_type" json:"login_type" binding:"required"`
+	}
 	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
 	robot, err := appx.GetRobot(c)
 	if err != nil {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	data, err := service.NewRobotLoginService(c).RobotLogin(robot)
+	data, err := service.NewRobotLoginService(c).RobotLogin(robot, req.LoginType)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
