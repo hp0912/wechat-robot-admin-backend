@@ -58,10 +58,17 @@ func (sv *RobotManageService) DockerStartWeChatClient(ctx *gin.Context, robot *m
 	}
 	defer dockerClient.Close()
 
+	// 需要的镜像
+	clientImage := "registry.cn-shenzhen.aliyuncs.com/houhou/wechat-robot-client:latest"
+	// 确保镜像存在，不存在则先拉取
+	if err := sv.ensureImage(sv.ctx, dockerClient, clientImage); err != nil {
+		return fmt.Errorf("准备客户端镜像失败: %v", err)
+	}
+
 	// 客户端容器配置
 	clientContainerName := fmt.Sprintf("client_%s", robot.RobotCode)
 	clientConfig := &container.Config{
-		Image: "registry.cn-shenzhen.aliyuncs.com/houhou/wechat-robot-client:latest",
+		Image: clientImage,
 		Env: []string{
 			fmt.Sprintf("GIN_MODE=%s", "release"),
 			fmt.Sprintf("WECHAT_CLIENT_PORT=%s", "9000"),
@@ -132,11 +139,18 @@ func (sv *RobotManageService) DockerStartWeChatServer(ctx *gin.Context, robot *m
 	}
 	defer dockerClient.Close()
 
+	// 需要的镜像
+	serverImage := "registry.cn-shenzhen.aliyuncs.com/houhou/wechat-ipad:latest"
+	// 确保镜像存在，不存在则先拉取
+	if err := sv.ensureImage(sv.ctx, dockerClient, serverImage); err != nil {
+		return fmt.Errorf("准备服务端镜像失败: %v", err)
+	}
+
 	// 服务端容器配置
 	clientContainerName := fmt.Sprintf("client_%s", robot.RobotCode)
 	serverContainerName := fmt.Sprintf("server_%s", robot.RobotCode)
 	serverConfig := &container.Config{
-		Image: "registry.cn-shenzhen.aliyuncs.com/houhou/wechat-ipad:latest",
+		Image: serverImage,
 		Env: []string{
 			fmt.Sprintf("WECHAT_PORT=%s", "9000"),
 			fmt.Sprintf("REDIS_HOST=%s", vars.RedisSettings.Host),
@@ -605,4 +619,25 @@ func (sv *RobotManageService) RobotRestartClient(robotID int64) error {
 
 func (sv *RobotManageService) RobotRestartServer(robotID int64) error {
 	return sv.RobotRestart(robotID, "server")
+}
+
+// ensureImage 确保镜像已存在；若不存在则拉取
+func (sv *RobotManageService) ensureImage(ctx context.Context, dockerClient *client.Client, image string) error {
+	// 先尝试 inspect
+	if _, err := dockerClient.ImageInspect(ctx, image); err == nil {
+		return nil // 已存在
+	}
+	// 不存在则拉取
+	reader, err := dockerClient.ImagePull(ctx, image, dockerImage.PullOptions{})
+	if err != nil {
+		return fmt.Errorf("拉取镜像 %s 失败: %w", image, err)
+	}
+	defer reader.Close()
+	// 读取完输出以便 docker 正常完成（忽略具体进度，这里只是确保镜像到位）
+	_, _ = io.Copy(io.Discard, reader)
+	// 再次确认
+	if _, err := dockerClient.ImageInspect(ctx, image); err != nil {
+		return fmt.Errorf("镜像 %s 拉取后仍不可用: %w", image, err)
+	}
+	return nil
 }
