@@ -21,10 +21,13 @@ func NewRobotLoginService(ctx context.Context) *RobotLoginService {
 }
 
 // RobotLogin 获取机器人登陆二维码
-func (sv *RobotLoginService) RobotLogin(robot *model.Robot) (dto.RobotLoginResponse, error) {
+func (sv *RobotLoginService) RobotLogin(robot *model.Robot, loginType string) (dto.RobotLoginResponse, error) {
 	var result dto.Response[dto.RobotLoginResponse]
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]string{
+			"login_type": loginType,
+		}).
 		SetResult(&result).
 		Post(robot.GetBaseURL() + "/login")
 	if err = result.CheckError(err); err != nil {
@@ -77,6 +80,58 @@ func (sv *RobotLoginService) LoginNewDeviceVerify(robot *model.Robot, ticket str
 		}).
 		SetResult(&result).
 		Post(robot.GetBaseURL() + "/login/new-device-verify")
+	if err = result.CheckError(err); err != nil {
+		return nil, err
+	}
+	return &result.Data, nil
+}
+
+func (sv *RobotLoginService) LoginData62Login(robot *model.Robot, req dto.LoginRequest) (*dto.UnifyAuthResponse, error) {
+	var result dto.Response[dto.UnifyAuthResponse]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(req).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/login/data62")
+	if err = result.CheckError(err); err != nil {
+		return nil, err
+	}
+	return &result.Data, nil
+}
+
+func (sv *RobotLoginService) LoginData62SMSAgain(robot *model.Robot, req dto.LoginData62SMSAgainRequest) (*string, error) {
+	var result dto.Response[string]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(req).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/login/data62-sms-again")
+	if err = result.CheckError(err); err != nil {
+		return nil, err
+	}
+	return &result.Data, nil
+}
+
+func (sv *RobotLoginService) LoginData62SMSVerify(robot *model.Robot, req dto.LoginData62SMSVerifyRequest) (*string, error) {
+	var result dto.Response[string]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(req).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/login/data62-sms-verify")
+	if err = result.CheckError(err); err != nil {
+		return nil, err
+	}
+	return &result.Data, nil
+}
+
+func (sv *RobotLoginService) LoginA16Data1(robot *model.Robot, req dto.LoginRequest) (*dto.UnifyAuthResponse, error) {
+	var result dto.Response[dto.UnifyAuthResponse]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(req).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/login/a16")
 	if err = result.CheckError(err); err != nil {
 		return nil, err
 	}

@@ -17,13 +17,20 @@ func NewRobotLoginController() *RobotLogin {
 }
 
 func (ct *RobotLogin) RobotLogin(c *gin.Context) {
+	var req struct {
+		LoginType string `form:"login_type" json:"login_type" binding:"required"`
+	}
 	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
 	robot, err := appx.GetRobot(c)
 	if err != nil {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	data, err := service.NewRobotLoginService(c).RobotLogin(robot)
+	data, err := service.NewRobotLoginService(c).RobotLogin(robot, req.LoginType)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
@@ -84,6 +91,86 @@ func (ct *RobotLogin) LoginNewDeviceVerify(c *gin.Context) {
 		return
 	}
 	data, err := service.NewRobotLoginService(c).LoginNewDeviceVerify(robot, req.Ticket)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(data)
+}
+
+func (ct *RobotLogin) LoginData62Login(c *gin.Context) {
+	var req dto.LoginRequest
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	data, err := service.NewRobotLoginService(c).LoginData62Login(robot, req)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(data)
+}
+
+func (ct *RobotLogin) LoginData62SMSAgain(c *gin.Context) {
+	var req dto.LoginData62SMSAgainRequest
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	data, err := service.NewRobotLoginService(c).LoginData62SMSAgain(robot, req)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(data)
+}
+
+func (ct *RobotLogin) LoginData62SMSVerify(c *gin.Context) {
+	var req dto.LoginData62SMSVerifyRequest
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	data, err := service.NewRobotLoginService(c).LoginData62SMSVerify(robot, req)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(data)
+}
+
+func (ct *RobotLogin) LoginA16Data1(c *gin.Context) {
+	var req dto.LoginRequest
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	data, err := service.NewRobotLoginService(c).LoginA16Data1(robot, req)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return

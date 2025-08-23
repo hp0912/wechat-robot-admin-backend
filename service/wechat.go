@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 	"wechat-robot-admin-backend/model"
 	"wechat-robot-admin-backend/repository"
@@ -33,7 +34,7 @@ func (sv *WeChatService) GetWeChatIdByCode(code string) (string, error) {
 	if code == "" {
 		return "", errors.New("无效的参数")
 	}
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/wechat/user?code=%s", vars.WeChatServerAddress, code), nil)
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/wechat/user?code=%s", strings.TrimSuffix(vars.WeChatServerAddress, "/"), code), nil)
 	if err != nil {
 		return "", err
 	}
