@@ -86,6 +86,32 @@ func (sv *RobotLoginService) LoginNewDeviceVerify(robot *model.Robot, ticket str
 	return &result.Data, nil
 }
 
+func (sv *RobotLoginService) LoginData62Login(robot *model.Robot, req dto.LoginRequest) (any, error) {
+	var result dto.Response[any]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(req).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/login/data62")
+	if err = result.CheckError(err); err != nil {
+		return nil, err
+	}
+	return &result.Data, nil
+}
+
+func (sv *RobotLoginService) LoginA16Data1(robot *model.Robot, req dto.LoginRequest) (any, error) {
+	var result dto.Response[any]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(req).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/login/a16")
+	if err = result.CheckError(err); err != nil {
+		return nil, err
+	}
+	return &result.Data, nil
+}
+
 // RobotLogout 机器人登出
 func (sv *RobotLoginService) RobotLogout(robot *model.Robot) (err error) {
 	var resp dto.Response[struct{}]

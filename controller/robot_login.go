@@ -98,6 +98,46 @@ func (ct *RobotLogin) LoginNewDeviceVerify(c *gin.Context) {
 	resp.ToResponse(data)
 }
 
+func (ct *RobotLogin) LoginData62Login(c *gin.Context) {
+	var req dto.LoginRequest
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	data, err := service.NewRobotLoginService(c).LoginData62Login(robot, req)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(data)
+}
+
+func (ct *RobotLogin) LoginA16Data1(c *gin.Context) {
+	var req dto.LoginRequest
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	data, err := service.NewRobotLoginService(c).LoginA16Data1(robot, req)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(data)
+}
+
 func (ct *RobotLogin) RobotLogout(c *gin.Context) {
 	resp := appx.NewResponse(c)
 	robot, err := appx.GetRobot(c)
