@@ -213,6 +213,8 @@ func RegisterRouter(r *gin.Engine) error {
 		robot.POST("/login/2fa", middleware.UserOwnerAuth(), robotLoginCtl.RobotLogin2FA)
 		robot.POST("/login/new-device-verify", middleware.UserOwnerAuth(), robotLoginCtl.LoginNewDeviceVerify)
 		robot.POST("/login/data62", middleware.UserOwnerAuth(), robotLoginCtl.LoginData62Login)
+		robot.POST("/login/data62-sms-again", middleware.UserOwnerAuth(), robotLoginCtl.LoginData62SMSAgain)
+		robot.POST("/login/data62-sms-verify", middleware.UserOwnerAuth(), robotLoginCtl.LoginData62SMSVerify)
 		robot.POST("/login/a16", middleware.UserOwnerAuth(), robotLoginCtl.LoginA16Data1)
 		robot.DELETE("/logout", middleware.UserOwnerAuth(), robotLoginCtl.RobotLogout)
 	}
