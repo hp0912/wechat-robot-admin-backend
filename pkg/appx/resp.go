@@ -20,18 +20,18 @@ func NewResponse(ctx *gin.Context) *Response {
 	}
 }
 
-func (r *Response) ToResponseWithHttpCode(code int, data interface{}) {
+func (r *Response) ToResponseWithHttpCode(code int, data any) {
 	r.Ctx.JSON(code, data)
 }
 
-func (r *Response) ToResponse(data interface{}) {
+func (r *Response) ToResponse(data any) {
 	r.Ctx.JSON(http.StatusOK, gin.H{"code": 200, "message": "", "data": data})
 }
-func (r *Response) ToResponseData(data interface{}) {
+func (r *Response) ToResponseData(data any) {
 	r.Ctx.JSON(http.StatusOK, gin.H{"name": data})
 }
 
-func (r *Response) ToResponseList(list interface{}, totalRows int64) {
+func (r *Response) ToResponseList(list any, totalRows int64) {
 	r.Ctx.JSON(http.StatusOK, gin.H{
 		"code":    200,
 		"message": "请求成功",
@@ -47,8 +47,8 @@ func (r *Response) ToErrorResponse(err error) {
 	r.Ctx.JSON(http.StatusOK, response)
 }
 
-func (r *Response) To401Response(err error) {
-	response := gin.H{"code": 401, "message": err.Error(), "data": nil}
+func (r *Response) To401Response(data any, err error) {
+	response := gin.H{"code": 401, "message": err.Error(), "data": data}
 	r.Ctx.JSON(http.StatusOK, response)
 }
 

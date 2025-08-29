@@ -60,6 +60,11 @@ func RegisterRouter(r *gin.Engine) error {
 	}
 
 	{
+		user := api.Group("/login")
+		user.POST("", userCtl.Login)
+	}
+
+	{
 		oauth := api.Group("/oauth")
 		oauth.GET("/official-account/url", wechatCtl.WeChatOfficialAccountAuthURL)
 		oauth.POST("/wechat", wechatCtl.WeChatAuth)
