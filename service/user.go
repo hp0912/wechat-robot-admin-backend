@@ -36,7 +36,7 @@ func (sv *UserService) SetupLogin(ctx *gin.Context, user *model.User) error {
 
 func (sv *UserService) Login(ctx context.Context, token string) (*model.User, error) {
 	if vars.LoginMethod != string(model.LoginMethodToken) {
-		return nil, errors.New(("登录方式不合法"))
+		return nil, errors.New("登录方式不合法")
 	}
 	if vars.LoginToken == "" {
 		return nil, errors.New("未配置登录密钥，请联系管理员")

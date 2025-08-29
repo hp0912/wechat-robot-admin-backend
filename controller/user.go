@@ -63,7 +63,7 @@ func (ct *User) LoginUser(c *gin.Context) {
 		user := &model.User{
 			LoginMethod: model.LoginMethod(vars.LoginMethod),
 		}
-		resp.To401Response(user, errors.New("登陆信息已失效"))
+		resp.To401ResponseWithData(user, errors.New("登陆信息已失效"))
 		return
 	}
 }
