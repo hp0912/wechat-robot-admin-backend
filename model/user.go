@@ -2,6 +2,13 @@ package model
 
 import "gorm.io/gorm"
 
+type LoginMethod string
+
+const (
+	LoginMethodScan  LoginMethod = "scan"
+	LoginMethodToken LoginMethod = "token"
+)
+
 type User struct {
 	ID          int64          `gorm:"primarykey" json:"id"`
 	WeChatId    string         `json:"wechat_id" gorm:"column:wechat_id;index"`
@@ -13,6 +20,7 @@ type User struct {
 	LastLoginAt int64          `json:"last_login_at" gorm:"bigint;default:0"`
 	CreatedAt   int64          `json:"created_at" gorm:"bigint"`
 	DeletedAt   gorm.DeletedAt `json:"-" gorm:"index"`
+	LoginMethod LoginMethod    `gorm:"->;<-:false" json:"login_method"`
 }
 
 func (User) TableName() string {

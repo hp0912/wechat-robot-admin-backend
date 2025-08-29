@@ -19,6 +19,18 @@ func NewUserRepo(ctx context.Context, db *gorm.DB) *User {
 	}
 }
 
+func (u *User) GetUser() (*model.User, error) {
+	var user model.User
+	err := u.DB.WithContext(u.Ctx).First(&user).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
 func (u *User) GetUserByID(id int64) (*model.User, error) {
 	var user model.User
 	err := u.DB.WithContext(u.Ctx).Where("id = ?", id).First(&user).Error

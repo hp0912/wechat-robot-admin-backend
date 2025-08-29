@@ -32,6 +32,11 @@ func loadEnvConfig() {
 	vars.DockerNetwork = os.Getenv("DOCKER_NETWORK")
 	vars.DockerComposeCmd = os.Getenv("DOCKER_COMPOSE_CMD")
 
+	vars.LoginMethod = os.Getenv("LOGIN_METHOD")
+	if vars.LoginMethod == "" {
+		log.Fatal("LOGIN_METHOD 环境变量未设置")
+	}
+	vars.LoginToken = os.Getenv("LOGIN_TOKEN")
 	vars.WeChatServerAddress = os.Getenv("WECHAT_SERVER_ADDRESS")
 	vars.WeChatServerToken = os.Getenv("WECHAT_SERVER_TOKEN")
 	vars.WeChatOfficialAccountAuthURL = os.Getenv("WECHAT_OFFICIAL_ACCOUNT_AUTH_URL")

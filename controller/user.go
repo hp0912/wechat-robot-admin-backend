@@ -2,8 +2,10 @@ package controller
 
 import (
 	"errors"
+	"wechat-robot-admin-backend/model"
 	"wechat-robot-admin-backend/pkg/appx"
 	"wechat-robot-admin-backend/service"
+	"wechat-robot-admin-backend/vars"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -14,6 +16,31 @@ type User struct {
 
 func NewUserController() *User {
 	return &User{}
+}
+
+func (ct *User) Login(c *gin.Context) {
+	var req struct {
+		Token string `json:"token" binding:"required"`
+	}
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	ctx := c.Request.Context()
+	user, err := service.NewUserService(ctx).Login(ctx, req.Token)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	err = service.NewUserService(ctx).SetupLogin(c, user)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(gin.H{
+		"success": true,
+	})
 }
 
 func (ct *User) LoginUser(c *gin.Context) {
@@ -33,7 +60,10 @@ func (ct *User) LoginUser(c *gin.Context) {
 		resp.ToResponse(user)
 		return
 	} else {
-		resp.To401Response(errors.New("登陆信息已失效"))
+		user := &model.User{
+			LoginMethod: model.LoginMethod(vars.LoginMethod),
+		}
+		resp.To401Response(user, errors.New("登陆信息已失效"))
 		return
 	}
 }
@@ -60,5 +90,8 @@ func (ct *User) Logout(c *gin.Context) {
 		resp.ToErrorResponse(err)
 		return
 	}
-	resp.ToResponse(nil)
+	user := &model.User{
+		LoginMethod: model.LoginMethod(vars.LoginMethod),
+	}
+	resp.ToResponse(user)
 }
