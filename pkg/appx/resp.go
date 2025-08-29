@@ -47,7 +47,11 @@ func (r *Response) ToErrorResponse(err error) {
 	r.Ctx.JSON(http.StatusOK, response)
 }
 
-func (r *Response) To401Response(data any, err error) {
+func (r *Response) To401Response(err error) {
+	r.To401ResponseWithData(nil, err)
+}
+
+func (r *Response) To401ResponseWithData(data any, err error) {
 	response := gin.H{"code": 401, "message": err.Error(), "data": data}
 	r.Ctx.JSON(http.StatusOK, response)
 }
