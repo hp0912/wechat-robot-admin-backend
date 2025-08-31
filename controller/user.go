@@ -45,18 +45,6 @@ func (ct *User) Login(c *gin.Context) {
 
 func (ct *User) LoginUser(c *gin.Context) {
 	resp := appx.NewResponse(c)
-
-	defer func() {
-		if err := recover(); err != nil {
-			user := &model.User{
-				LoginMethod: model.LoginMethod(vars.LoginMethod),
-			}
-			c.SetCookie("session", "", -1, "/", "", false, true)
-			resp.To401ResponseWithData(user, errors.New("登陆信息已失效"))
-			return
-		}
-	}()
-
 	session := sessions.Default(c)
 	id := session.Get("id")
 	if value, ok := id.(int64); ok {
