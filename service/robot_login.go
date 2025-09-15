@@ -71,15 +71,16 @@ func (sv *RobotLoginService) RobotLogin2FA(robot *model.Robot, req dto.RobotLogi
 	return nil
 }
 
-func (sv *RobotLoginService) LoginNewDeviceVerify(robot *model.Robot, ticket string) (*dto.SilderOCR, error) {
-	var result dto.Response[dto.SilderOCR]
+func (sv *RobotLoginService) LoginSliderVerify(robot *model.Robot, req dto.SliderVerifyRequest) (*string, error) {
+	var result dto.Response[string]
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetBody(map[string]string{
-			"ticket": ticket,
+			"data62": req.Data62,
+			"ticket": req.Ticket,
 		}).
 		SetResult(&result).
-		Post(robot.GetBaseURL() + "/login/new-device-verify")
+		Post(robot.GetBaseURL() + "/login/slider")
 	if err = result.CheckError(err); err != nil {
 		return nil, err
 	}

@@ -78,8 +78,8 @@ func (ct *RobotLogin) RobotLogin2FA(c *gin.Context) {
 	resp.ToResponse(nil)
 }
 
-func (ct *RobotLogin) LoginNewDeviceVerify(c *gin.Context) {
-	var req dto.NewDeviceVerifyRequest
+func (ct *RobotLogin) LoginSliderVerify(c *gin.Context) {
+	var req dto.SliderVerifyRequest
 	resp := appx.NewResponse(c)
 	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
 		resp.ToErrorResponse(errors.New("参数错误"))
@@ -90,7 +90,7 @@ func (ct *RobotLogin) LoginNewDeviceVerify(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	data, err := service.NewRobotLoginService(c).LoginNewDeviceVerify(robot, req.Ticket)
+	data, err := service.NewRobotLoginService(c).LoginSliderVerify(robot, req)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return

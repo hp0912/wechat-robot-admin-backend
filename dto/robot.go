@@ -52,7 +52,8 @@ type RobotLogin2FARequest struct {
 	Data62 string `form:"data62" json:"data62" binding:"required"`
 }
 
-type NewDeviceVerifyRequest struct {
+type SliderVerifyRequest struct {
+	Data62 string `form:"data62" json:"data62" binding:"required"`
 	Ticket string `form:"ticket" json:"ticket" binding:"required"`
 }
 
