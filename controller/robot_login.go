@@ -2,6 +2,7 @@ package controller
 
 import (
 	"errors"
+	"fmt"
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/pkg/appx"
 	"wechat-robot-admin-backend/service"
@@ -79,23 +80,44 @@ func (ct *RobotLogin) RobotLogin2FA(c *gin.Context) {
 }
 
 func (ct *RobotLogin) LoginSliderVerify(c *gin.Context) {
+	c.Header("Content-Type", "text/html; charset=utf-8")
+
+	htmlErrorContent := `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>获取滑块失败</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .result { padding: 20px; background: #f5f5f5; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        %s
+    </div>
+</body>
+</html>`
+
 	var req dto.SliderVerifyRequest
-	resp := appx.NewResponse(c)
 	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
-		resp.ToErrorResponse(errors.New("参数错误"))
+		c.String(200, fmt.Sprintf(htmlErrorContent, err.Error()))
 		return
 	}
 	robot, err := appx.GetRobot(c)
 	if err != nil {
-		resp.ToErrorResponse(errors.New("参数错误"))
+		c.String(200, fmt.Sprintf(htmlErrorContent, err.Error()))
 		return
 	}
 	data, err := service.NewRobotLoginService(c).LoginSliderVerify(robot, req)
 	if err != nil {
-		resp.ToErrorResponse(err)
+		c.String(200, fmt.Sprintf(htmlErrorContent, err.Error()))
 		return
 	}
-	resp.ToResponse(data)
+
+	c.String(200, *data)
 }
 
 func (ct *RobotLogin) LoginData62Login(c *gin.Context) {
