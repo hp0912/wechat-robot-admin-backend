@@ -3,6 +3,7 @@ package controller
 import (
 	"errors"
 	"fmt"
+	"log"
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/pkg/appx"
 	"wechat-robot-admin-backend/service"
@@ -103,16 +104,19 @@ func (ct *RobotLogin) LoginSliderVerify(c *gin.Context) {
 
 	var req dto.SliderVerifyRequest
 	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		log.Println("LoginSliderVerify ->", err.Error())
 		c.String(200, fmt.Sprintf(htmlErrorContent, err.Error()))
 		return
 	}
 	robot, err := appx.GetRobot(c)
 	if err != nil {
+		log.Println("LoginSliderVerify ->", err.Error())
 		c.String(200, fmt.Sprintf(htmlErrorContent, err.Error()))
 		return
 	}
 	data, err := service.NewRobotLoginService(c).LoginSliderVerify(robot, req)
 	if err != nil {
+		log.Println("LoginSliderVerify ->", err.Error())
 		c.String(200, fmt.Sprintf(htmlErrorContent, err.Error()))
 		return
 	}
@@ -124,16 +128,19 @@ func (ct *RobotLogin) LoginSliderVerifySubmit(c *gin.Context) {
 	var req dto.SliderVerifySubmitRequest
 	resp := appx.NewResponse(c)
 	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		log.Println("LoginSliderVerifySubmit ->", err.Error())
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
 	robot, err := appx.GetRobot(c)
 	if err != nil {
+		log.Println("LoginSliderVerifySubmit ->", err.Error())
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
 	err = service.NewRobotLoginService(c).LoginSliderVerifySubmit(robot, req)
 	if err != nil {
+		log.Println("LoginSliderVerifySubmit ->", err.Error())
 		resp.ToErrorResponse(err)
 		return
 	}
