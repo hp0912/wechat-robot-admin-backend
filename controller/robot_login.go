@@ -120,6 +120,26 @@ func (ct *RobotLogin) LoginSliderVerify(c *gin.Context) {
 	c.String(200, *data)
 }
 
+func (ct *RobotLogin) LoginSliderVerifySubmit(c *gin.Context) {
+	var req dto.SliderVerifySubmitRequest
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	err = service.NewRobotLoginService(c).LoginSliderVerifySubmit(robot, req)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
+
 func (ct *RobotLogin) LoginData62Login(c *gin.Context) {
 	var req dto.LoginRequest
 	resp := appx.NewResponse(c)

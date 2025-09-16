@@ -74,17 +74,28 @@ func (sv *RobotLoginService) RobotLogin2FA(robot *model.Robot, req dto.RobotLogi
 func (sv *RobotLoginService) LoginSliderVerify(robot *model.Robot, req dto.SliderVerifyRequest) (*string, error) {
 	var result dto.Response[string]
 	_, err := resty.New().R().
-		SetHeader("Content-Type", "application/json;chartset=utf-8").
-		SetBody(map[string]string{
-			"data62": req.Data62,
-			"ticket": req.Ticket,
-		}).
+		SetHeader("Content-Type", "application/json").
+		SetQueryParam("data", req.Data62).
+		SetQueryParam("ticket", req.Ticket).
 		SetResult(&result).
-		Post(robot.GetBaseURL() + "/login/slider")
+		Get("http://wechat-slider:9000/api/v1/slider-verify-html") // TODO 链接先写死
 	if err = result.CheckError(err); err != nil {
 		return nil, err
 	}
 	return &result.Data, nil
+}
+
+func (sv *RobotLoginService) LoginSliderVerifySubmit(robot *model.Robot, req dto.SliderVerifySubmitRequest) error {
+	var result dto.Response[struct{}]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json").
+		SetBody(req).
+		SetResult(&result).
+		Post("http://wechat-slider:9000/api/v1/security-verify") // TODO 链接先写死
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (sv *RobotLoginService) LoginData62Login(robot *model.Robot, req dto.LoginRequest) (*dto.UnifyAuthResponse, error) {
