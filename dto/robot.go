@@ -52,8 +52,24 @@ type RobotLogin2FARequest struct {
 	Data62 string `form:"data62" json:"data62" binding:"required"`
 }
 
-type NewDeviceVerifyRequest struct {
-	Ticket string `form:"ticket" json:"ticket" binding:"required"`
+type SliderVerifyRequest struct {
+	Data62        string `form:"data62" json:"data62" binding:"required"`
+	Ticket        string `form:"ticket" json:"ticket" binding:"required"`
+	DeviceType    string `form:"device_type" json:"device_type"`
+	ClientVersion int32  `form:"client_version" json:"client_version"`
+}
+
+type SliderVerifySubmitRequest struct {
+	Data62        string `form:"data62" json:"data62" binding:"required"`
+	VerifyID      string `form:"verifyid" json:"verifyid" binding:"required"`
+	SecTicket     string `form:"secticket" json:"secticket" binding:"required"`
+	RandStr       string `form:"randstr" json:"randstr" binding:"required"`
+	Ticket        string `form:"ticket" json:"ticket" binding:"required"`
+	ClientVersion int32  `form:"client_version" json:"client_version"`
+	DeviceType    string `form:"device_type" json:"device_type"`
+	Ret           int    `form:"ret" json:"ret"`
+	ErrorCode     int    `form:"errorCode" json:"errorCode"`
+	ErrorMessage  string `form:"errorMessage" json:"errorMessage"`
 }
 
 type LoginRequest struct {

@@ -2,6 +2,7 @@ package controller
 
 import (
 	"errors"
+	"fmt"
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/pkg/appx"
 	"wechat-robot-admin-backend/service"
@@ -78,8 +79,49 @@ func (ct *RobotLogin) RobotLogin2FA(c *gin.Context) {
 	resp.ToResponse(nil)
 }
 
-func (ct *RobotLogin) LoginNewDeviceVerify(c *gin.Context) {
-	var req dto.NewDeviceVerifyRequest
+func (ct *RobotLogin) LoginSliderVerify(c *gin.Context) {
+	c.Header("Content-Type", "text/html; charset=utf-8")
+
+	htmlErrorContent := `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>获取滑块失败</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .result { padding: 20px; background: #f5f5f5; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        %s
+    </div>
+</body>
+</html>`
+
+	var req dto.SliderVerifyRequest
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		c.String(200, fmt.Sprintf(htmlErrorContent, err.Error()))
+		return
+	}
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		c.String(200, fmt.Sprintf(htmlErrorContent, err.Error()))
+		return
+	}
+	data, err := service.NewRobotLoginService(c).LoginSliderVerify(robot, req)
+	if err != nil {
+		c.String(200, fmt.Sprintf(htmlErrorContent, err.Error()))
+		return
+	}
+
+	c.String(200, *data)
+}
+
+func (ct *RobotLogin) LoginSliderVerifySubmit(c *gin.Context) {
+	var req dto.SliderVerifySubmitRequest
 	resp := appx.NewResponse(c)
 	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
 		resp.ToErrorResponse(errors.New("参数错误"))
@@ -90,12 +132,12 @@ func (ct *RobotLogin) LoginNewDeviceVerify(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	data, err := service.NewRobotLoginService(c).LoginNewDeviceVerify(robot, req.Ticket)
+	err = service.NewRobotLoginService(c).LoginSliderVerifySubmit(robot, req)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
 	}
-	resp.ToResponse(data)
+	resp.ToResponse(nil)
 }
 
 func (ct *RobotLogin) LoginData62Login(c *gin.Context) {
