@@ -15,6 +15,9 @@ var WeChatServerAddress string // 登录管理员后台的微信鉴权服务器�
 var WeChatServerToken string
 var WeChatOfficialAccountAuthURL string // 微信公众号授权地址
 
+var SliderVerifyURL string
+var SliderVerifySubmitURL string
+
 var SessionSecret string
 
 var OpenAIApiKey string

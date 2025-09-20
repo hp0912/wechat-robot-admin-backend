@@ -213,8 +213,8 @@ func RegisterRouter(r *gin.Engine) error {
 		robot.DELETE("/remove", middleware.UserOwnerAuth(), robotManageCtl.RobotRemove)
 		// 机器人登陆、登出
 		robot.GET("/state", middleware.UserOwnerAuth(), robotLoginCtl.RobotState)
-		robot.GET("/login/slider", middleware.UserOwnerAuth(), robotLoginCtl.LoginSliderVerify)
-		robot.GET("/login/slider-verify-submit", robotLoginCtl.LoginSliderVerify) // 不需要 middleware.UserOwnerAuth() 鉴权
+		robot.GET("/login/slider", robotLoginCtl.LoginSliderVerify)                     // 不需要 middleware.UserOwnerAuth() 鉴权
+		robot.GET("/login/slider-verify-submit", robotLoginCtl.LoginSliderVerifySubmit) // 不需要 middleware.UserOwnerAuth() 鉴权
 		robot.POST("/login", middleware.UserOwnerAuth(), robotLoginCtl.RobotLogin)
 		robot.POST("/login-check", middleware.UserOwnerAuth(), robotLoginCtl.RobotLoginCheck)
 		robot.POST("/login/2fa", middleware.UserOwnerAuth(), robotLoginCtl.RobotLogin2FA)
