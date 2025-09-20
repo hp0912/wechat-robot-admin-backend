@@ -60,7 +60,7 @@ type SliderVerifyRequest struct {
 }
 
 type SliderVerifySubmitRequest struct {
-	Data62        string `form:"data62" json:"data62" binding:"required"`
+	Data          string `form:"data" json:"data" binding:"required"`
 	VerifyID      string `form:"verifyid" json:"verifyid" binding:"required"`
 	SecTicket     string `form:"secticket" json:"secticket" binding:"required"`
 	RandStr       string `form:"randstr" json:"randstr" binding:"required"`

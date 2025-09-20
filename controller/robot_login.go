@@ -104,17 +104,10 @@ func (ct *RobotLogin) LoginSliderVerify(c *gin.Context) {
 
 	var req dto.SliderVerifyRequest
 	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
-		log.Println("LoginSliderVerify ->", err.Error())
 		c.String(200, fmt.Sprintf(htmlErrorContent, err.Error()))
 		return
 	}
-	robot, err := appx.GetRobot(c)
-	if err != nil {
-		log.Println("LoginSliderVerify ->", err.Error())
-		c.String(200, fmt.Sprintf(htmlErrorContent, err.Error()))
-		return
-	}
-	data, err := service.NewRobotLoginService(c).LoginSliderVerify(robot, req)
+	data, err := service.NewRobotLoginService(c).LoginSliderVerify(req)
 	if err != nil {
 		log.Println("LoginSliderVerify ->", err.Error())
 		c.String(200, fmt.Sprintf(htmlErrorContent, err.Error()))
@@ -132,13 +125,7 @@ func (ct *RobotLogin) LoginSliderVerifySubmit(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	robot, err := appx.GetRobot(c)
-	if err != nil {
-		log.Println("LoginSliderVerifySubmit ->", err.Error())
-		resp.ToErrorResponse(errors.New("参数错误"))
-		return
-	}
-	err = service.NewRobotLoginService(c).LoginSliderVerifySubmit(robot, req)
+	err := service.NewRobotLoginService(c).LoginSliderVerifySubmit(req)
 	if err != nil {
 		log.Println("LoginSliderVerifySubmit ->", err.Error())
 		resp.ToErrorResponse(err)
