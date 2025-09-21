@@ -41,10 +41,10 @@ func loadEnvConfig() {
 	vars.WeChatServerToken = os.Getenv("WECHAT_SERVER_TOKEN")
 	vars.WeChatOfficialAccountAuthURL = os.Getenv("WECHAT_OFFICIAL_ACCOUNT_AUTH_URL")
 
-	vars.SliderVerifyURL = os.Getenv("SLIDER_VERIFY_URL")
-	vars.SliderVerifySubmitURL = os.Getenv("SLIDER_VERIFY_SUBMIT_URL")
-	if vars.SliderVerifyURL == "" || vars.SliderVerifySubmitURL == "" {
-		log.Fatal("SLIDER_VERIFY_URL 或 SLIDER_VERIFY_SUBMIT_URL 环境变量未设置，具体请查看 .env.example 文件")
+	vars.SliderServerBaseURL = os.Getenv("SLIDER_SERVER_BASE_URL")
+	vars.SliderToken = os.Getenv("SLIDER_TOKEN")
+	if vars.SliderServerBaseURL == "" || vars.SliderToken == "" {
+		log.Fatal("vars.SliderServerBaseURL 或 vars.SliderToken 环境变量未设置，具体请查看 .env.example 文件")
 	}
 
 	vars.OpenAIApiKey = os.Getenv("OPENAI_API_KEY")

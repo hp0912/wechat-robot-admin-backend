@@ -80,6 +80,23 @@ func (ct *RobotLogin) RobotLogin2FA(c *gin.Context) {
 	resp.ToResponse(nil)
 }
 
+func (ct *RobotLogin) LoginSliderAutoVerify(c *gin.Context) {
+	var req dto.SliderVerifyRequest
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		log.Println("LoginSliderAutoVerify ->", err.Error())
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	err := service.NewRobotLoginService(c).LoginSliderAutoVerify(req)
+	if err != nil {
+		log.Println("LoginSliderAutoVerify ->", err.Error())
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
+
 func (ct *RobotLogin) LoginSliderVerify(c *gin.Context) {
 	c.Header("Content-Type", "text/html; charset=utf-8")
 

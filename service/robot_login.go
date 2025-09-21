@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"fmt"
+	"strings"
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/model"
 	"wechat-robot-admin-backend/repository"
@@ -71,14 +73,31 @@ func (sv *RobotLoginService) RobotLogin2FA(robot *model.Robot, req dto.RobotLogi
 	return nil
 }
 
+// LoginSliderAutoVerify 自动过滑块
+func (sv *RobotLoginService) LoginSliderAutoVerify(req dto.SliderVerifyRequest) error {
+	var result dto.Response[struct{}]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json").
+		SetAuthToken(vars.SliderToken).
+		SetQueryParam("data", req.Data62).
+		SetQueryParam("ticket", req.Ticket).
+		SetResult(&result).
+		Post(fmt.Sprintf("%s/api/v1/slider-verify", strings.TrimSuffix(vars.SliderServerBaseURL, "/")))
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (sv *RobotLoginService) LoginSliderVerify(req dto.SliderVerifyRequest) (*string, error) {
 	var result dto.Response[string]
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json").
+		SetAuthToken(vars.SliderToken).
 		SetQueryParam("data", req.Data62).
 		SetQueryParam("ticket", req.Ticket).
 		SetResult(&result).
-		Get(vars.SliderVerifyURL)
+		Get(fmt.Sprintf("%s/api/v1/slider-verify-html", strings.TrimSuffix(vars.SliderServerBaseURL, "/")))
 	if err = result.CheckError(err); err != nil {
 		return nil, err
 	}
@@ -89,9 +108,10 @@ func (sv *RobotLoginService) LoginSliderVerifySubmit(req dto.SliderVerifySubmitR
 	var result dto.Response[struct{}]
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json").
+		SetAuthToken(vars.SliderToken).
 		SetBody(req).
 		SetResult(&result).
-		Post(vars.SliderVerifySubmitURL)
+		Post(fmt.Sprintf("%s/api/v1/security-verify", strings.TrimSuffix(vars.SliderServerBaseURL, "/")))
 	if err = result.CheckError(err); err != nil {
 		return err
 	}
