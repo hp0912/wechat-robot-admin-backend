@@ -51,7 +51,6 @@ func (sv *RobotLoginService) RobotLoginCheck(robot *model.Robot, uuid string) (d
 	if err = result.CheckError(err); err != nil {
 		return dto.RobotLoginCheckResponse{}, err
 	}
-	result.Data.Ticket = "xxx"
 	return result.Data, nil
 }
 
