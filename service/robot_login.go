@@ -51,6 +51,7 @@ func (sv *RobotLoginService) RobotLoginCheck(robot *model.Robot, uuid string) (d
 	if err = result.CheckError(err); err != nil {
 		return dto.RobotLoginCheckResponse{}, err
 	}
+	result.Data.Ticket = "xxx"
 	return result.Data, nil
 }
 
@@ -79,8 +80,10 @@ func (sv *RobotLoginService) LoginSliderAutoVerify(req dto.SliderVerifyRequest) 
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json").
 		SetAuthToken(vars.SliderToken).
-		SetQueryParam("data", req.Data62).
-		SetQueryParam("ticket", req.Ticket).
+		SetBody(map[string]string{
+			"data":   req.Data62,
+			"ticket": req.Ticket,
+		}).
 		SetResult(&result).
 		Post(fmt.Sprintf("%s/api/v1/slider-verify", strings.TrimSuffix(vars.SliderServerBaseURL, "/")))
 	if err = result.CheckError(err); err != nil {
