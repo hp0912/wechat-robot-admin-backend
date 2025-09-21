@@ -260,7 +260,7 @@ func (sv *MessageService) GetTimbre() ([]string, error) {
 	if result.Code != 200 {
 		return nil, fmt.Errorf("failed to get timbre: %s", result.Msg)
 	}
-	return result.Speakers, nil
+	return result.Data, nil
 }
 
 func (sv *MessageService) SendAITTSMessage(ctx *gin.Context, req dto.RobotSendAITTSMessageRequest, robot *model.Robot) error {
