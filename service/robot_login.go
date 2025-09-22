@@ -23,12 +23,13 @@ func NewRobotLoginService(ctx context.Context) *RobotLoginService {
 }
 
 // RobotLogin 获取机器人登陆二维码
-func (sv *RobotLoginService) RobotLogin(robot *model.Robot, loginType string) (dto.RobotLoginResponse, error) {
+func (sv *RobotLoginService) RobotLogin(robot *model.Robot, loginType string, isPretender bool) (dto.RobotLoginResponse, error) {
 	var result dto.Response[dto.RobotLoginResponse]
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
-		SetBody(map[string]string{
-			"login_type": loginType,
+		SetBody(map[string]any{
+			"login_type":   loginType,
+			"is_pretender": isPretender,
 		}).
 		SetResult(&result).
 		Post(robot.GetBaseURL() + "/login")
