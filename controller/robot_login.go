@@ -21,7 +21,7 @@ func NewRobotLoginController() *RobotLogin {
 func (ct *RobotLogin) RobotLogin(c *gin.Context) {
 	var req struct {
 		LoginType   string `form:"login_type" json:"login_type" binding:"required"`
-		IsPretender bool   `form:"is_pretender" json:"is_pretender"`
+		IsPretender *bool  `form:"is_pretender" json:"is_pretender" binding:"required"`
 	}
 	resp := appx.NewResponse(c)
 	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
@@ -33,7 +33,7 @@ func (ct *RobotLogin) RobotLogin(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	data, err := service.NewRobotLoginService(c).RobotLogin(robot, req.LoginType, req.IsPretender)
+	data, err := service.NewRobotLoginService(c).RobotLogin(robot, req.LoginType, *req.IsPretender)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
