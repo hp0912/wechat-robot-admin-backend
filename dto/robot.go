@@ -18,6 +18,11 @@ type RobotLoginCheckRequest struct {
 	Uuid string `form:"uuid" json:"uuid" binding:"required"`
 }
 
+type RobotLoginData struct {
+	DeviceType    string
+	ClientVersion int32
+}
+
 type RobotLoginResponse struct {
 	AutoLogin  bool   `json:"auto_login"`  // 自动登陆
 	AwkenLogin bool   `json:"awken_login"` // 微信登录凭证
