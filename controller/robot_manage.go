@@ -235,3 +235,18 @@ func (ct *RobotManage) RobotStartServer(c *gin.Context) {
 	}
 	resp.ToResponse(nil)
 }
+
+func (ct *RobotManage) ExportRobotLoginData(c *gin.Context) {
+	resp := appx.NewResponse(c)
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	data, err := service.NewRobotManageService(c).ExportRobotLoginData(robot)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(data)
+}
