@@ -23,6 +23,7 @@ import (
 	"github.com/docker/docker/client"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/go-resty/resty/v2"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -38,7 +39,28 @@ func NewRobotManageService(ctx context.Context) *RobotManageService {
 }
 
 func (sv *RobotManageService) RobotList(req dto.RobotListRequest, pager appx.Pager) ([]*model.Robot, int64, error) {
-	return repository.NewRobotRepo(sv.ctx, vars.DB).RobotList(req, pager)
+	if pager.PageSize <= 0 || pager.PageSize > 50 {
+		return nil, 0, errors.New("参数异常")
+	}
+	robots, total, err := repository.NewRobotRepo(sv.ctx, vars.DB).RobotList(req, pager)
+	if err != nil {
+		return nil, 0, err
+	}
+	client := resty.New()
+	client.SetTimeout(2 * time.Second)
+	for index := range robots {
+		var robotLoginData dto.Response[dto.RobotLoginData]
+		_, err := client.R().
+			SetHeader("Content-Type", "application/json;chartset=utf-8").
+			SetResult(&robotLoginData).
+			Get(robots[index].GetBaseURL() + "/get-cached-info")
+		if err = robotLoginData.CheckError(err); err != nil {
+			//
+		}
+		robots[index].DeviceType = robots[index].ParseDeviceType(robotLoginData.Data.DeviceType)
+		robots[index].WeChatVersion = robots[index].ParseDeviceVersion(robotLoginData.Data.ClientVersion)
+	}
+	return robots, total, nil
 }
 
 // 辅助方法：获取Docker客户端
@@ -324,7 +346,26 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 // RobotView 查看机器人元数据
 func (sv *RobotManageService) RobotView(robotID int64) (*model.Robot, error) {
 	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
-	return respo.GetByID(robotID)
+	robot, err := respo.GetByID(robotID)
+	if err != nil {
+		return nil, err
+	}
+	if robot == nil {
+		return nil, nil
+	}
+	client := resty.New()
+	client.SetTimeout(2 * time.Second)
+	var robotLoginData dto.Response[dto.RobotLoginData]
+	_, err = client.R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetResult(&robotLoginData).
+		Get(robot.GetBaseURL() + "/get-cached-info")
+	if err = robotLoginData.CheckError(err); err != nil {
+		//
+	}
+	robot.DeviceType = robot.ParseDeviceType(robotLoginData.Data.DeviceType)
+	robot.WeChatVersion = robot.ParseDeviceVersion(robotLoginData.Data.ClientVersion)
+	return robot, nil
 }
 
 // RobotStopAndRemoveWeChatClient 删除机器人客户端容器
