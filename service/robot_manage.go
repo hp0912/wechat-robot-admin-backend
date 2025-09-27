@@ -682,3 +682,37 @@ func (sv *RobotManageService) ensureImage(ctx context.Context, dockerClient *cli
 	}
 	return nil
 }
+
+func (sv *RobotManageService) ExportRobotLoginData(robot *model.Robot) (string, error) {
+	client := resty.New()
+	client.SetTimeout(2 * time.Second)
+	var robotLoginData dto.Response[dto.RobotLoginData]
+	_, err := client.R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetResult(&robotLoginData).
+		Get(robot.GetBaseURL() + "/get-cached-info")
+	if err = robotLoginData.CheckError(err); err != nil {
+		return "", err
+	}
+	dataBytes, err := json.MarshalIndent(robotLoginData.Data, "", "  ")
+	if err != nil {
+		return "", err
+	}
+	return string(dataBytes), nil
+}
+
+func (sv *RobotManageService) ImportRobotLoginData(robot *model.Robot, data string) error {
+	client := resty.New()
+	var robotLoginData dto.Response[struct{}]
+	_, err := client.R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]string{
+			"data": data,
+		}).
+		SetResult(&robotLoginData).
+		Post(robot.GetBaseURL() + "/import-login-data")
+	if err = robotLoginData.CheckError(err); err != nil {
+		return err
+	}
+	return nil
+}

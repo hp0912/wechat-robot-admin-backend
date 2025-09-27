@@ -199,6 +199,8 @@ func RegisterRouter(r *gin.Engine) error {
 		robot.GET("/list", robotManageCtl.RobotList)
 		robot.POST("/create", robotManageCtl.RobotCreate)
 		robot.GET("/view", middleware.UserOwnerAuth(), robotManageCtl.RobotView)
+		robot.GET("/export-login-data", middleware.UserOwnerAuth(), robotManageCtl.ExportRobotLoginData)
+		robot.POST("/import-login-data", middleware.UserOwnerAuth(), robotManageCtl.ImportRobotLoginData)
 		robot.POST("/restart-client", middleware.UserOwnerAuth(), robotManageCtl.RobotRestartClient)
 		robot.POST("/restart-server", middleware.UserOwnerAuth(), robotManageCtl.RobotRestartServer)
 		// 拉取最新镜像

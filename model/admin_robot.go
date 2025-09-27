@@ -28,6 +28,7 @@ const (
 	DeviceTypeWin        DeviceType = "Windows"
 	DeviceTypeMac        DeviceType = "Mac"
 	DeviceTypeCar        DeviceType = "Car"
+	DeviceTypeUnknown    DeviceType = "Unknown"
 )
 
 // Robot 表示微信机器人实例
@@ -85,7 +86,7 @@ func (r *Robot) ParseDeviceType(raw string) DeviceType {
 	} else if strings.Contains(deviceType, "car") {
 		return DeviceTypeCar
 	}
-	return DeviceTypeAndroid
+	return DeviceTypeUnknown
 }
 
 func (r *Robot) ParseDeviceVersion(version int32) string {
