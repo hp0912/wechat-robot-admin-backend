@@ -700,3 +700,19 @@ func (sv *RobotManageService) ExportRobotLoginData(robot *model.Robot) (string, 
 	}
 	return string(dataBytes), nil
 }
+
+func (sv *RobotManageService) ImportRobotLoginData(robot *model.Robot, data string) error {
+	client := resty.New()
+	var robotLoginData dto.Response[struct{}]
+	_, err := client.R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]string{
+			"data": data,
+		}).
+		SetResult(&robotLoginData).
+		Post(robot.GetBaseURL() + "/import-login-data")
+	if err = robotLoginData.CheckError(err); err != nil {
+		return err
+	}
+	return nil
+}
