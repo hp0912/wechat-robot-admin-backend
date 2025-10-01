@@ -23,6 +23,7 @@ var messageCtl *controller.Message
 var systemMessageCtl *controller.SystemMessage
 var momentsCtl *controller.Moments
 var systemSettingsCtl *controller.SystemSettings
+var ossSettingsCtl *controller.OSSSettings
 var wxAppCtl *controller.WXApp
 var aiCallbackCtl *controller.AICallback
 
@@ -44,6 +45,7 @@ func initController() {
 	momentsCtl = controller.NewMomentsController()
 	systemMessageCtl = controller.NewSystemMessageController()
 	systemSettingsCtl = controller.NewSystemSettingsController()
+	ossSettingsCtl = controller.NewOSSSettingsController()
 	wxAppCtl = controller.NewWXAppController()
 }
 
@@ -148,6 +150,13 @@ func RegisterRouter(r *gin.Engine) error {
 		systemSettings.Use(middleware.UserAuth())
 		systemSettings.GET("", middleware.UserOwnerAuth(), systemSettingsCtl.GetSystemSettings)
 		systemSettings.POST("", middleware.UserOwnerAuth(), systemSettingsCtl.SaveSystemSettings)
+	}
+
+	{
+		ossSettings := api.Group("/oss-settings")
+		ossSettings.Use(middleware.UserAuth())
+		ossSettings.GET("", middleware.UserOwnerAuth(), ossSettingsCtl.GetOSSSettings)
+		ossSettings.POST("", middleware.UserOwnerAuth(), ossSettingsCtl.SaveOSSSettings)
 	}
 
 	{
