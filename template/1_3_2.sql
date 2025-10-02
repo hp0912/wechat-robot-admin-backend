@@ -1,4 +1,4 @@
--- 1.3.2版本更新脚本
+-- 1.3.2 机器人实例数据库 版本更新脚本
 CREATE TABLE IF NOT EXISTS `oss_settings` (
   `id` BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '表主键ID',
   `auto_upload_image` BOOLEAN DEFAULT FALSE COMMENT '启用自动上传图片',
