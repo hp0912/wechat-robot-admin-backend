@@ -24,6 +24,7 @@ var systemMessageCtl *controller.SystemMessage
 var momentsCtl *controller.Moments
 var systemSettingsCtl *controller.SystemSettings
 var ossSettingsCtl *controller.OSSSettings
+var mcpServerCtl *controller.MCPServer
 var wxAppCtl *controller.WXApp
 var aiCallbackCtl *controller.AICallback
 
@@ -46,6 +47,7 @@ func initController() {
 	systemMessageCtl = controller.NewSystemMessageController()
 	systemSettingsCtl = controller.NewSystemSettingsController()
 	ossSettingsCtl = controller.NewOSSSettingsController()
+	mcpServerCtl = controller.NewMCPController()
 	wxAppCtl = controller.NewWXAppController()
 }
 
@@ -157,6 +159,15 @@ func RegisterRouter(r *gin.Engine) error {
 		ossSettings.Use(middleware.UserAuth())
 		ossSettings.GET("", middleware.UserOwnerAuth(), ossSettingsCtl.GetOSSSettings)
 		ossSettings.POST("", middleware.UserOwnerAuth(), ossSettingsCtl.SaveOSSSettings)
+	}
+
+	{
+		mcpServer := api.Group("/mcp-server")
+		mcpServer.Use(middleware.UserAuth())
+		mcpServer.GET("", middleware.UserOwnerAuth(), mcpServerCtl.GetMCPServers)
+		mcpServer.POST("", middleware.UserOwnerAuth(), mcpServerCtl.CreateMCPServer)
+		mcpServer.PUT("", middleware.UserOwnerAuth(), mcpServerCtl.UpdateMCPServer)
+		mcpServer.DELETE("", middleware.UserOwnerAuth(), mcpServerCtl.DeleteMCPServer)
 	}
 
 	{

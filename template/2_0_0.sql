@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS `mcp_servers` (
   -- 基础字段
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT 'MCP服务器配置表主键ID',
   `name` varchar(100) NOT NULL COMMENT 'MCP服务器名称',
+  `is_built_in` tinyint(1) DEFAULT 0 COMMENT '是否内置MCP服务器',
   `description` varchar(500) DEFAULT '' COMMENT 'MCP服务器描述',
   `transport` enum('stdio','sse','http','ws') NOT NULL COMMENT '传输类型：stdio-命令行，sse-SSE，http-HTTP，ws-WebSocket',
   `enabled` tinyint(1) DEFAULT 1 COMMENT '是否启用该MCP服务器',
