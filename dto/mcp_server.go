@@ -1,7 +1,5 @@
 package dto
 
-import "time"
-
 // MCPTransportType MCP服务器传输类型
 type MCPTransportType string
 
@@ -61,13 +59,13 @@ type MCPServer struct {
 	Tags         []string          `json:"tags"`          // []string，用于分类和过滤
 
 	// 状态追踪
-	LastConnectedAt *time.Time `json:"last_connected_at"`
-	LastError       string     `json:"last_error"`
-	ConnectionCount int64      `json:"connection_count"`
-	ErrorCount      int64      `json:"error_count"`
+	LastConnectedAt *string `json:"last_connected_at"`
+	LastError       string  `json:"last_error"`
+	ConnectionCount int64   `json:"connection_count"`
+	ErrorCount      int64   `json:"error_count"`
 
 	// 时间戳
-	CreatedAt time.Time  `json:"created_at"`
-	UpdatedAt time.Time  `json:"updated_at"`
-	DeletedAt *time.Time `json:"deleted_at,omitempty"`
+	CreatedAt string  `json:"created_at"`
+	UpdatedAt string  `json:"updated_at"`
+	DeletedAt *string `json:"deleted_at,omitempty"`
 }
