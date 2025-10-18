@@ -65,7 +65,7 @@ type MCPServer struct {
 	ErrorCount      int64   `json:"error_count"`
 
 	// 时间戳
-	CreatedAt string  `json:"created_at"`
-	UpdatedAt string  `json:"updated_at"`
+	CreatedAt *string `json:"created_at"`
+	UpdatedAt *string `json:"updated_at"`
 	DeletedAt *string `json:"deleted_at,omitempty"`
 }

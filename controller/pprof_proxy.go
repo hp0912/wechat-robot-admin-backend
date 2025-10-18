@@ -35,7 +35,7 @@ func (p *PprofProxy) ProxyPprof(c *gin.Context) {
 	originalDirector := proxy.Director
 	proxy.Director = func(req *http.Request) {
 		originalDirector(req)
-		req.URL.Path = target.Path + "/pprof/" + pprofPath
+		req.URL.Path = target.Path + "/pprof" + pprofPath
 		// 移除id参数
 		query := req.URL.Query()
 		query.Del("id")

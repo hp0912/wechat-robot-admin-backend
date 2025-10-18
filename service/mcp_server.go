@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"strconv"
 
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/model"
@@ -25,6 +26,19 @@ func (s *MCPServerService) GetMCPServers(robot *model.Robot) ([]*dto.MCPServer, 
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetResult(&result).
 		Get(robot.GetBaseURL() + "/mcp/servers")
+	if err = result.CheckError(err); err != nil {
+		return result.Data, err
+	}
+	return result.Data, nil
+}
+
+func (s *MCPServerService) GetMCPServer(robot *model.Robot, id int64) (*dto.MCPServer, error) {
+	var result dto.Response[*dto.MCPServer]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetQueryParam("id", strconv.FormatInt(id, 10)).
+		SetResult(&result).
+		Get(robot.GetBaseURL() + "/mcp/server")
 	if err = result.CheckError(err); err != nil {
 		return result.Data, err
 	}
