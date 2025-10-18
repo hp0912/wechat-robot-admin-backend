@@ -27,6 +27,7 @@ var ossSettingsCtl *controller.OSSSettings
 var mcpServerCtl *controller.MCPServer
 var wxAppCtl *controller.WXApp
 var aiCallbackCtl *controller.AICallback
+var pprofProxyCtl *controller.PprofProxy
 
 func initController() {
 	probeCtl = controller.NewProbeController()
@@ -49,6 +50,7 @@ func initController() {
 	ossSettingsCtl = controller.NewOSSSettingsController()
 	mcpServerCtl = controller.NewMCPController()
 	wxAppCtl = controller.NewWXAppController()
+	pprofProxyCtl = controller.NewPprofProxyController()
 }
 
 func RegisterRouter(r *gin.Engine) error {
@@ -253,6 +255,13 @@ func RegisterRouter(r *gin.Engine) error {
 		robot.Use(middleware.UserAuth())
 
 		robot.POST("/qrcode-auth-login", middleware.UserOwnerAuth(), wxAppCtl.WxappQrcodeAuthLogin)
+	}
+
+	{
+		// pprof代理路由
+		pprof := api.Group("/pprof")
+		pprof.Use(middleware.UserAuth())
+		pprof.GET("/*pprof_path", middleware.UserOwnerAuth(), pprofProxyCtl.ProxyPprof)
 	}
 
 	return nil
