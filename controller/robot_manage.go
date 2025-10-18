@@ -222,13 +222,13 @@ func (ct *RobotManage) RobotStartClient(c *gin.Context) {
 }
 
 func (ct *RobotManage) RobotStartServer(c *gin.Context) {
-	var req dto.RobotCommonRequest
+	var req dto.RobotStartServerRequest
 	resp := appx.NewResponse(c)
 	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	err := service.NewRobotManageService(c).RobotStartWeChatServer(c, req.ID)
+	err := service.NewRobotManageService(c).RobotStartWeChatServer(c, req)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return

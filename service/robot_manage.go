@@ -153,7 +153,7 @@ func (sv *RobotManageService) DockerStartWeChatClient(ctx *gin.Context, robot *m
 	return nil
 }
 
-func (sv *RobotManageService) DockerStartWeChatServer(ctx *gin.Context, robot *model.Robot) error {
+func (sv *RobotManageService) DockerStartWeChatServer(ctx *gin.Context, robot *model.Robot, pprofEnable bool) error {
 	// 创建Docker客户端
 	dockerClient, err := sv.getDockerClient()
 	if err != nil {
@@ -181,6 +181,11 @@ func (sv *RobotManageService) DockerStartWeChatServer(ctx *gin.Context, robot *m
 			fmt.Sprintf("REDIS_DB=%d", robot.RedisDB),
 			fmt.Sprintf("WECHAT_CLIENT_HOST=%s", fmt.Sprintf("%s:%d", clientContainerName, 9000)),
 		},
+	}
+	if pprofEnable {
+		serverConfig.Env = append(serverConfig.Env, "ENABLE_PPROF=true")
+		serverConfig.Env = append(serverConfig.Env, "PPROF_ADDR=0.0.0.0")
+		serverConfig.Env = append(serverConfig.Env, "PPROF_PORT=9010")
 	}
 
 	serverHostConfig := &container.HostConfig{
@@ -335,7 +340,7 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 		return err
 	}
 
-	err = sv.DockerStartWeChatServer(ctx, robot)
+	err = sv.DockerStartWeChatServer(ctx, robot, false)
 	if err != nil {
 		return err
 	}
@@ -420,16 +425,16 @@ func (sv *RobotManageService) RobotStartWeChatClient(ctx *gin.Context, robotID i
 }
 
 // RobotStartWeChatServer 启动机器人服务端容器
-func (sv *RobotManageService) RobotStartWeChatServer(ctx *gin.Context, robotID int64) error {
+func (sv *RobotManageService) RobotStartWeChatServer(ctx *gin.Context, req dto.RobotStartServerRequest) error {
 	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
-	robot, err := respo.GetByID(robotID)
+	robot, err := respo.GetByID(req.ID)
 	if err != nil {
 		return err
 	}
 	if robot == nil {
 		return errors.New("机器人不存在")
 	}
-	err = sv.DockerStartWeChatServer(ctx, robot)
+	err = sv.DockerStartWeChatServer(ctx, robot, req.PprofEnable)
 	if err != nil {
 		return err
 	}
