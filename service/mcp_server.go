@@ -71,6 +71,36 @@ func (s *MCPServerService) UpdateMCPServer(robot *model.Robot, mcpServer *dto.MC
 	return nil
 }
 
+func (s *MCPServerService) EnableMCPServer(robot *model.Robot, id int64) error {
+	var result dto.Response[struct{}]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]int64{
+			"id": id,
+		}).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/mcp/server/enable")
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *MCPServerService) DisableMCPServer(robot *model.Robot, id int64) error {
+	var result dto.Response[struct{}]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]int64{
+			"id": id,
+		}).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/mcp/server/disable")
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s *MCPServerService) DeleteMCPServer(robot *model.Robot, mcpServer *dto.MCPServer) error {
 	var result dto.Response[struct{}]
 	_, err := resty.New().R().

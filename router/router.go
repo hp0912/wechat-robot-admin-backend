@@ -169,6 +169,8 @@ func RegisterRouter(r *gin.Engine) error {
 		mcpServer.GET("", middleware.UserOwnerAuth(), mcpServerCtl.GetMCPServer)
 		mcpServer.GET("/list", middleware.UserOwnerAuth(), mcpServerCtl.GetMCPServers)
 		mcpServer.POST("", middleware.UserOwnerAuth(), mcpServerCtl.CreateMCPServer)
+		mcpServer.POST("/enable", middleware.UserOwnerAuth(), mcpServerCtl.EnableMCPServer)
+		mcpServer.POST("/disable", middleware.UserOwnerAuth(), mcpServerCtl.DisableMCPServer)
 		mcpServer.PUT("", middleware.UserOwnerAuth(), mcpServerCtl.UpdateMCPServer)
 		mcpServer.DELETE("", middleware.UserOwnerAuth(), mcpServerCtl.DeleteMCPServer)
 	}

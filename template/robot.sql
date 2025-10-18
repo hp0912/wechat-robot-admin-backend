@@ -326,7 +326,7 @@ CREATE TABLE IF NOT EXISTS `mcp_servers` (
   `is_built_in` tinyint(1) DEFAULT 0 COMMENT '是否内置MCP服务器',
   `description` varchar(500) DEFAULT '' COMMENT 'MCP服务器描述',
   `transport` enum('stdio','sse','http','ws') NOT NULL COMMENT '传输类型：stdio-命令行，sse-SSE，http-HTTP，ws-WebSocket',
-  `enabled` tinyint(1) DEFAULT 1 COMMENT '是否启用该MCP服务器',
+  `enabled` tinyint(1) DEFAULT 0 COMMENT '是否启用该MCP服务器',
   `priority` int DEFAULT 0 COMMENT '优先级，数字越大优先级越高',
   
   -- Stdio模式专用字段（命令行模式）
