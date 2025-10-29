@@ -7,11 +7,25 @@ type RobotListRequest struct {
 }
 
 type RobotCreateRequest struct {
-	RobotCode string `form:"robot_code" json:"robot_code" binding:"required"`
+	RobotCode     string `form:"robot_code" json:"robot_code" binding:"required"`
+	// 代理设置
+	ProxyEnabled  bool   `form:"proxy_enabled" json:"proxy_enabled"`
+	ProxyIP       string `form:"proxy_ip" json:"proxy_ip"`
+	ProxyUser     string `form:"proxy_user" json:"proxy_user"`
+	ProxyPassword string `form:"proxy_password" json:"proxy_password"`
 }
 
 type RobotCommonRequest struct {
 	ID int64 `form:"id" json:"id" binding:"required"`
+}
+
+type RobotUpdateRequest struct {
+	ID            int64  `form:"id" json:"id" binding:"required"`
+	// 代理设置
+	ProxyEnabled  bool   `form:"proxy_enabled" json:"proxy_enabled"`
+	ProxyIP       string `form:"proxy_ip" json:"proxy_ip"`
+	ProxyUser     string `form:"proxy_user" json:"proxy_user"`
+	ProxyPassword string `form:"proxy_password" json:"proxy_password"`
 }
 
 type RobotLoginCheckRequest struct {

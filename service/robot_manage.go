@@ -287,9 +287,14 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 		Status:       model.RobotStatusOffline,
 		ErrorMessage: "",
 		LastLoginAt:  0,
-		CreatedAt:    time.Now().Unix(),
-		UpdatedAt:    time.Now().Unix(),
-		RedisDB:      redisDb + 1,
+		// 代理设置
+		ProxyEnabled:  req.ProxyEnabled,
+		ProxyIP:       req.ProxyIP,
+		ProxyUser:     req.ProxyUser,
+		ProxyPassword: req.ProxyPassword,
+		CreatedAt:     time.Now().Unix(),
+		UpdatedAt:     time.Now().Unix(),
+		RedisDB:       redisDb + 1,
 	}
 	err = respo.Create(robot)
 	if err != nil {
@@ -366,6 +371,31 @@ func (sv *RobotManageService) RobotView(robotID int64) (*model.Robot, error) {
 	robot.DeviceType = robot.ParseDeviceType(robotLoginData.Data.DeviceType)
 	robot.WeChatVersion = robot.ParseDeviceVersion(robotLoginData.Data.ClientVersion)
 	return robot, nil
+}
+
+// RobotUpdate 更新机器人设置
+func (sv *RobotManageService) RobotUpdate(req dto.RobotUpdateRequest) error {
+	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
+	robot, err := respo.GetByID(req.ID)
+	if err != nil {
+		return err
+	}
+	if robot == nil {
+		return errors.New("机器人不存在")
+	}
+
+	// 更新代理设置
+	robot.ProxyEnabled = req.ProxyEnabled
+	robot.ProxyIP = req.ProxyIP
+	robot.ProxyUser = req.ProxyUser
+	robot.ProxyPassword = req.ProxyPassword
+	robot.UpdatedAt = time.Now().Unix()
+
+	err = respo.Update(robot)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // RobotStopAndRemoveWeChatClient 删除机器人客户端容器

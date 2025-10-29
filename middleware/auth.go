@@ -1,6 +1,10 @@
 package middleware
 
 import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io"
 	"net/http"
 	"strconv"
 	"strings"
@@ -126,8 +130,46 @@ func UserOwnerAuth() func(c *gin.Context) {
 			c.Abort()
 			return
 		}
-		idStr := c.Query("id") // 获取字符串
-		robotId, err := strconv.ParseInt(idStr, 10, 64)
+		// 尝试从查询参数获取ID
+		idStr := c.Query("id")
+		var robotId int64
+		var err error
+
+		if idStr != "" {
+			// 从查询参数获取
+			robotId, err = strconv.ParseInt(idStr, 10, 64)
+		} else {
+			// 尝试从请求体获取ID（用于POST请求）
+			// 读取请求体但不消耗它
+			body, readErr := io.ReadAll(c.Request.Body)
+			if readErr != nil {
+				err = fmt.Errorf("failed to read request body")
+			} else {
+				// 重新设置请求体，以便后续处理器可以读取
+				c.Request.Body = io.NopCloser(bytes.NewBuffer(body))
+
+				var requestBody map[string]interface{}
+				if jsonErr := json.Unmarshal(body, &requestBody); jsonErr != nil {
+					err = fmt.Errorf("failed to parse JSON")
+				} else {
+					if id, ok := requestBody["id"]; ok {
+						switch v := id.(type) {
+						case float64:
+							robotId = int64(v)
+						case int:
+							robotId = int64(v)
+						case int64:
+							robotId = v
+						default:
+							err = fmt.Errorf("invalid id type")
+						}
+					} else {
+						err = fmt.Errorf("id not found in request body")
+					}
+				}
+			}
+		}
+
 		if err != nil {
 			c.JSON(http.StatusOK, gin.H{
 				"code":    500,

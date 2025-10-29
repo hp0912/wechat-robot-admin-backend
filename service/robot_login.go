@@ -25,12 +25,25 @@ func NewRobotLoginService(ctx context.Context) *RobotLoginService {
 // RobotLogin 获取机器人登陆二维码
 func (sv *RobotLoginService) RobotLogin(robot *model.Robot, loginType string, isPretender bool) (dto.RobotLoginResponse, error) {
 	var result dto.Response[dto.RobotLoginResponse]
+
+	// 构建请求体，包含代理信息
+	requestBody := map[string]any{
+		"login_type":   loginType,
+		"is_pretender": isPretender,
+	}
+
+	// 如果机器人启用了代理，添加代理信息
+	if robot.ProxyEnabled && robot.ProxyIP != "" {
+		requestBody["proxy"] = map[string]string{
+			"ProxyIp":       robot.ProxyIP,
+			"ProxyUser":     robot.ProxyUser,
+			"ProxyPassword": robot.ProxyPassword,
+		}
+	}
+
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
-		SetBody(map[string]any{
-			"login_type":   loginType,
-			"is_pretender": isPretender,
-		}).
+		SetBody(requestBody).
 		SetResult(&result).
 		Post(robot.GetBaseURL() + "/login")
 	if err = result.CheckError(err); err != nil {
@@ -123,9 +136,25 @@ func (sv *RobotLoginService) LoginSliderVerifySubmit(req dto.SliderVerifySubmitR
 
 func (sv *RobotLoginService) LoginData62Login(robot *model.Robot, req dto.LoginRequest) (*dto.UnifyAuthResponse, error) {
 	var result dto.Response[dto.UnifyAuthResponse]
+
+	// 构建请求体，包含代理信息
+	requestBody := map[string]any{
+		"username": req.Username,
+		"password": req.Password,
+	}
+
+	// 如果机器人启用了代理，添加代理信息
+	if robot.ProxyEnabled && robot.ProxyIP != "" {
+		requestBody["proxy"] = map[string]string{
+			"ProxyIp":       robot.ProxyIP,
+			"ProxyUser":     robot.ProxyUser,
+			"ProxyPassword": robot.ProxyPassword,
+		}
+	}
+
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
-		SetBody(req).
+		SetBody(requestBody).
 		SetResult(&result).
 		Post(robot.GetBaseURL() + "/login/data62")
 	if err = result.CheckError(err); err != nil {
@@ -136,9 +165,25 @@ func (sv *RobotLoginService) LoginData62Login(robot *model.Robot, req dto.LoginR
 
 func (sv *RobotLoginService) LoginData62SMSAgain(robot *model.Robot, req dto.LoginData62SMSAgainRequest) (*string, error) {
 	var result dto.Response[string]
+
+	// 构建请求体，包含代理信息
+	requestBody := map[string]any{
+		"url":    req.Url,
+		"cookie": req.Cookie,
+	}
+
+	// 如果机器人启用了代理，添加代理信息
+	if robot.ProxyEnabled && robot.ProxyIP != "" {
+		requestBody["proxy"] = map[string]string{
+			"ProxyIp":       robot.ProxyIP,
+			"ProxyUser":     robot.ProxyUser,
+			"ProxyPassword": robot.ProxyPassword,
+		}
+	}
+
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
-		SetBody(req).
+		SetBody(requestBody).
 		SetResult(&result).
 		Post(robot.GetBaseURL() + "/login/data62-sms-again")
 	if err = result.CheckError(err); err != nil {
@@ -149,9 +194,26 @@ func (sv *RobotLoginService) LoginData62SMSAgain(robot *model.Robot, req dto.Log
 
 func (sv *RobotLoginService) LoginData62SMSVerify(robot *model.Robot, req dto.LoginData62SMSVerifyRequest) (*string, error) {
 	var result dto.Response[string]
+
+	// 构建请求体，包含代理信息
+	requestBody := map[string]any{
+		"url":    req.Url,
+		"cookie": req.Cookie,
+		"sms":    req.Sms,
+	}
+
+	// 如果机器人启用了代理，添加代理信息
+	if robot.ProxyEnabled && robot.ProxyIP != "" {
+		requestBody["proxy"] = map[string]string{
+			"ProxyIp":       robot.ProxyIP,
+			"ProxyUser":     robot.ProxyUser,
+			"ProxyPassword": robot.ProxyPassword,
+		}
+	}
+
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
-		SetBody(req).
+		SetBody(requestBody).
 		SetResult(&result).
 		Post(robot.GetBaseURL() + "/login/data62-sms-verify")
 	if err = result.CheckError(err); err != nil {
@@ -162,9 +224,25 @@ func (sv *RobotLoginService) LoginData62SMSVerify(robot *model.Robot, req dto.Lo
 
 func (sv *RobotLoginService) LoginA16Data1(robot *model.Robot, req dto.LoginRequest) (*dto.UnifyAuthResponse, error) {
 	var result dto.Response[dto.UnifyAuthResponse]
+
+	// 构建请求体，包含代理信息
+	requestBody := map[string]any{
+		"username": req.Username,
+		"password": req.Password,
+	}
+
+	// 如果机器人启用了代理，添加代理信息
+	if robot.ProxyEnabled && robot.ProxyIP != "" {
+		requestBody["proxy"] = map[string]string{
+			"ProxyIp":       robot.ProxyIP,
+			"ProxyUser":     robot.ProxyUser,
+			"ProxyPassword": robot.ProxyPassword,
+		}
+	}
+
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
-		SetBody(req).
+		SetBody(requestBody).
 		SetResult(&result).
 		Post(robot.GetBaseURL() + "/login/a16")
 	if err = result.CheckError(err); err != nil {
