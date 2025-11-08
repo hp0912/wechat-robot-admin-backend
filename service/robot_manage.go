@@ -180,6 +180,7 @@ func (sv *RobotManageService) DockerStartWeChatServer(ctx *gin.Context, robot *m
 			fmt.Sprintf("REDIS_PASSWORD=%s", vars.RedisSettings.Password),
 			fmt.Sprintf("REDIS_DB=%d", robot.RedisDB),
 			fmt.Sprintf("WECHAT_CLIENT_HOST=%s", fmt.Sprintf("%s:%d", clientContainerName, 9000)),
+			fmt.Sprintf("UUID_URL=%s", vars.UUIDURL),
 		},
 	}
 
