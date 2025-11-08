@@ -43,8 +43,9 @@ func loadEnvConfig() {
 
 	vars.SliderServerBaseURL = os.Getenv("SLIDER_SERVER_BASE_URL")
 	vars.SliderToken = os.Getenv("SLIDER_TOKEN")
-	if vars.SliderServerBaseURL == "" || vars.SliderToken == "" {
-		log.Fatal("vars.SliderServerBaseURL 或 vars.SliderToken 环境变量未设置，具体请查看 .env.example 文件")
+	vars.UUIDURL = os.Getenv("UUID_URL")
+	if vars.SliderServerBaseURL == "" || vars.SliderToken == "" || vars.UUIDURL == "" {
+		log.Fatal("vars.SliderServerBaseURL 或 vars.SliderToken 或 vars.UUIDURL 环境变量未设置，具体请查看 .env.example 文件")
 	}
 
 	vars.OpenAIApiKey = os.Getenv("OPENAI_API_KEY")
