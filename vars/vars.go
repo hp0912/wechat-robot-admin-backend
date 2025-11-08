@@ -17,6 +17,7 @@ var WeChatOfficialAccountAuthURL string // 微信公众号授权地址
 
 var SliderServerBaseURL string
 var SliderToken string
+var UUIDURL string
 
 var SessionSecret string
 
