@@ -317,7 +317,7 @@ CREATE TABLE IF NOT EXISTS `oss_settings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- MCP服务器配置表
--- 支持四种传输模式：stdio(命令行)、sse、http、ws(WebSocket)
+-- 支持四种传输模式：stdio(命令行)、stream
 -- 创建时间：2025-10-02
 CREATE TABLE IF NOT EXISTS `mcp_servers` (
   -- 基础字段
@@ -325,7 +325,7 @@ CREATE TABLE IF NOT EXISTS `mcp_servers` (
   `name` varchar(100) NOT NULL COMMENT 'MCP服务器名称',
   `is_built_in` tinyint(1) DEFAULT 0 COMMENT '是否内置MCP服务器',
   `description` varchar(500) DEFAULT '' COMMENT 'MCP服务器描述',
-  `transport` enum('stdio','sse','http','ws') NOT NULL COMMENT '传输类型：stdio-命令行，sse-SSE，http-HTTP，ws-WebSocket',
+  `transport` enum('stdio','stream') NOT NULL COMMENT '传输类型',
   `enabled` tinyint(1) DEFAULT 0 COMMENT '是否启用该MCP服务器',
   `priority` int DEFAULT 0 COMMENT '优先级，数字越大优先级越高',
   
@@ -337,6 +337,7 @@ CREATE TABLE IF NOT EXISTS `mcp_servers` (
   
   -- 网络模式专用字段（SSE/HTTP/WS共用）
   `url` varchar(500) DEFAULT '' COMMENT '服务器URL地址（SSE/HTTP/WS模式）',
+  `client_name` varchar(100) DEFAULT '' COMMENT '客户端名称',
   `auth_type` enum('none','bearer','basic','apikey') DEFAULT 'none' COMMENT '认证类型：none-无认证，bearer-Bearer Token，basic-Basic认证，apikey-API Key',
   `auth_token` varchar(500) DEFAULT '' COMMENT '认证令牌（Bearer Token或API Key）',
   `auth_username` varchar(100) DEFAULT '' COMMENT 'Basic认证用户名',
@@ -373,5 +374,5 @@ CREATE TABLE IF NOT EXISTS `mcp_servers` (
   KEY `idx_mcp_servers_deleted_at` (`deleted_at`),
   KEY `idx_enabled_priority` (`enabled`, `priority`),
   KEY `idx_transport` (`transport`),
-  UNIQUE KEY `uniq_name` (`name`)
+  KEY `idx_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='MCP服务器配置表';
