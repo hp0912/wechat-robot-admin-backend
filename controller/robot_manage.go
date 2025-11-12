@@ -57,6 +57,15 @@ func (ct *RobotManage) RobotCreate(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("机器人编码只能包含字母、数字和下划线，并且必须以字母开头"))
 		return
 	}
+	// 验证代理IP格式（如果启用了代理）
+	if req.ProxyEnabled && req.ProxyIP != "" {
+		// 简单的IP:PORT格式验证
+		proxyRe := regexp.MustCompile(`^[^:]+:\d+$`)
+		if !proxyRe.MatchString(req.ProxyIP) {
+			resp.ToErrorResponse(errors.New("代理地址格式错误，应为 IP:端口 格式"))
+			return
+		}
+	}
 	err := service.NewRobotManageService(c).RobotCreate(c, req)
 	if err != nil {
 		resp.ToErrorResponse(err)
@@ -82,6 +91,30 @@ func (ct *RobotManage) RobotView(c *gin.Context) {
 		return
 	}
 	resp.ToResponse(robot)
+}
+
+func (ct *RobotManage) RobotUpdate(c *gin.Context) {
+	var req dto.RobotUpdateRequest
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	// 验证代理IP格式（如果启用了代理）
+	if req.ProxyEnabled && req.ProxyIP != "" {
+		// 简单的IP:PORT格式验证
+		re := regexp.MustCompile(`^[^:]+:\d+$`)
+		if !re.MatchString(req.ProxyIP) {
+			resp.ToErrorResponse(errors.New("代理地址格式错误，应为 IP:端口 格式"))
+			return
+		}
+	}
+	err := service.NewRobotManageService(c).RobotUpdate(req)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
 }
 
 func (ct *RobotManage) RobotRemove(c *gin.Context) {
