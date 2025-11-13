@@ -45,6 +45,19 @@ func (s *MCPServerService) GetMCPServer(robot *model.Robot, id int64) (*dto.MCPS
 	return result.Data, nil
 }
 
+func (s *MCPServerService) GetMCPServerTools(robot *model.Robot, id int64) ([]*dto.MCPServerTool, error) {
+	var result dto.Response[[]*dto.MCPServerTool]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetQueryParam("id", strconv.FormatInt(id, 10)).
+		SetResult(&result).
+		Get(robot.GetBaseURL() + "/mcp/server/tools")
+	if err = result.CheckError(err); err != nil {
+		return nil, err
+	}
+	return result.Data, nil
+}
+
 func (s *MCPServerService) CreateMCPServer(robot *model.Robot, mcpServer *dto.MCPServer) error {
 	var result dto.Response[struct{}]
 	_, err := resty.New().R().

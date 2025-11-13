@@ -69,3 +69,9 @@ type MCPServer struct {
 	UpdatedAt *string `json:"updated_at"`
 	DeletedAt *string `json:"deleted_at,omitempty"`
 }
+
+type MCPServerTool struct {
+	Name        string `json:"name"`
+	Title       string `json:"title,omitempty"`
+	Description string `json:"description,omitempty"`
+}

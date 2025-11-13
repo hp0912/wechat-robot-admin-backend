@@ -53,6 +53,28 @@ func (s *MCPServer) GetMCPServer(c *gin.Context) {
 	resp.ToResponse(data)
 }
 
+func (s *MCPServer) GetMCPServerTools(c *gin.Context) {
+	var req struct {
+		MCPServerID int64 `form:"mcp_server_id" binding:"required"`
+	}
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	data, err := service.NewMCPServerService(c).GetMCPServerTools(robot, req.MCPServerID)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(data)
+}
+
 func (s *MCPServer) CreateMCPServer(c *gin.Context) {
 	var req dto.MCPServer
 	resp := appx.NewResponse(c)
