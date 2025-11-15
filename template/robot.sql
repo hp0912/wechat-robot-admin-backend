@@ -288,6 +288,8 @@ CREATE TABLE IF NOT EXISTS `moment_comments` (
 
 CREATE TABLE IF NOT EXISTS `system_settings` (
   `id` BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '表主键ID',
+  `webhook_url` VARCHAR(255) DEFAULT '' COMMENT 'Webhook 地址',
+  `webhook_headers` JSON DEFAULT NULL COMMENT 'Webhook 请求头',
   `api_token_enabled` BOOLEAN DEFAULT FALSE COMMENT '启用API Token',
   `offline_notification_enabled` BOOLEAN DEFAULT FALSE COMMENT '启用离线通知',
   `notification_type` ENUM('push_plus', 'email') NOT NULL DEFAULT 'push_plus' COMMENT '通知方式：push_plus-推送加，email-邮件',
