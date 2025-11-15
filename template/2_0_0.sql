@@ -59,3 +59,9 @@ CREATE TABLE IF NOT EXISTS `mcp_servers` (
   KEY `idx_transport` (`transport`),
   KEY `idx_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='MCP服务器配置表';
+
+alter table system_settings
+    add webhook_url varchar(255) default '' not null comment 'Webhook 地址' after id;
+
+alter table system_settings
+    add webhook_headers JSON null comment 'Webhook 请求头' after webhook_url;
