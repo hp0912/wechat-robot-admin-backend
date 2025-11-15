@@ -73,6 +73,8 @@ func (s *SystemSettingService) SaveSystemSettings(req dto.SystemSettingsRequest,
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetBody(dto.SystemSettings{
 			ID:                         req.SystemSettingsID,
+			WebhookURL:                 req.WebhookURL,
+			WebhookHeaders:             req.WebhookHeaders,
 			APITokenEnabled:            req.APITokenEnabled,
 			OfflineNotificationEnabled: req.OfflineNotificationEnabled,
 			NotificationType:           req.NotificationType,
