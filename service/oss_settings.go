@@ -2,12 +2,13 @@ package service
 
 import (
 	"context"
+
+	"github.com/go-resty/resty/v2"
+
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/model"
 	"wechat-robot-admin-backend/repository"
 	"wechat-robot-admin-backend/vars"
-
-	"github.com/go-resty/resty/v2"
 )
 
 type OSSSettingService struct {

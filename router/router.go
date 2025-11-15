@@ -24,8 +24,10 @@ var systemMessageCtl *controller.SystemMessage
 var momentsCtl *controller.Moments
 var systemSettingsCtl *controller.SystemSettings
 var ossSettingsCtl *controller.OSSSettings
+var mcpServerCtl *controller.MCPServer
 var wxAppCtl *controller.WXApp
 var aiCallbackCtl *controller.AICallback
+var pprofProxyCtl *controller.PprofProxy
 
 func initController() {
 	probeCtl = controller.NewProbeController()
@@ -46,7 +48,9 @@ func initController() {
 	systemMessageCtl = controller.NewSystemMessageController()
 	systemSettingsCtl = controller.NewSystemSettingsController()
 	ossSettingsCtl = controller.NewOSSSettingsController()
+	mcpServerCtl = controller.NewMCPController()
 	wxAppCtl = controller.NewWXAppController()
+	pprofProxyCtl = controller.NewPprofProxyController()
 }
 
 func RegisterRouter(r *gin.Engine) error {
@@ -160,6 +164,19 @@ func RegisterRouter(r *gin.Engine) error {
 	}
 
 	{
+		mcpServer := api.Group("/mcp-server")
+		mcpServer.Use(middleware.UserAuth())
+		mcpServer.GET("", middleware.UserOwnerAuth(), mcpServerCtl.GetMCPServer)
+		mcpServer.GET("/list", middleware.UserOwnerAuth(), mcpServerCtl.GetMCPServers)
+		mcpServer.GET("/tools", middleware.UserOwnerAuth(), mcpServerCtl.GetMCPServerTools)
+		mcpServer.POST("", middleware.UserOwnerAuth(), mcpServerCtl.CreateMCPServer)
+		mcpServer.POST("/enable", middleware.UserOwnerAuth(), mcpServerCtl.EnableMCPServer)
+		mcpServer.POST("/disable", middleware.UserOwnerAuth(), mcpServerCtl.DisableMCPServer)
+		mcpServer.PUT("", middleware.UserOwnerAuth(), mcpServerCtl.UpdateMCPServer)
+		mcpServer.DELETE("", middleware.UserOwnerAuth(), mcpServerCtl.DeleteMCPServer)
+	}
+
+	{
 		moments := api.Group("/moments")
 		moments.Use(middleware.UserAuth())
 		moments.GET("/list", middleware.UserOwnerAuth(), momentsCtl.FriendCircleGetList)
@@ -242,6 +259,13 @@ func RegisterRouter(r *gin.Engine) error {
 		robot.Use(middleware.UserAuth())
 
 		robot.POST("/qrcode-auth-login", middleware.UserOwnerAuth(), wxAppCtl.WxappQrcodeAuthLogin)
+	}
+
+	{
+		// pprof代理路由
+		pprof := api.Group("/pprof")
+		pprof.Use(middleware.UserAuth())
+		pprof.GET("/*pprof_path", middleware.UserOwnerAuth(), pprofProxyCtl.ProxyPprof)
 	}
 
 	return nil
