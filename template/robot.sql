@@ -144,7 +144,7 @@ CREATE TABLE IF NOT EXISTS `messages` (
   `sender_wxid` VARCHAR(64),
   `reply_wxid` VARCHAR(64),
   `to_wxid` VARCHAR(64),
-  `attachment_url` VARCHAR(512),
+  `attachment_url` VARCHAR(1024),
   `created_at` BIGINT NOT NULL,
   `updated_at` BIGINT NOT NULL,
   UNIQUE KEY `uniq_msg_id` (`msg_id`),
