@@ -51,10 +51,10 @@ func (ct *RobotManage) RobotCreate(c *gin.Context) {
 		return
 	}
 	// 编译正则表达式
-	re := regexp.MustCompile(`^[a-zA-Z][a-zA-Z0-9_]+$`)
+	re := regexp.MustCompile(`^[a-zA-Z][a-zA-Z0-9_]{9,63}$`)
 	// 使用正则表达式匹配字符串
 	if !re.MatchString(req.RobotCode) {
-		resp.ToErrorResponse(errors.New("机器人编码只能包含字母、数字和下划线，并且必须以字母开头"))
+		resp.ToErrorResponse(errors.New("机器人编码只能包含字母、数字和下划线，必须以字母开头，长度为10-64个字符"))
 		return
 	}
 	err := service.NewRobotManageService(c).RobotCreate(c, req)
