@@ -11,10 +11,12 @@ import (
 func NetworkExists(networkName string) bool {
 	cmd := exec.Command("docker", "network", "ls", "--filter", fmt.Sprintf("name=%s", networkName), "--format", "{{.Name}}")
 	var out bytes.Buffer
+	var stderr bytes.Buffer
 	cmd.Stdout = &out
+	cmd.Stderr = &stderr
 	err := cmd.Run()
 	if err != nil {
-		fmt.Println("Error checking network:", err)
+		fmt.Printf("Error checking network: %v\nStderr: %s\n", err, stderr.String())
 		return false
 	}
 
