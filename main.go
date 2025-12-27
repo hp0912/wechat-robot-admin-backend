@@ -18,7 +18,7 @@ func main() {
 		log.Fatalf("加载配置失败: %v", err)
 	}
 	if err := startup.SetupVars(); err != nil {
-		log.Fatalf("MySQL连接失败: %v", err)
+		log.Fatalf("初始化环境失败: %v", err)
 	}
 	// 启动HTTP服务
 	gin.SetMode(os.Getenv("GIN_MODE"))
