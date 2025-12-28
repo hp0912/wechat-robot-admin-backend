@@ -10,7 +10,6 @@ type GetFriendSettingsResponse struct {
 	ChatAIEnabled         bool           `form:"chat_ai_enabled" json:"chat_ai_enabled"`
 	ChatBaseURL           string         `form:"chat_base_url" json:"chat_base_url"`
 	ChatAPIKey            string         `form:"chat_api_key" json:"chat_api_key"`
-	WorkflowModel         string         `form:"workflow_model" json:"workflow_model"`
 	ChatModel             string         `form:"chat_model" json:"chat_model"`
 	ImageRecognitionModel string         `form:"image_recognition_model" json:"image_recognition_model"`
 	ChatPrompt            string         `form:"chat_prompt" json:"chat_prompt"`
@@ -30,7 +29,6 @@ type SaveFriendSettingsRequest struct {
 	ChatAIEnabled         bool           `form:"chat_ai_enabled" json:"chat_ai_enabled"`
 	ChatBaseURL           string         `form:"chat_base_url" json:"chat_base_url"`
 	ChatAPIKey            string         `form:"chat_api_key" json:"chat_api_key"`
-	WorkflowModel         string         `form:"workflow_model" json:"workflow_model"`
 	ChatModel             string         `form:"chat_model" json:"chat_model"`
 	ImageRecognitionModel string         `form:"image_recognition_model" json:"image_recognition_model"`
 	ChatPrompt            string         `form:"chat_prompt" json:"chat_prompt"`
