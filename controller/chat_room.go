@@ -33,7 +33,7 @@ func (ct *ChatRoom) SyncChatRoomMembers(c *gin.Context) {
 }
 
 func (ct *ChatRoom) GetChatRoomMembers(c *gin.Context) {
-	var req dto.ChatRoomMemberRequest
+	var req dto.ChatRoomMemberListRequest
 	resp := appx.NewResponse(c)
 	robot, err := appx.GetRobot(c)
 	if err != nil {
@@ -54,7 +54,7 @@ func (ct *ChatRoom) GetChatRoomMembers(c *gin.Context) {
 }
 
 func (ct *ChatRoom) GetNotLeftMembers(c *gin.Context) {
-	var req dto.ChatRoomMemberRequest
+	var req dto.ChatRoomMemberListRequest
 	resp := appx.NewResponse(c)
 	robot, err := appx.GetRobot(c)
 	if err != nil {
@@ -71,6 +71,46 @@ func (ct *ChatRoom) GetNotLeftMembers(c *gin.Context) {
 		return
 	}
 	resp.ToResponse(data)
+}
+
+func (ct *ChatRoom) GetChatRoomMember(c *gin.Context) {
+	var req dto.ChatRoomMemberRequest
+	resp := appx.NewResponse(c)
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	data, err := service.NewChatRoomService(c).GetChatRoomMember(req, robot)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(data)
+}
+
+func (ct *ChatRoom) UpdateChatRoomMember(c *gin.Context) {
+	var req dto.UpdateChatRoomMemberRequest
+	resp := appx.NewResponse(c)
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	err = service.NewChatRoomService(c).UpdateChatRoomMember(req, robot)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
 }
 
 func (ct *ChatRoom) CreateChatRoom(c *gin.Context) {

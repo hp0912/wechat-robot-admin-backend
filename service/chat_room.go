@@ -35,7 +35,7 @@ func (sv *ChatRoomService) SyncChatRoomMembers(robot *model.Robot, chatRoomID st
 	}
 }
 
-func (sv *ChatRoomService) GetChatRoomMembers(req dto.ChatRoomMemberRequest, pager appx.Pager, robot *model.Robot) ([]*dto.ChatRoomMember, int64, error) {
+func (sv *ChatRoomService) GetChatRoomMembers(req dto.ChatRoomMemberListRequest, pager appx.Pager, robot *model.Robot) ([]*dto.ChatRoomMember, int64, error) {
 	var result dto.Response[struct {
 		Itmes []*dto.ChatRoomMember `json:"items"`
 		Total int64                 `json:"total"`
@@ -54,7 +54,7 @@ func (sv *ChatRoomService) GetChatRoomMembers(req dto.ChatRoomMemberRequest, pag
 	return result.Data.Itmes, result.Data.Total, nil
 }
 
-func (sv *ChatRoomService) GetNotLeftMembers(req dto.ChatRoomMemberRequest, robot *model.Robot) ([]*dto.ChatRoomMember, error) {
+func (sv *ChatRoomService) GetNotLeftMembers(req dto.ChatRoomMemberListRequest, robot *model.Robot) ([]*dto.ChatRoomMember, error) {
 	var result dto.Response[[]*dto.ChatRoomMember]
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
@@ -66,6 +66,33 @@ func (sv *ChatRoomService) GetNotLeftMembers(req dto.ChatRoomMemberRequest, robo
 		return nil, err
 	}
 	return result.Data, nil
+}
+
+func (sv *ChatRoomService) GetChatRoomMember(req dto.ChatRoomMemberRequest, robot *model.Robot) (*dto.ChatRoomMember, error) {
+	var result dto.Response[*dto.ChatRoomMember]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetQueryParam("chat_room_id", req.ChatRoomID).
+		SetQueryParam("wechat_id", req.WechatID).
+		SetResult(&result).
+		Get(robot.GetBaseURL() + "/chat-room/member")
+	if err = result.CheckError(err); err != nil {
+		return nil, err
+	}
+	return result.Data, nil
+}
+
+func (sv *ChatRoomService) UpdateChatRoomMember(req dto.UpdateChatRoomMemberRequest, robot *model.Robot) error {
+	var result dto.Response[struct{}]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(req).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/chat-room/member")
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (sv *ChatRoomService) CreateChatRoom(contactIDs []string, robot *model.Robot) error {
