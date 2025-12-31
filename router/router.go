@@ -107,6 +107,8 @@ func RegisterRouter(r *gin.Engine) error {
 		chatRoom := api.Group("/chat-room")
 		chatRoom.Use(middleware.UserAuth())
 		chatRoom.GET("/members", middleware.UserOwnerAuth(), chatRoomCtl.GetChatRoomMembers)
+		chatRoom.GET("/member", middleware.UserOwnerAuth(), chatRoomCtl.GetChatRoomMember)
+		chatRoom.POST("/member", middleware.UserOwnerAuth(), chatRoomCtl.UpdateChatRoomMember)
 		chatRoom.GET("/not-left-members", middleware.UserOwnerAuth(), chatRoomCtl.GetNotLeftMembers)
 		chatRoom.POST("/create", middleware.UserOwnerAuth(), chatRoomCtl.CreateChatRoom)
 		chatRoom.POST("/invite", middleware.UserOwnerAuth(), chatRoomCtl.InviteChatRoomMember)

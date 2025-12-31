@@ -212,8 +212,6 @@ CREATE TABLE IF NOT EXISTS `chat_room_members` (
   `score` BIGINT NOT NULL DEFAULT 0 COMMENT '积分',
   `temporary_score` BIGINT NOT NULL DEFAULT 0 COMMENT '临时积分',
   `temporary_score_expiry` BIGINT NOT NULL DEFAULT 0 COMMENT '临时积分有效期',
-  `frozen_score` BIGINT NOT NULL DEFAULT 0 COMMENT '冻结积分',
-  `frozen_temporary_score` BIGINT NOT NULL DEFAULT 0 COMMENT '冻结临时积分',
   `remark` VARCHAR(255) DEFAULT NULL COMMENT '备注',
   `joined_at` BIGINT NOT NULL COMMENT '加入时间',
   `last_active_at` BIGINT NOT NULL COMMENT '最近活跃时间',

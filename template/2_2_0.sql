@@ -14,10 +14,3 @@ alter table chat_room_members
 
 alter table chat_room_members
     add temporary_score_expiry bigint default 0 not null comment '临时积分有效期' after temporary_score;
-
-alter table chat_room_members
-    add frozen_score bigint default 0 not null comment '冻结积分' after temporary_score_expiry;
-
-alter table chat_room_members
-    add frozen_temporary_score bigint default 0 not null comment '冻结临时积分' after frozen_score;
-
