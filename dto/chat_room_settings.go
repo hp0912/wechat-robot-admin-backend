@@ -28,6 +28,7 @@ type GetChatRoomSettingsResponse struct {
 	WelcomeEmojiLen           int64          `form:"welcome_emoji_len" json:"welcome_emoji_len"`
 	WelcomeImageURL           string         `form:"welcome_image_url" json:"welcome_image_url"`
 	WelcomeURL                string         `form:"welcome_url" json:"welcome_url"`
+	ShortVideoParsingEnabled  bool           `form:"short_video_parsing_enabled" json:"short_video_parsing_enabled"`
 	PatEnabled                bool           `form:"pat_enabled" json:"pat_enabled"`
 	PatType                   string         `form:"pat_type" json:"pat_type"`
 	PatText                   string         `form:"pat_text" json:"pat_text"`
@@ -67,6 +68,7 @@ type SaveChatRoomSettingsRequest struct {
 	WelcomeEmojiLen           int64          `form:"welcome_emoji_len" json:"welcome_emoji_len"`
 	WelcomeImageURL           string         `form:"welcome_image_url" json:"welcome_image_url"`
 	WelcomeURL                string         `form:"welcome_url" json:"welcome_url"`
+	ShortVideoParsingEnabled  bool           `form:"short_video_parsing_enabled" json:"short_video_parsing_enabled"`
 	PatEnabled                bool           `form:"pat_enabled" json:"pat_enabled"`
 	PatType                   string         `form:"pat_type" json:"pat_type"`
 	PatText                   string         `form:"pat_text" json:"pat_text"`

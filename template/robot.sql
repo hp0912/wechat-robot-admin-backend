@@ -95,6 +95,8 @@ CREATE TABLE IF NOT EXISTS `chat_room_settings` (
   `tts_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI文本转语音功能',
   `tts_settings` JSON COMMENT '文本转语音AI配置项',
   `ltts_settings` JSON COMMENT '长文本转语音AI配置项',
+  -- 短视频解析
+  `short_video_parsing_enabled` BOOLEAN DEFAULT TRUE COMMENT '是否启用短视频解析功能',
     -- 拍一拍
   `pat_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI拍一拍功能',
   `pat_type` ENUM('text', 'voice') NOT NULL DEFAULT 'text' COMMENT '拍一拍方式：text-文本，voice-语音',
