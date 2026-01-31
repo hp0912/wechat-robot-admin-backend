@@ -11,7 +11,6 @@ CREATE TABLE IF NOT EXISTS `global_settings` (
   `max_completion_tokens` INT DEFAULT 0 COMMENT '最大回复',
   -- 绘图模型AI设置
   `image_ai_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI绘图功能',
-  `image_model` VARCHAR(255) DEFAULT '' COMMENT '绘图AI模型',
   `image_ai_settings` JSON COMMENT '绘图AI配置项',
   -- 文本转语音AI设置
   `tts_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI文本转语音功能',
@@ -66,7 +65,6 @@ CREATE TABLE IF NOT EXISTS `friend_settings` (
   `max_completion_tokens` INT DEFAULT 0 COMMENT '最大回复',
   -- 绘图模型AI设置
   `image_ai_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI绘图功能',
-  `image_model` VARCHAR(255) DEFAULT '' COMMENT '绘图AI模型',
   `image_ai_settings` JSON COMMENT '绘图AI配置项',
    -- 文本转语音AI设置
   `tts_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI文本转语音功能',
@@ -89,7 +87,6 @@ CREATE TABLE IF NOT EXISTS `chat_room_settings` (
   `max_completion_tokens` INT DEFAULT 0 COMMENT '最大回复',
   -- 绘图模型AI设置
   `image_ai_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI绘图功能',
-  `image_model` VARCHAR(255) DEFAULT '' COMMENT '绘图AI模型',
   `image_ai_settings` JSON COMMENT '绘图AI配置项',
    -- 文本转语音AI设置
   `tts_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI文本转语音功能',

@@ -126,7 +126,7 @@ type Location struct {
 	PoiClassifyId   string `xml:"poiClassifyId,attr"`
 	PoiName         string `xml:"poiName,attr"`
 	PoiAddress      string `xml:"poiAddress,attr"`
-	PoiClassifyType string `xml:"poiClassifyType,attr"`
+	PoiClassifyType uint32 `xml:"poiClassifyType,attr"`
 	City            string `xml:"city,attr"`
 }
 

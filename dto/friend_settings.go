@@ -15,7 +15,6 @@ type GetFriendSettingsResponse struct {
 	ChatPrompt            string         `form:"chat_prompt" json:"chat_prompt"`
 	MaxCompletionTokens   int            `form:"max_completion_tokens" json:"max_completion_tokens"`
 	ImageAIEnabled        bool           `form:"image_ai_enabled" json:"image_ai_enabled"`
-	ImageModel            string         `form:"image_model" json:"image_model"`
 	ImageAISettings       map[string]any `form:"image_ai_settings" json:"image_ai_settings"`
 	TTSEnabled            bool           `form:"tts_enabled" json:"tts_enabled"`
 	TTSSettings           map[string]any `form:"tts_settings" json:"tts_settings"`
@@ -34,7 +33,6 @@ type SaveFriendSettingsRequest struct {
 	ChatPrompt            string         `form:"chat_prompt" json:"chat_prompt"`
 	MaxCompletionTokens   int            `form:"max_completion_tokens" json:"max_completion_tokens"`
 	ImageAIEnabled        bool           `form:"image_ai_enabled" json:"image_ai_enabled"`
-	ImageModel            string         `form:"image_model" json:"image_model"`
 	ImageAISettings       map[string]any `form:"image_ai_settings" json:"image_ai_settings"`
 	TTSEnabled            bool           `form:"tts_enabled" json:"tts_enabled"`
 	TTSSettings           map[string]any `form:"tts_settings" json:"tts_settings"`
