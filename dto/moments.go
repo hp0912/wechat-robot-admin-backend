@@ -54,7 +54,7 @@ type WeappInfo struct {
 
 type ContentObject struct {
 	ContentStyle    uint32    `xml:"contentStyle"`
-	ContentSubStyle string    `xml:"contentSubStyle,omitempty"`
+	ContentSubStyle uint32    `xml:"contentSubStyle,omitempty"`
 	Title           string    `xml:"title"`
 	Description     string    `xml:"description"`
 	ContentUrl      string    `xml:"contentUrl"`
