@@ -59,6 +59,22 @@ func (sv *MessageService) SendTextMessage(req dto.SendTextMessageRequest, robot 
 	return nil
 }
 
+func (sv *MessageService) SendLongTextMessage(req dto.SendLongTextMessageRequest, robot *model.Robot) error {
+	var result dto.Response[any]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(dto.SendLongTextMessageRequest{
+			ToWxid:  req.ToWxid,
+			Content: req.Content,
+		}).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/message/send/longtext")
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (sv *MessageService) SendImageMessage(ctx *gin.Context, req dto.SendImageMessageRequest, file io.Reader, header *multipart.FileHeader, robot *model.Robot) error {
 	robotURL := fmt.Sprintf("%s/message/send/image", robot.GetBaseURL())
 	// 准备转发请求

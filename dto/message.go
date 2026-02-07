@@ -20,6 +20,12 @@ type SendTextMessageRequest struct {
 	RobotSendTextMessageRequest
 }
 
+type SendLongTextMessageRequest struct {
+	ID      int64  `form:"id" json:"id"  binding:"required"`
+	ToWxid  string `form:"to_wxid" json:"to_wxid" binding:"required"`
+	Content string `form:"content" json:"content" binding:"required"`
+}
+
 type SendImageMessageRequest struct {
 	ID     int64  `form:"id" json:"id"  binding:"required"`
 	ToWxid string `form:"to_wxid" json:"to_wxid" binding:"required"`

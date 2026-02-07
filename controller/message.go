@@ -59,6 +59,26 @@ func (ct *Message) SendTextMessage(c *gin.Context) {
 	resp.ToResponse(nil)
 }
 
+func (ct *Message) SendLongTextMessage(c *gin.Context) {
+	var req dto.SendLongTextMessageRequest
+	resp := appx.NewResponse(c)
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	err = service.NewMessageService(c).SendLongTextMessage(req, robot)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
+
 func (ct *Message) SendImageMessage(c *gin.Context) {
 	resp := appx.NewResponse(c)
 	// 获取表单文件
