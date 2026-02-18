@@ -71,6 +71,10 @@ type SaveChatRoomSettingsRequest struct {
 	WelcomeImageURL           string         `form:"welcome_image_url" json:"welcome_image_url"`
 	WelcomeURL                string         `form:"welcome_url" json:"welcome_url"`
 	ShortVideoParsingEnabled  bool           `form:"short_video_parsing_enabled" json:"short_video_parsing_enabled"`
+	WxhbNotifyEnabled         bool           `form:"wxhb_notify_enabled" json:"wxhb_notify_enabled"`
+	WxhbNotifyMemberList      string         `form:"wxhb_notify_member_list" json:"wxhb_notify_member_list"`
+	PodcastEnabled            bool           `form:"podcast_enabled" json:"podcast_enabled"`
+	PodcastConfig             map[string]any `form:"podcast_config" json:"podcast_config"`
 	PatEnabled                bool           `form:"pat_enabled" json:"pat_enabled"`
 	PatType                   string         `form:"pat_type" json:"pat_type"`
 	PatText                   string         `form:"pat_text" json:"pat_text"`
