@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `chat_room_settings` (
   `wxhb_notify_member_list` TEXT COMMENT '微信红包通知的成员列表，逗号分隔的微信ID',
   -- AI 播客
   `podcast_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI播客功能',
-  `podcast_config` JSON COMMENT COMMENT 'AI播客配置',
+  `podcast_config` JSON COMMENT 'AI播客配置',
   -- 拍一拍
   `pat_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI拍一拍功能',
   `pat_type` ENUM('text', 'voice') NOT NULL DEFAULT 'text' COMMENT '拍一拍方式：text-文本，voice-语音',
