@@ -25,6 +25,7 @@ var momentsCtl *controller.Moments
 var systemSettingsCtl *controller.SystemSettings
 var ossSettingsCtl *controller.OSSSettings
 var mcpServerCtl *controller.MCPServer
+var skillsCtl *controller.Skills
 var wxAppCtl *controller.WXApp
 var aiCallbackCtl *controller.AICallback
 var pprofProxyCtl *controller.PprofProxy
@@ -48,7 +49,7 @@ func initController() {
 	systemMessageCtl = controller.NewSystemMessageController()
 	systemSettingsCtl = controller.NewSystemSettingsController()
 	ossSettingsCtl = controller.NewOSSSettingsController()
-	mcpServerCtl = controller.NewMCPController()
+	skillsCtl = controller.NewSkillsController()
 	wxAppCtl = controller.NewWXAppController()
 	pprofProxyCtl = controller.NewPprofProxyController()
 }
@@ -177,6 +178,17 @@ func RegisterRouter(r *gin.Engine) error {
 		mcpServer.POST("/disable", middleware.UserOwnerAuth(), mcpServerCtl.DisableMCPServer)
 		mcpServer.PUT("", middleware.UserOwnerAuth(), mcpServerCtl.UpdateMCPServer)
 		mcpServer.DELETE("", middleware.UserOwnerAuth(), mcpServerCtl.DeleteMCPServer)
+	}
+
+	{
+		mcpServer := api.Group("/skills")
+		mcpServer.Use(middleware.UserAuth())
+		mcpServer.GET("", middleware.UserOwnerAuth(), skillsCtl.GetSkills)
+		mcpServer.POST("/install", middleware.UserOwnerAuth(), skillsCtl.InstallSkill)
+		mcpServer.POST("/enable", middleware.UserOwnerAuth(), skillsCtl.EnableSkill)
+		mcpServer.POST("/disable", middleware.UserOwnerAuth(), skillsCtl.DisableSkill)
+		mcpServer.PUT("/update", middleware.UserOwnerAuth(), skillsCtl.UpdateSkill)
+		mcpServer.DELETE("/uninstall", middleware.UserOwnerAuth(), skillsCtl.UninstallSkill)
 	}
 
 	{
