@@ -25,4 +25,6 @@ var OpenAIApiKey string
 
 var ThirdPartyApiKey string
 
+var HostDataDir string // 宿主机数据目录绝对路径，用于容器目录挂载
+
 var UploadFileChunkSize int64 = 50000

@@ -124,10 +124,23 @@ func (sv *RobotManageService) DockerStartWeChatClient(ctx *gin.Context, robot *m
 		},
 	}
 
+	if vars.HostDataDir != "" {
+		hostSkillsDir := fmt.Sprintf("%s/wechat-robot/%s/data/skills", vars.HostDataDir, robot.RobotCode)
+		clientHostConfig.Binds = []string{
+			fmt.Sprintf("%s:/data/skills", hostSkillsDir),
+		}
+	}
+
+	// 为该机器人创建（或复用）独立隔离网络，并将公共服务容器接入。
+	// 动态容器仅加入此网络，不加入公共网络，从而实现跨组网络隔离。
+	if _, err := sv.ensureRobotNetwork(dockerClient, robot.RobotCode); err != nil {
+		return fmt.Errorf("创建机器人隔离网络失败: %v", err)
+	}
+
 	// 客户端网络配置
 	clientNetworkConfig := &network.NetworkingConfig{
 		EndpointsConfig: map[string]*network.EndpointSettings{
-			vars.DockerNetwork: {},
+			sv.robotNetworkName(robot.RobotCode): {},
 		},
 	}
 
@@ -199,10 +212,10 @@ func (sv *RobotManageService) DockerStartWeChatServer(ctx *gin.Context, robot *m
 		},
 	}
 
-	// 服务端网络配置
+	// 服务端网络配置：与 client 使用同一隔离网络，确保同组互通、跨组隔离。
 	serverNetworkConfig := &network.NetworkingConfig{
 		EndpointsConfig: map[string]*network.EndpointSettings{
-			vars.DockerNetwork: {},
+			sv.robotNetworkName(robot.RobotCode): {},
 		},
 	}
 
@@ -489,6 +502,14 @@ func (sv *RobotManageService) RobotRemove(ctx *gin.Context, robotID int64) error
 		return err
 	}
 
+	// 两个容器都已删除后，清理该机器人的隔离网络。
+	if dc, dcErr := sv.getDockerClient(); dcErr == nil {
+		defer dc.Close()
+		if netErr := sv.removeRobotNetwork(dc, robot.RobotCode); netErr != nil {
+			log.Printf("删除机器人隔离网络失败: %v", netErr)
+		}
+	}
+
 	return nil
 }
 
@@ -673,6 +694,117 @@ func (sv *RobotManageService) RobotRestartClient(robotID int64) error {
 
 func (sv *RobotManageService) RobotRestartServer(robotID int64) error {
 	return sv.RobotRestart(robotID, "server")
+}
+
+func (sv *RobotManageService) robotNetworkName(robotCode string) string {
+	return fmt.Sprintf("robot-%s", robotCode)
+}
+
+func (sv *RobotManageService) robotNetworkPublicContainers() []string {
+	return []string{
+		"wechat-admin-mysql",
+		"wechat-admin-redis",
+		"wechat-server",
+		"wechat-slider",
+		"wechat-uuid",
+		"word-cloud-server",
+		"jimeng-api",
+		"wechat-robot-mcp-server",
+		"xiaohongshu-mcp",
+		"wechat-robot-admin-backend",
+		"netease-cloud-music",
+	}
+}
+
+// ensureRobotNetwork creates the per-robot isolated bridge network if it does not
+// already exist, then connects all required public service containers to it so
+// that the robot pair can reach shared dependencies. The robot containers
+// themselves are attached ONLY to this network; they are never added to
+// vars.DockerNetwork, so containers in different robot groups cannot reach each
+// other even though they all share the same public services.
+func (sv *RobotManageService) ensureRobotNetwork(dockerClient *client.Client, robotCode string) (string, error) {
+	networkName := sv.robotNetworkName(robotCode)
+
+	// Look up existing network by exact name.
+	netFilters := filters.NewArgs()
+	netFilters.Add("name", networkName)
+	nets, err := dockerClient.NetworkList(sv.ctx, network.ListOptions{Filters: netFilters})
+	if err != nil {
+		return "", fmt.Errorf("查询网络失败: %v", err)
+	}
+
+	var networkID string
+	for _, n := range nets {
+		if n.Name == networkName {
+			networkID = n.ID
+			break
+		}
+	}
+
+	if networkID == "" {
+		resp, err := dockerClient.NetworkCreate(sv.ctx, networkName, network.CreateOptions{
+			Driver: "bridge",
+		})
+		if err != nil {
+			return "", fmt.Errorf("创建网络 %s 失败: %v", networkName, err)
+		}
+		networkID = resp.ID
+	}
+
+	// Connect required public service containers (best-effort; already-connected is fine).
+	for _, ctrName := range sv.robotNetworkPublicContainers() {
+		ctrFilters := filters.NewArgs()
+		ctrFilters.Add("name", ctrName)
+		ctrs, err := dockerClient.ContainerList(sv.ctx, container.ListOptions{All: true, Filters: ctrFilters})
+		if err != nil || len(ctrs) == 0 {
+			continue
+		}
+		if err := dockerClient.NetworkConnect(sv.ctx, networkID, ctrs[0].ID, nil); err != nil {
+			// Ignore "already exists in network" errors; log everything else.
+			log.Printf("连接容器 %s 到网络 %s: %v", ctrName, networkName, err)
+		}
+	}
+
+	return networkID, nil
+}
+
+// removeRobotNetwork disconnects all public service containers from the per-robot
+// network and then removes the network itself. Called when a robot is fully deleted.
+func (sv *RobotManageService) removeRobotNetwork(dockerClient *client.Client, robotCode string) error {
+	networkName := sv.robotNetworkName(robotCode)
+
+	netFilters := filters.NewArgs()
+	netFilters.Add("name", networkName)
+	nets, err := dockerClient.NetworkList(sv.ctx, network.ListOptions{Filters: netFilters})
+	if err != nil {
+		return fmt.Errorf("查询网络失败: %v", err)
+	}
+
+	var networkID string
+	for _, n := range nets {
+		if n.Name == networkName {
+			networkID = n.ID
+			break
+		}
+	}
+	if networkID == "" {
+		return nil // Already gone.
+	}
+
+	for _, ctrName := range sv.robotNetworkPublicContainers() {
+		ctrFilters := filters.NewArgs()
+		ctrFilters.Add("name", ctrName)
+		ctrs, err := dockerClient.ContainerList(sv.ctx, container.ListOptions{All: true, Filters: ctrFilters})
+		if err != nil || len(ctrs) == 0 {
+			continue
+		}
+		_ = dockerClient.NetworkDisconnect(sv.ctx, networkID, ctrs[0].ID, true)
+	}
+
+	if err := dockerClient.NetworkRemove(sv.ctx, networkID); err != nil {
+		return fmt.Errorf("删除网络 %s 失败: %v", networkName, err)
+	}
+	return nil
 }
 
 // ensureImage 确保镜像已存在；若不存在则拉取
