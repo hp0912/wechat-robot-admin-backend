@@ -212,6 +212,10 @@ func (sv *RobotManageService) DockerStartWeChatServer(ctx *gin.Context, robot *m
 		},
 	}
 
+	if _, err := sv.ensureRobotNetwork(dockerClient, robot.RobotCode); err != nil {
+		return fmt.Errorf("创建机器人隔离网络失败: %v", err)
+	}
+
 	// 服务端网络配置：与 client 使用同一隔离网络，确保同组互通、跨组隔离。
 	serverNetworkConfig := &network.NetworkingConfig{
 		EndpointsConfig: map[string]*network.EndpointSettings{
