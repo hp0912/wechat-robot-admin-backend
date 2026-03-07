@@ -124,6 +124,13 @@ func (sv *RobotManageService) DockerStartWeChatClient(ctx *gin.Context, robot *m
 		},
 	}
 
+	if vars.HostDataDir != "" {
+		hostSkillsDir := fmt.Sprintf("%s/wechat-robot/%s/data/skills", vars.HostDataDir, robot.RobotCode)
+		clientHostConfig.Binds = []string{
+			fmt.Sprintf("%s:/data/skills", hostSkillsDir),
+		}
+	}
+
 	// 为该机器人创建（或复用）独立隔离网络，并将公共服务容器接入。
 	// 动态容器仅加入此网络，不加入公共网络，从而实现跨组网络隔离。
 	if _, err := sv.ensureRobotNetwork(dockerClient, robot.RobotCode); err != nil {

@@ -50,6 +50,7 @@ func loadEnvConfig() {
 
 	vars.OpenAIApiKey = os.Getenv("OPENAI_API_KEY")
 	vars.ThirdPartyApiKey = os.Getenv("THIRD_PARTY_API_KEY")
+	vars.HostDataDir = os.Getenv("HOST_DATA_DIR")
 
 	// mysql
 	vars.MysqlSettings.Driver = os.Getenv("MYSQL_DRIVER")
