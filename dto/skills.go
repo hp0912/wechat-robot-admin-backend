@@ -31,6 +31,9 @@ type Skill struct {
 
 	// 是否已启用
 	Enabled bool `json:"enabled"`
+
+	// 环境变量列表
+	EnvVars []EnvVar `json:"env_vars,omitempty"`
 }
 
 // SkillSource 技能来源
@@ -56,4 +59,15 @@ type InstallSkillRequest struct {
 	RepoURL string `json:"repo_url"`
 	SubPath string `json:"sub_path"`
 	Ref     string `json:"ref"`
+}
+
+type EnvVar struct {
+	Key         string `json:"key"`
+	Value       string `json:"value"`
+	Description string `json:"description,omitempty"`
+}
+
+type SetSkillEnvsRequest struct {
+	Name    string   `json:"name" binding:"required"`
+	EnvVars []EnvVar `json:"env_vars"`
 }
