@@ -95,3 +95,16 @@ func (s *SkillsService) UninstallSkill(robot *model.Robot, req *dto.SkillRequest
 	}
 	return nil
 }
+
+func (s *SkillsService) SetSkillEnvs(robot *model.Robot, req *dto.SetSkillEnvsRequest) error {
+	var result dto.Response[struct{}]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(req).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/skill/env-vars")
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
+}

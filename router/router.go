@@ -189,6 +189,7 @@ func RegisterRouter(r *gin.Engine) error {
 		mcpServer.POST("/disable", middleware.UserOwnerAuth(), skillsCtl.DisableSkill)
 		mcpServer.PUT("/update", middleware.UserOwnerAuth(), skillsCtl.UpdateSkill)
 		mcpServer.DELETE("/uninstall", middleware.UserOwnerAuth(), skillsCtl.UninstallSkill)
+		mcpServer.POST("/envs", middleware.UserOwnerAuth(), skillsCtl.SetSkillEnvs)
 	}
 
 	{

@@ -130,3 +130,23 @@ func (s *Skills) UninstallSkill(c *gin.Context) {
 	}
 	resp.ToResponse(nil)
 }
+
+func (s *Skills) SetSkillEnvs(c *gin.Context) {
+	var req dto.SetSkillEnvsRequest
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	err = service.NewSkillsService(c).SetSkillEnvs(robot, &req)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
