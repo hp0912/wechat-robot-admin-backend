@@ -711,6 +711,7 @@ func (sv *RobotManageService) robotNetworkPublicContainers() []string {
 	return []string{
 		"wechat-admin-mysql",
 		"wechat-admin-redis",
+		"wechat-admin-qdrant",
 		"wechat-server",
 		"wechat-slider",
 		"wechat-uuid",
