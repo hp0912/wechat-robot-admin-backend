@@ -16,5 +16,12 @@ type RedisSettingS struct {
 	Password string
 }
 
+type QdrantSettingS struct {
+	Host   string
+	Port   int
+	ApiKey string
+}
+
 var MysqlSettings = &MysqlSettingS{}
 var RedisSettings = &RedisSettingS{}
+var QdrantSettings = &QdrantSettingS{}

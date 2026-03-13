@@ -3,6 +3,7 @@ package startup
 import (
 	"log"
 	"os"
+	"strconv"
 	"strings"
 	"wechat-robot-admin-backend/vars"
 
@@ -65,4 +66,16 @@ func loadEnvConfig() {
 	vars.RedisSettings.Host = os.Getenv("REDIS_HOST")
 	vars.RedisSettings.Port = os.Getenv("REDIS_PORT")
 	vars.RedisSettings.Password = os.Getenv("REDIS_PASSWORD")
+
+	// qdrant
+	vars.QdrantSettings.Host = os.Getenv("QDRANT_HOST")
+	qdrantPort := os.Getenv("QDRANT_PORT")
+	if qdrantPort != "" {
+		port, err := strconv.Atoi(qdrantPort)
+		if err != nil {
+			log.Fatalf("QDRANT_PORT 转换失败: %v", err)
+		}
+		vars.QdrantSettings.Port = port
+	}
+	vars.QdrantSettings.ApiKey = os.Getenv("QDRANT_API_KEY")
 }
