@@ -54,7 +54,6 @@ type GetGlobalSettingsResponse struct {
 
 type SaveGlobalSettingsRequest struct {
 	ID                        int64          `form:"id" json:"id"  binding:"required"`
-	ConfigID                  int64          `form:"config_id" json:"config_id"`
 	ChatAIEnabled             bool           `form:"chat_ai_enabled" json:"chat_ai_enabled"`
 	ChatAITrigger             string         `form:"chat_ai_trigger" json:"chat_ai_trigger"`
 	ChatBaseURL               string         `form:"chat_base_url" json:"chat_base_url"`

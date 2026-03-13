@@ -33,7 +33,6 @@ func (sv *GlobalSettingsService) GetGlobalSettings(robot *model.Robot) (resp dto
 
 func (sv *GlobalSettingsService) SaveGlobalSettings(req dto.SaveGlobalSettingsRequest, robot *model.Robot) error {
 	var result dto.Response[struct{}]
-	req.ID = req.ConfigID
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetBody(req).
