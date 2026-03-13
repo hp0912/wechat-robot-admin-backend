@@ -26,6 +26,7 @@ var systemSettingsCtl *controller.SystemSettings
 var ossSettingsCtl *controller.OSSSettings
 var mcpServerCtl *controller.MCPServer
 var skillsCtl *controller.Skills
+var knowledgeCtl *controller.Knowledge
 var wxAppCtl *controller.WXApp
 var aiCallbackCtl *controller.AICallback
 var pprofProxyCtl *controller.PprofProxy
@@ -50,6 +51,7 @@ func initController() {
 	systemSettingsCtl = controller.NewSystemSettingsController()
 	ossSettingsCtl = controller.NewOSSSettingsController()
 	skillsCtl = controller.NewSkillsController()
+	knowledgeCtl = controller.NewKnowledgeController()
 	wxAppCtl = controller.NewWXAppController()
 	pprofProxyCtl = controller.NewPprofProxyController()
 }
@@ -190,6 +192,37 @@ func RegisterRouter(r *gin.Engine) error {
 		mcpServer.PUT("/update", middleware.UserOwnerAuth(), skillsCtl.UpdateSkill)
 		mcpServer.DELETE("/uninstall", middleware.UserOwnerAuth(), skillsCtl.UninstallSkill)
 		mcpServer.POST("/envs", middleware.UserOwnerAuth(), skillsCtl.SetSkillEnvs)
+	}
+
+	{
+		knowledge := api.Group("/knowledge")
+		knowledge.Use(middleware.UserAuth())
+		knowledge.POST("/document", middleware.UserOwnerAuth(), knowledgeCtl.AddDocument)
+		knowledge.DELETE("/document", middleware.UserOwnerAuth(), knowledgeCtl.DeleteDocument)
+		knowledge.GET("/documents", middleware.UserOwnerAuth(), knowledgeCtl.ListDocuments)
+		knowledge.GET("/categories", middleware.UserOwnerAuth(), knowledgeCtl.GetCategories)
+		knowledge.POST("/search", middleware.UserOwnerAuth(), knowledgeCtl.SearchKnowledge)
+		knowledge.POST("/reindex", middleware.UserOwnerAuth(), knowledgeCtl.ReindexAll)
+	}
+
+	{
+		memory := api.Group("/memory")
+		memory.Use(middleware.UserAuth())
+		memory.POST("", middleware.UserOwnerAuth(), knowledgeCtl.SaveMemory)
+		memory.POST("/search", middleware.UserOwnerAuth(), knowledgeCtl.SearchMemory)
+		memory.DELETE("", middleware.UserOwnerAuth(), knowledgeCtl.DeleteMemory)
+	}
+
+	{
+		imageKnowledge := api.Group("/image-knowledge")
+		imageKnowledge.Use(middleware.UserAuth())
+		imageKnowledge.POST("/document", middleware.UserOwnerAuth(), knowledgeCtl.AddImageDocument)
+		imageKnowledge.DELETE("/document", middleware.UserOwnerAuth(), knowledgeCtl.DeleteImageDocument)
+		imageKnowledge.GET("/documents", middleware.UserOwnerAuth(), knowledgeCtl.ListImageDocuments)
+		imageKnowledge.GET("/categories", middleware.UserOwnerAuth(), knowledgeCtl.GetImageCategories)
+		imageKnowledge.POST("/search/text", middleware.UserOwnerAuth(), knowledgeCtl.SearchImageByText)
+		imageKnowledge.POST("/search/image", middleware.UserOwnerAuth(), knowledgeCtl.SearchImageByImage)
+		imageKnowledge.POST("/reindex", middleware.UserOwnerAuth(), knowledgeCtl.ReindexAllImages)
 	}
 
 	{

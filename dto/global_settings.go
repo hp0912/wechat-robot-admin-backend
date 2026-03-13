@@ -45,11 +45,15 @@ type GetGlobalSettingsResponse struct {
 	MorningEnabled            bool           `form:"morning_enabled" json:"morning_enabled"`
 	MorningCron               string         `form:"morning_cron" json:"morning_cron"`
 	FriendSyncCron            string         `form:"friend_sync_cron" json:"friend_sync_cron"`
+	TextEmbeddingModel        string         `form:"text_embedding_model" json:"text_embedding_model"`
+	ImageEmbeddingModel       string         `form:"image_embedding_model" json:"image_embedding_model"`
+	ImageEmbeddingBaseURL     string         `form:"image_embedding_base_url" json:"image_embedding_base_url"`
+	ImageEmbeddingAPIKey      string         `form:"image_embedding_api_key" json:"image_embedding_api_key"`
+	ImageEmbeddingDimension   int            `form:"image_embedding_dimension" json:"image_embedding_dimension"`
 }
 
 type SaveGlobalSettingsRequest struct {
 	ID                        int64          `form:"id" json:"id"  binding:"required"`
-	ConfigID                  int64          `form:"config_id" json:"config_id"`
 	ChatAIEnabled             bool           `form:"chat_ai_enabled" json:"chat_ai_enabled"`
 	ChatAITrigger             string         `form:"chat_ai_trigger" json:"chat_ai_trigger"`
 	ChatBaseURL               string         `form:"chat_base_url" json:"chat_base_url"`
@@ -89,4 +93,9 @@ type SaveGlobalSettingsRequest struct {
 	MorningEnabled            bool           `form:"morning_enabled" json:"morning_enabled"`
 	MorningCron               string         `form:"morning_cron" json:"morning_cron"`
 	FriendSyncCron            string         `form:"friend_sync_cron" json:"friend_sync_cron"`
+	TextEmbeddingModel        string         `form:"text_embedding_model" json:"text_embedding_model"`
+	ImageEmbeddingModel       string         `form:"image_embedding_model" json:"image_embedding_model"`
+	ImageEmbeddingBaseURL     string         `form:"image_embedding_base_url" json:"image_embedding_base_url"`
+	ImageEmbeddingAPIKey      string         `form:"image_embedding_api_key" json:"image_embedding_api_key"`
+	ImageEmbeddingDimension   int            `form:"image_embedding_dimension" json:"image_embedding_dimension"`
 }
