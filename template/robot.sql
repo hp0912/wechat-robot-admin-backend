@@ -399,3 +399,80 @@ CREATE TABLE IF NOT EXISTS `skills` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_skills_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Agent Skills 表';
+
+CREATE TABLE IF NOT EXISTS `memories` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `contact_wxid` varchar(255) NOT NULL DEFAULT '' COMMENT '联系人微信ID',
+  `chat_room_id` varchar(255) NOT NULL DEFAULT '' COMMENT '群聊ID',
+  `type` varchar(32) NOT NULL COMMENT '记忆类型: fact/preference/event/relation/summary',
+  `key` varchar(255) NOT NULL DEFAULT '' COMMENT '记忆键',
+  `content` text COMMENT '记忆内容',
+  `source` varchar(32) NOT NULL DEFAULT 'auto' COMMENT '来源: auto/manual',
+  `importance` int NOT NULL DEFAULT 5 COMMENT '重要性 1-10',
+  `access_count` int NOT NULL DEFAULT 0 COMMENT '访问次数',
+  `last_access_at` bigint NOT NULL DEFAULT 0 COMMENT '最后访问时间',
+  `expire_at` bigint NOT NULL DEFAULT 0 COMMENT '过期时间',
+  `created_at` bigint NOT NULL DEFAULT 0 COMMENT '创建时间',
+  `updated_at` bigint NOT NULL DEFAULT 0 COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_memories_contact_wxid` (`contact_wxid`),
+  KEY `idx_memories_chat_room_id` (`chat_room_id`),
+  KEY `idx_memories_type` (`type`),
+  KEY `idx_memories_last_access_at` (`last_access_at`),
+  KEY `idx_memories_expire_at` (`expire_at`),
+  KEY `idx_contact_key` (`contact_wxid`, `key`),
+  KEY `idx_contact_type` (`contact_wxid`, `type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='长期记忆表';
+
+CREATE TABLE IF NOT EXISTS `knowledge_documents` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(255) DEFAULT NULL,
+  `content` LONGTEXT,
+  `source` VARCHAR(64) DEFAULT NULL COMMENT 'file / url / manual',
+  `category` VARCHAR(128) DEFAULT NULL COMMENT '知识分类',
+  `chunk_index` INT DEFAULT NULL,
+  `chunk_total` INT DEFAULT NULL,
+  `vector_id` VARCHAR(128) DEFAULT NULL COMMENT 'Qdrant 中的点 ID',
+  `enabled` TINYINT(1) DEFAULT 1,
+  `created_at` BIGINT DEFAULT NULL,
+  `updated_at` BIGINT DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_knowledge_documents_title` (`title`),
+  KEY `idx_knowledge_documents_category` (`category`),
+  KEY `idx_knowledge_documents_enabled` (`enabled`),
+  KEY `idx_chunk_category` (`chunk_index`, `category`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='知识库文档';
+
+CREATE TABLE IF NOT EXISTS embedding_tasks (
+  id BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  source_type VARCHAR(32) NOT NULL COMMENT '来源类型: message / memory / knowledge',
+  source_id BIGINT NOT NULL COMMENT '来源ID',
+  content TEXT COMMENT '向量化内容',
+  status VARCHAR(32) NOT NULL DEFAULT 'pending' COMMENT '任务状态: pending / processing / done / failed',
+  vector_id VARCHAR(128) NOT NULL DEFAULT '' COMMENT '向量ID',
+  error_msg TEXT COMMENT '错误信息',
+  created_at BIGINT NOT NULL DEFAULT 0 COMMENT '创建时间',
+  processed_at BIGINT NOT NULL DEFAULT 0 COMMENT '处理时间',
+  PRIMARY KEY (id),
+  KEY idx_source (source_type, source_id, status),
+  KEY idx_embedding_tasks_status (status),
+  KEY idx_status_processed (status, processed_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='向量化任务队列';
+
+CREATE TABLE IF NOT EXISTS `conversation_sessions` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `contact_wxid` VARCHAR(255) DEFAULT NULL,
+  `chat_room_id` VARCHAR(255) DEFAULT NULL,
+  `summary` TEXT,
+  `message_count` INT DEFAULT NULL,
+  `first_msg_id` BIGINT DEFAULT NULL,
+  `last_msg_id` BIGINT DEFAULT NULL,
+  `last_active_at` BIGINT DEFAULT NULL,
+  `is_active` TINYINT(1) NOT NULL DEFAULT 1,
+  `created_at` BIGINT DEFAULT NULL,
+  `updated_at` BIGINT DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_active_contact` (`is_active`, `contact_wxid`),
+  KEY `idx_active_chatroom` (`is_active`, `chat_room_id`),
+  KEY `idx_active_time` (`is_active`, `last_active_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='向量化任务队列';
