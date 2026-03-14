@@ -20,6 +20,9 @@ func main() {
 	if err := startup.SetupVars(); err != nil {
 		log.Fatalf("初始化环境失败: %v", err)
 	}
+	if err := startup.AutoMigrate(); err != nil {
+		log.Fatalf("自动迁移失败: %v", err)
+	}
 	// 启动HTTP服务
 	gin.SetMode(os.Getenv("GIN_MODE"))
 	app := gin.Default()

@@ -35,7 +35,7 @@ const (
 type Robot struct {
 	ID            int64          `gorm:"column:id;primaryKey;autoIncrement" json:"id"`
 	RobotCode     string         `gorm:"column:robot_code;type:varchar(64);not null;uniqueIndex:idx_robot_code" json:"robot_code"`         // 当前机器人的唯一标识
-	RobotName     string         `gorm:"column:robot_name;type:varchar(255);not null" json:"robot_name"`                                   // 当前机器人的名称
+	RobotName     string         `gorm:"column:robot_name;type:varchar(255);not null;default:'WeChat Robot'" json:"robot_name"`            // 当前机器人的名称
 	Owner         string         `gorm:"column:owner;type:varchar(64);not null;index:idx_owner" json:"owner"`                              // 当前机器人的拥有者
 	DeviceID      string         `gorm:"column:device_id;type:varchar(255)" json:"device_id"`                                              // 当前机器人登陆的设备Id
 	DeviceName    string         `gorm:"column:device_name;type:varchar(255)" json:"device_name"`                                          // 当前机器人登陆的设备名称
