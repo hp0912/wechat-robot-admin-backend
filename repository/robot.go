@@ -69,8 +69,8 @@ func (r *Robot) GetByOwner(owner string, unscoped bool) ([]*model.Robot, error) 
 	return robots, nil
 }
 
-func (r *Robot) GetMaxRedisDB() (uint, error) {
-	var maxDB uint
+func (r *Robot) GetMaxRedisDB() (uint64, error) {
+	var maxDB uint64
 	if err := r.DB.WithContext(r.Ctx).Model(&model.Robot{}).Unscoped().Select("COALESCE(MAX(redis_db), 0)").Scan(&maxDB).Error; err != nil {
 		return 0, err
 	}
