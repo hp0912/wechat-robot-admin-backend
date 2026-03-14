@@ -7,7 +7,7 @@ type RobotListRequest struct {
 }
 
 type RobotCreateRequest struct {
-	RobotCode string `form:"robot_code" json:"robot_code" binding:"required"`
+	RobotName string `form:"robot_name" json:"robot_name" binding:"required"`
 }
 
 type RobotCommonRequest struct {

@@ -23,6 +23,7 @@ func SetupVars() error {
 		return err
 	}
 	log.Println("MySQL表初始化成功")
+
 	if err := InitDockerNetwork(); err != nil {
 		return err
 	}

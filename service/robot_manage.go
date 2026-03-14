@@ -134,16 +134,10 @@ func (sv *RobotManageService) DockerStartWeChatClient(ctx *gin.Context, robot *m
 		}
 	}
 
-	// 为该机器人创建（或复用）独立隔离网络，并将公共服务容器接入。
-	// 动态容器仅加入此网络，不加入公共网络，从而实现跨组网络隔离。
-	if _, err := sv.ensureRobotNetwork(dockerClient, robot.RobotCode); err != nil {
-		return fmt.Errorf("创建机器人隔离网络失败: %v", err)
-	}
-
 	// 客户端网络配置
 	clientNetworkConfig := &network.NetworkingConfig{
 		EndpointsConfig: map[string]*network.EndpointSettings{
-			sv.robotNetworkName(robot.RobotCode): {},
+			vars.DockerNetwork: {},
 		},
 	}
 
@@ -215,14 +209,10 @@ func (sv *RobotManageService) DockerStartWeChatServer(ctx *gin.Context, robot *m
 		},
 	}
 
-	if _, err := sv.ensureRobotNetwork(dockerClient, robot.RobotCode); err != nil {
-		return fmt.Errorf("创建机器人隔离网络失败: %v", err)
-	}
-
 	// 服务端网络配置：与 client 使用同一隔离网络，确保同组互通、跨组隔离。
 	serverNetworkConfig := &network.NetworkingConfig{
 		EndpointsConfig: map[string]*network.EndpointSettings{
-			sv.robotNetworkName(robot.RobotCode): {},
+			vars.DockerNetwork: {},
 		},
 	}
 
@@ -303,7 +293,8 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 	}
 
 	robot := &model.Robot{
-		RobotCode:    req.RobotCode,
+		RobotCode:    fmt.Sprintf("x%s", utils.GetRandomString(15)),
+		RobotName:    req.RobotName,
 		Owner:        wechatId.(string),
 		DeviceID:     utils.CreateDeviceID(""),
 		DeviceName:   utils.CreateDeviceName(),
@@ -507,14 +498,6 @@ func (sv *RobotManageService) RobotRemove(ctx *gin.Context, robotID int64) error
 	err = sv.DockerStopAndRemoveWeChatServer(ctx, robot)
 	if err != nil {
 		return err
-	}
-
-	// 两个容器都已删除后，清理该机器人的隔离网络。
-	if dc, dcErr := sv.getDockerClient(); dcErr == nil {
-		defer dc.Close()
-		if netErr := sv.removeRobotNetwork(dc, robot.RobotCode); netErr != nil {
-			log.Printf("删除机器人隔离网络失败: %v", netErr)
-		}
 	}
 
 	return nil
