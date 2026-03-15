@@ -26,9 +26,7 @@ type SearchKnowledgeRequest struct {
 }
 
 type ListKnowledgeRequest struct {
-	Category string `form:"category" json:"category"`
-	Page     int    `form:"page" json:"page"`
-	PageSize int    `form:"page_size" json:"page_size"`
+	Category string `form:"category" json:"category" binding:"required"`
 }
 
 type DeleteKnowledgeRequest struct {
@@ -68,9 +66,7 @@ type DeleteImageKnowledgeRequest struct {
 }
 
 type ListImageKnowledgeRequest struct {
-	Category string `form:"category" json:"category"`
-	Page     int    `form:"page" json:"page"`
-	PageSize int    `form:"page_size" json:"page_size"`
+	Category string `form:"category" json:"category" binding:"required"`
 }
 
 type SearchImageKnowledgeByTextRequest struct {

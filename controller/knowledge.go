@@ -85,7 +85,8 @@ func (k *Knowledge) ListDocuments(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	data, err := service.NewKnowledgeService(c).ListDocuments(robot, &req)
+	pager := appx.InitPager(c)
+	data, err := service.NewKnowledgeService(c).ListDocuments(robot, pager, &req)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
@@ -310,7 +311,8 @@ func (k *Knowledge) ListImageDocuments(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	data, err := service.NewKnowledgeService(c).ListImageDocuments(robot, &req)
+	pager := appx.InitPager(c)
+	data, err := service.NewKnowledgeService(c).ListImageDocuments(robot, pager, &req)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return

@@ -8,6 +8,7 @@ import (
 
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/model"
+	"wechat-robot-admin-backend/pkg/appx"
 )
 
 type KnowledgeService struct {
@@ -57,21 +58,15 @@ func (s *KnowledgeService) DeleteDocument(robot *model.Robot, req *dto.DeleteKno
 	return nil
 }
 
-func (s *KnowledgeService) ListDocuments(robot *model.Robot, req *dto.ListKnowledgeRequest) (dto.ListResponse[*dto.KnowledgeDocument], error) {
+func (s *KnowledgeService) ListDocuments(robot *model.Robot, pager appx.Pager, req *dto.ListKnowledgeRequest) (dto.ListResponse[*dto.KnowledgeDocument], error) {
 	var result dto.Response[dto.ListResponse[*dto.KnowledgeDocument]]
-	request := resty.New().R().
+	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
-		SetResult(&result)
-	if req.Category != "" {
-		request.SetQueryParam("category", req.Category)
-	}
-	if req.Page > 0 {
-		request.SetQueryParam("page", strconv.Itoa(req.Page))
-	}
-	if req.PageSize > 0 {
-		request.SetQueryParam("page_size", strconv.Itoa(req.PageSize))
-	}
-	_, err := request.Get(robot.GetBaseURL() + "/knowledge/documents")
+		SetQueryParam("category", req.Category).
+		SetQueryParam("page_index", strconv.Itoa(pager.PageIndex)).
+		SetQueryParam("page_size", "20").
+		SetResult(&result).
+		Get(robot.GetBaseURL() + "/knowledge/documents")
 	if err = result.CheckError(err); err != nil {
 		return result.Data, err
 	}
@@ -231,21 +226,16 @@ func (s *KnowledgeService) DeleteImageDocument(robot *model.Robot, req *dto.Dele
 	return nil
 }
 
-func (s *KnowledgeService) ListImageDocuments(robot *model.Robot, req *dto.ListImageKnowledgeRequest) (dto.ListResponse[*dto.ImageKnowledgeDocument], error) {
+func (s *KnowledgeService) ListImageDocuments(robot *model.Robot, pager appx.Pager, req *dto.ListImageKnowledgeRequest) (dto.ListResponse[*dto.ImageKnowledgeDocument], error) {
 	var result dto.Response[dto.ListResponse[*dto.ImageKnowledgeDocument]]
-	request := resty.New().R().
+	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
-		SetResult(&result)
-	if req.Category != "" {
-		request.SetQueryParam("category", req.Category)
-	}
-	if req.Page > 0 {
-		request.SetQueryParam("page", strconv.Itoa(req.Page))
-	}
-	if req.PageSize > 0 {
-		request.SetQueryParam("page_size", strconv.Itoa(req.PageSize))
-	}
-	_, err := request.Get(robot.GetBaseURL() + "/image-knowledge/documents")
+		SetQueryParam("category", req.Category).
+		SetQueryParam("page_index", strconv.Itoa(pager.PageIndex)).
+		SetQueryParam("page_size", "20").
+		SetResult(&result).
+		Get(robot.GetBaseURL() + "/image-knowledge/documents")
+
 	if err = result.CheckError(err); err != nil {
 		return result.Data, err
 	}
