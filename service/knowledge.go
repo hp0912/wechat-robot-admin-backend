@@ -65,8 +65,8 @@ func (s *KnowledgeService) ListDocuments(robot *model.Robot, req *dto.ListKnowle
 	return result.Data, nil
 }
 
-func (s *KnowledgeService) GetCategories(robot *model.Robot) ([]string, error) {
-	var result dto.Response[[]string]
+func (s *KnowledgeService) GetCategories(robot *model.Robot) ([]*dto.KnowledgeCategory, error) {
+	var result dto.Response[[]*dto.KnowledgeCategory]
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetResult(&result).
@@ -75,6 +75,45 @@ func (s *KnowledgeService) GetCategories(robot *model.Robot) ([]string, error) {
 		return result.Data, err
 	}
 	return result.Data, nil
+}
+
+func (s *KnowledgeService) CreateKnowledgeCategory(robot *model.Robot, req *dto.CreateKnowledgeCategoryRequest) (*dto.KnowledgeCategory, error) {
+	var result dto.Response[*dto.KnowledgeCategory]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(req).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/knowledge/category")
+	if err = result.CheckError(err); err != nil {
+		return result.Data, err
+	}
+	return result.Data, nil
+}
+
+func (s *KnowledgeService) UpdateKnowledgeCategory(robot *model.Robot, req *dto.UpdateKnowledgeCategoryRequest) error {
+	var result dto.Response[struct{}]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(req).
+		SetResult(&result).
+		Put(robot.GetBaseURL() + "/knowledge/category")
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *KnowledgeService) DeleteKnowledgeCategory(robot *model.Robot, req *dto.DeleteKnowledgeCategoryRequest) error {
+	var result dto.Response[struct{}]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(req).
+		SetResult(&result).
+		Delete(robot.GetBaseURL() + "/knowledge/category")
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (s *KnowledgeService) SearchKnowledge(robot *model.Robot, req *dto.SearchKnowledgeRequest) ([]dto.VectorSearchResult, error) {

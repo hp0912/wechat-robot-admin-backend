@@ -78,6 +78,22 @@ type SearchImageKnowledgeByImageRequest struct {
 	Limit    int    `json:"limit"`
 }
 
+type CreateKnowledgeCategoryRequest struct {
+	Code        string `json:"code" binding:"required"`
+	Name        string `json:"name" binding:"required"`
+	Description string `json:"description"`
+}
+
+type UpdateKnowledgeCategoryRequest struct {
+	ID          int64  `json:"id" binding:"required"`
+	Name        string `json:"name" binding:"required"`
+	Description string `json:"description"`
+}
+
+type DeleteKnowledgeCategoryRequest struct {
+	ID int64 `json:"id" binding:"required"`
+}
+
 type KnowledgeDocument struct {
 	ID         int64  `json:"id"`
 	Title      string `json:"title"`
@@ -116,6 +132,16 @@ type ImageKnowledgeDocument struct {
 	Category    string `json:"category"`
 	VectorID    string `json:"vector_id"`
 	Enabled     bool   `json:"enabled"`
+	CreatedAt   int64  `json:"created_at"`
+	UpdatedAt   int64  `json:"updated_at"`
+}
+
+type KnowledgeCategory struct {
+	ID          int64  `json:"id"`
+	Code        string `json:"code"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	IsBuiltin   bool   `json:"is_builtin"`
 	CreatedAt   int64  `json:"created_at"`
 	UpdatedAt   int64  `json:"updated_at"`
 }

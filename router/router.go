@@ -201,6 +201,9 @@ func RegisterRouter(r *gin.Engine) error {
 		knowledge.DELETE("/document", middleware.UserOwnerAuth(), knowledgeCtl.DeleteDocument)
 		knowledge.GET("/documents", middleware.UserOwnerAuth(), knowledgeCtl.ListDocuments)
 		knowledge.GET("/categories", middleware.UserOwnerAuth(), knowledgeCtl.GetCategories)
+		knowledge.POST("/category", middleware.UserOwnerAuth(), knowledgeCtl.CreateKnowledgeCategory)
+		knowledge.PUT("/category", middleware.UserOwnerAuth(), knowledgeCtl.UpdateKnowledgeCategory)
+		knowledge.DELETE("/category", middleware.UserOwnerAuth(), knowledgeCtl.DeleteKnowledgeCategory)
 		knowledge.POST("/search", middleware.UserOwnerAuth(), knowledgeCtl.SearchKnowledge)
 		knowledge.POST("/reindex", middleware.UserOwnerAuth(), knowledgeCtl.ReindexAll)
 	}

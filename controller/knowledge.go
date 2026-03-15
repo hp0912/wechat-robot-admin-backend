@@ -89,6 +89,64 @@ func (k *Knowledge) GetCategories(c *gin.Context) {
 	resp.ToResponse(data)
 }
 
+func (k *Knowledge) CreateKnowledgeCategory(c *gin.Context) {
+	var req dto.CreateKnowledgeCategoryRequest
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	data, err := service.NewKnowledgeService(c).CreateKnowledgeCategory(robot, &req)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(data)
+}
+
+func (k *Knowledge) UpdateKnowledgeCategory(c *gin.Context) {
+	var req dto.UpdateKnowledgeCategoryRequest
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if err = service.NewKnowledgeService(c).UpdateKnowledgeCategory(robot, &req); err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
+
+func (k *Knowledge) DeleteKnowledgeCategory(c *gin.Context) {
+	var req dto.DeleteKnowledgeCategoryRequest
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if err = service.NewKnowledgeService(c).DeleteKnowledgeCategory(robot, &req); err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
+
 func (k *Knowledge) SearchKnowledge(c *gin.Context) {
 	var req dto.SearchKnowledgeRequest
 	resp := appx.NewResponse(c)
