@@ -35,6 +35,25 @@ func (k *Knowledge) AddDocument(c *gin.Context) {
 	resp.ToResponse(nil)
 }
 
+func (k *Knowledge) UpdateDocument(c *gin.Context) {
+	var req dto.UpdateKnowledgeDocumentRequest
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if err = service.NewKnowledgeService(c).UpdateDocument(robot, &req); err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
+
 func (k *Knowledge) DeleteDocument(c *gin.Context) {
 	var req dto.DeleteKnowledgeRequest
 	resp := appx.NewResponse(c)

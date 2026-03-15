@@ -31,6 +31,19 @@ func (s *KnowledgeService) AddDocument(robot *model.Robot, req *dto.AddKnowledge
 	return nil
 }
 
+func (s *KnowledgeService) UpdateDocument(robot *model.Robot, req *dto.UpdateKnowledgeDocumentRequest) error {
+	var result dto.Response[struct{}]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(req).
+		SetResult(&result).
+		Put(robot.GetBaseURL() + "/knowledge/document")
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s *KnowledgeService) DeleteDocument(robot *model.Robot, req *dto.DeleteKnowledgeRequest) error {
 	var result dto.Response[struct{}]
 	_, err := resty.New().R().

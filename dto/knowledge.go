@@ -12,6 +12,13 @@ type AddKnowledgeDocumentRequest struct {
 	Category string `json:"category"`
 }
 
+type UpdateKnowledgeDocumentRequest struct {
+	ID      int64  `json:"id" binding:"required"`
+	Title   string `json:"title" binding:"required"`
+	Content string `json:"content" binding:"required"`
+	Source  string `json:"source"`
+}
+
 type SearchKnowledgeRequest struct {
 	Query    string `json:"query" binding:"required"`
 	Category string `json:"category"`
