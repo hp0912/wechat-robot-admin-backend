@@ -12,6 +12,13 @@ type AddKnowledgeDocumentRequest struct {
 	Category string `json:"category"`
 }
 
+type UpdateKnowledgeDocumentRequest struct {
+	ID      int64  `json:"id" binding:"required"`
+	Title   string `json:"title" binding:"required"`
+	Content string `json:"content" binding:"required"`
+	Source  string `json:"source"`
+}
+
 type SearchKnowledgeRequest struct {
 	Query    string `json:"query" binding:"required"`
 	Category string `json:"category"`
@@ -19,9 +26,7 @@ type SearchKnowledgeRequest struct {
 }
 
 type ListKnowledgeRequest struct {
-	Category string `form:"category" json:"category"`
-	Page     int    `form:"page" json:"page"`
-	PageSize int    `form:"page_size" json:"page_size"`
+	Category string `form:"category" json:"category" binding:"required"`
 }
 
 type DeleteKnowledgeRequest struct {
@@ -61,9 +66,7 @@ type DeleteImageKnowledgeRequest struct {
 }
 
 type ListImageKnowledgeRequest struct {
-	Category string `form:"category" json:"category"`
-	Page     int    `form:"page" json:"page"`
-	PageSize int    `form:"page_size" json:"page_size"`
+	Category string `form:"category" json:"category" binding:"required"`
 }
 
 type SearchImageKnowledgeByTextRequest struct {
@@ -76,6 +79,22 @@ type SearchImageKnowledgeByImageRequest struct {
 	ImageURL string `json:"image_url" binding:"required"`
 	Category string `json:"category"`
 	Limit    int    `json:"limit"`
+}
+
+type CreateKnowledgeCategoryRequest struct {
+	Code        string `json:"code" binding:"required"`
+	Name        string `json:"name" binding:"required"`
+	Description string `json:"description"`
+}
+
+type UpdateKnowledgeCategoryRequest struct {
+	ID          int64  `json:"id" binding:"required"`
+	Name        string `json:"name" binding:"required"`
+	Description string `json:"description"`
+}
+
+type DeleteKnowledgeCategoryRequest struct {
+	ID int64 `json:"id" binding:"required"`
 }
 
 type KnowledgeDocument struct {
@@ -116,6 +135,16 @@ type ImageKnowledgeDocument struct {
 	Category    string `json:"category"`
 	VectorID    string `json:"vector_id"`
 	Enabled     bool   `json:"enabled"`
+	CreatedAt   int64  `json:"created_at"`
+	UpdatedAt   int64  `json:"updated_at"`
+}
+
+type KnowledgeCategory struct {
+	ID          int64  `json:"id"`
+	Code        string `json:"code"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	IsBuiltin   bool   `json:"is_builtin"`
 	CreatedAt   int64  `json:"created_at"`
 	UpdatedAt   int64  `json:"updated_at"`
 }

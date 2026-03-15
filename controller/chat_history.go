@@ -16,7 +16,7 @@ func NewChatHistoryController() *ChatHistory {
 	return &ChatHistory{}
 }
 
-func (ct *ChatHistory) GetChatRoomMembers(c *gin.Context) {
+func (ct *ChatHistory) GetChatHistory(c *gin.Context) {
 	var req dto.ChatHistoryRequest
 	resp := appx.NewResponse(c)
 	robot, err := appx.GetRobot(c)

@@ -127,7 +127,7 @@ func RegisterRouter(r *gin.Engine) error {
 	{
 		chat := api.Group("/chat")
 		chat.Use(middleware.UserAuth())
-		chat.GET("/history", middleware.UserOwnerAuth(), chatHistoryCtl.GetChatRoomMembers)
+		chat.GET("/history", middleware.UserOwnerAuth(), chatHistoryCtl.GetChatHistory)
 		chat.GET("/image/download", middleware.UserOwnerAuth(), chatHistoryCtl.DownloadImage)
 		chat.GET("/voice/download", middleware.UserOwnerAuth(), chatHistoryCtl.DownloadVoice)
 		chat.GET("/file/download", middleware.UserOwnerAuth(), chatHistoryCtl.DownloadFile)
@@ -198,9 +198,13 @@ func RegisterRouter(r *gin.Engine) error {
 		knowledge := api.Group("/knowledge")
 		knowledge.Use(middleware.UserAuth())
 		knowledge.POST("/document", middleware.UserOwnerAuth(), knowledgeCtl.AddDocument)
+		knowledge.PUT("/document", middleware.UserOwnerAuth(), knowledgeCtl.UpdateDocument)
 		knowledge.DELETE("/document", middleware.UserOwnerAuth(), knowledgeCtl.DeleteDocument)
 		knowledge.GET("/documents", middleware.UserOwnerAuth(), knowledgeCtl.ListDocuments)
 		knowledge.GET("/categories", middleware.UserOwnerAuth(), knowledgeCtl.GetCategories)
+		knowledge.POST("/category", middleware.UserOwnerAuth(), knowledgeCtl.CreateKnowledgeCategory)
+		knowledge.PUT("/category", middleware.UserOwnerAuth(), knowledgeCtl.UpdateKnowledgeCategory)
+		knowledge.DELETE("/category", middleware.UserOwnerAuth(), knowledgeCtl.DeleteKnowledgeCategory)
 		knowledge.POST("/search", middleware.UserOwnerAuth(), knowledgeCtl.SearchKnowledge)
 		knowledge.POST("/reindex", middleware.UserOwnerAuth(), knowledgeCtl.ReindexAll)
 	}

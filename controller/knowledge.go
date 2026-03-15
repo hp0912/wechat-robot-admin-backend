@@ -35,6 +35,25 @@ func (k *Knowledge) AddDocument(c *gin.Context) {
 	resp.ToResponse(nil)
 }
 
+func (k *Knowledge) UpdateDocument(c *gin.Context) {
+	var req dto.UpdateKnowledgeDocumentRequest
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if err = service.NewKnowledgeService(c).UpdateDocument(robot, &req); err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
+
 func (k *Knowledge) DeleteDocument(c *gin.Context) {
 	var req dto.DeleteKnowledgeRequest
 	resp := appx.NewResponse(c)
@@ -66,7 +85,8 @@ func (k *Knowledge) ListDocuments(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	data, err := service.NewKnowledgeService(c).ListDocuments(robot, &req)
+	pager := appx.InitPager(c)
+	data, err := service.NewKnowledgeService(c).ListDocuments(robot, pager, &req)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
@@ -87,6 +107,64 @@ func (k *Knowledge) GetCategories(c *gin.Context) {
 		return
 	}
 	resp.ToResponse(data)
+}
+
+func (k *Knowledge) CreateKnowledgeCategory(c *gin.Context) {
+	var req dto.CreateKnowledgeCategoryRequest
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	data, err := service.NewKnowledgeService(c).CreateKnowledgeCategory(robot, &req)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(data)
+}
+
+func (k *Knowledge) UpdateKnowledgeCategory(c *gin.Context) {
+	var req dto.UpdateKnowledgeCategoryRequest
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if err = service.NewKnowledgeService(c).UpdateKnowledgeCategory(robot, &req); err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
+
+func (k *Knowledge) DeleteKnowledgeCategory(c *gin.Context) {
+	var req dto.DeleteKnowledgeCategoryRequest
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if err = service.NewKnowledgeService(c).DeleteKnowledgeCategory(robot, &req); err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
 }
 
 func (k *Knowledge) SearchKnowledge(c *gin.Context) {
@@ -233,7 +311,8 @@ func (k *Knowledge) ListImageDocuments(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	data, err := service.NewKnowledgeService(c).ListImageDocuments(robot, &req)
+	pager := appx.InitPager(c)
+	data, err := service.NewKnowledgeService(c).ListImageDocuments(robot, pager, &req)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
