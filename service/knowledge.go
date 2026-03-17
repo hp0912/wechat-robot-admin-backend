@@ -73,10 +73,11 @@ func (s *KnowledgeService) ListDocuments(robot *model.Robot, pager appx.Pager, r
 	return result.Data, nil
 }
 
-func (s *KnowledgeService) GetCategories(robot *model.Robot) ([]*dto.KnowledgeCategory, error) {
+func (s *KnowledgeService) GetCategories(robot *model.Robot, req *dto.ListKnowledgeCategoryRequest) ([]*dto.KnowledgeCategory, error) {
 	var result dto.Response[[]*dto.KnowledgeCategory]
 	_, err := resty.New().R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetQueryParam("type", req.Type).
 		SetResult(&result).
 		Get(robot.GetBaseURL() + "/knowledge/categories")
 	if err = result.CheckError(err); err != nil {

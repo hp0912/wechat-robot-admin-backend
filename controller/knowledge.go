@@ -95,13 +95,18 @@ func (k *Knowledge) ListDocuments(c *gin.Context) {
 }
 
 func (k *Knowledge) GetCategories(c *gin.Context) {
+	var req dto.ListKnowledgeCategoryRequest
 	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
 	robot, err := appx.GetRobot(c)
 	if err != nil {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	data, err := service.NewKnowledgeService(c).GetCategories(robot)
+	data, err := service.NewKnowledgeService(c).GetCategories(robot, &req)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
