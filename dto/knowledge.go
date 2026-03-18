@@ -81,8 +81,13 @@ type SearchImageKnowledgeByImageRequest struct {
 	Limit    int    `json:"limit"`
 }
 
+type ListKnowledgeCategoryRequest struct {
+	Type string `form:"type" binding:"omitempty,oneof=text image"`
+}
+
 type CreateKnowledgeCategoryRequest struct {
 	Code        string `json:"code" binding:"required"`
+	Type        string `json:"type" binding:"required,oneof=text image"`
 	Name        string `json:"name" binding:"required"`
 	Description string `json:"description"`
 }
