@@ -58,6 +58,32 @@ func (s *KnowledgeService) DeleteDocument(robot *model.Robot, req *dto.DeleteKno
 	return nil
 }
 
+func (s *KnowledgeService) EnableDocument(robot *model.Robot, id int64) error {
+	var result dto.Response[struct{}]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]int64{"id": id}).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/knowledge/document/enable")
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *KnowledgeService) DisableDocument(robot *model.Robot, id int64) error {
+	var result dto.Response[struct{}]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(map[string]int64{"id": id}).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/knowledge/document/disable")
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s *KnowledgeService) ListDocuments(robot *model.Robot, pager appx.Pager, req *dto.ListKnowledgeRequest) (dto.ListResponse[*dto.KnowledgeDocument], error) {
 	var result dto.Response[dto.ListResponse[*dto.KnowledgeDocument]]
 	_, err := resty.New().R().
