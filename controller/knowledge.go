@@ -73,6 +73,48 @@ func (k *Knowledge) DeleteDocument(c *gin.Context) {
 	resp.ToResponse(nil)
 }
 
+func (k *Knowledge) EnableDocument(c *gin.Context) {
+	var req struct {
+		ID int64 `json:"id" binding:"required"`
+	}
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if err = service.NewKnowledgeService(c).EnableDocument(robot, req.ID); err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
+
+func (k *Knowledge) DisableDocument(c *gin.Context) {
+	var req struct {
+		ID int64 `json:"id" binding:"required"`
+	}
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if err = service.NewKnowledgeService(c).DisableDocument(robot, req.ID); err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
+
 func (k *Knowledge) ListDocuments(c *gin.Context) {
 	var req dto.ListKnowledgeRequest
 	resp := appx.NewResponse(c)

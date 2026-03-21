@@ -200,6 +200,8 @@ func RegisterRouter(r *gin.Engine) error {
 		knowledge.POST("/document", middleware.UserOwnerAuth(), knowledgeCtl.AddDocument)
 		knowledge.PUT("/document", middleware.UserOwnerAuth(), knowledgeCtl.UpdateDocument)
 		knowledge.DELETE("/document", middleware.UserOwnerAuth(), knowledgeCtl.DeleteDocument)
+		knowledge.POST("/document/enable", middleware.UserOwnerAuth(), knowledgeCtl.EnableDocument)
+		knowledge.POST("/document/disable", middleware.UserOwnerAuth(), knowledgeCtl.DisableDocument)
 		knowledge.GET("/documents", middleware.UserOwnerAuth(), knowledgeCtl.ListDocuments)
 		knowledge.GET("/categories", middleware.UserOwnerAuth(), knowledgeCtl.GetCategories)
 		knowledge.POST("/category", middleware.UserOwnerAuth(), knowledgeCtl.CreateKnowledgeCategory)
