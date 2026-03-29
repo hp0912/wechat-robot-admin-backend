@@ -34,6 +34,9 @@ func (sv *ChatHistoryService) GetChatHistory(req dto.ChatHistoryRequest, pager a
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetQueryParam("contact_id", req.ContactID).
 		SetQueryParam("keyword", req.Keyword).
+		SetQueryParam("chat_room_member", req.ChatRoomMember).
+		SetQueryParam("time_start", strconv.FormatInt(req.TimeStart, 10)).
+		SetQueryParam("time_end", strconv.FormatInt(req.TimeEnd, 10)).
 		SetQueryParam("page_index", strconv.Itoa(pager.PageIndex)).
 		SetQueryParam("page_size", "20").
 		SetResult(&result).
