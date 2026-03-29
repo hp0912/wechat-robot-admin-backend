@@ -114,6 +114,7 @@ func (sv *RobotManageService) DockerStartWeChatClient(ctx *gin.Context, robot *m
 			fmt.Sprintf("QDRANT_API_KEY=%s", vars.QdrantSettings.ApiKey),
 			fmt.Sprintf("WORD_CLOUD_URL=%s", "http://word-cloud-server:9000/api/v1/word-cloud/gen"),
 			fmt.Sprintf("THIRD_PARTY_API_KEY=%s", vars.ThirdPartyApiKey),
+			fmt.Sprintf("SLIDER_ACCESS_KEY=%s", vars.SliderAccessKey),
 		},
 	}
 
