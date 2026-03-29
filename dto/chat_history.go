@@ -1,9 +1,12 @@
 package dto
 
 type ChatHistoryRequest struct {
-	ID        int64  `form:"id" json:"id"  binding:"required"`
-	ContactID string `form:"contact_id" json:"contact_id" binding:"required"`
-	Keyword   string `form:"keyword" json:"keyword"`
+	ID             int64  `form:"id" json:"id"  binding:"required"`
+	ContactID      string `form:"contact_id" json:"contact_id" binding:"required"`
+	Keyword        string `form:"keyword" json:"keyword"`
+	ChatRoomMember string `form:"chat_room_member" json:"chat_room_member"`
+	TimeStart      int64  `form:"time_start" json:"time_start"`
+	TimeEnd        int64  `form:"time_end" json:"time_end"`
 }
 
 // MessageType 以Go惯用形式定义了PC微信所有的官方消息类型。
