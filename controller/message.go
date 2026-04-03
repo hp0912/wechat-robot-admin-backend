@@ -239,7 +239,7 @@ func (ct *Message) SendFileMessage(c *gin.Context) {
 	defer file.Close()
 
 	if fileHeader.Size > vars.UploadFileChunkSize {
-		resp.ToErrorResponse(errors.New("单个分片大小不能超过50KB"))
+		resp.ToErrorResponse(errors.New("单个分片大小不能超过200KB"))
 		return
 	}
 
