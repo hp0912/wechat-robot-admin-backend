@@ -12,6 +12,7 @@ type OSSProvider string
 const (
 	OSSProviderAliyun       OSSProvider = "aliyun"        // 阿里云 OSS
 	OSSProviderTencentCloud OSSProvider = "tencent_cloud" // 腾讯云 COS
+	OSSProviderVolcengine   OSSProvider = "volcengine"    // 火山引擎 TOS
 	OSSProviderCloudflare   OSSProvider = "cloudflare"    // Cloudflare R2
 )
 
@@ -26,6 +27,7 @@ type OSSSettingsRequest struct {
 	OSSProvider             OSSProvider    `json:"oss_provider"`
 	AliyunOSSSettings       map[string]any `json:"aliyun_oss_settings"`
 	TencentCloudOSSSettings map[string]any `json:"tencent_cloud_oss_settings"`
+	VolcengineTOSSettings   map[string]any `json:"volcengine_tos_settings"`
 	CloudflareR2Settings    map[string]any `json:"cloudflare_r2_settings"`
 }
 
@@ -40,6 +42,7 @@ type OSSSettings struct {
 	OSSProvider             OSSProvider    `json:"oss_provider"`
 	AliyunOSSSettings       map[string]any `json:"aliyun_oss_settings"`
 	TencentCloudOSSSettings map[string]any `json:"tencent_cloud_oss_settings"`
+	VolcengineTOSSettings   map[string]any `json:"volcengine_tos_settings"`
 	CloudflareR2Settings    map[string]any `json:"cloudflare_r2_settings"`
 	CreatedAt               int64          `json:"created_at"`
 	UpdatedAt               int64          `json:"updated_at"`
