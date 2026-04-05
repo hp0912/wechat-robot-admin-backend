@@ -126,6 +126,7 @@ CREATE TABLE IF NOT EXISTS `chat_room_settings` (
   `news_type` ENUM('', 'text', 'image') DEFAULT NULL COMMENT '每日早报类型：text-文本，image-图片',
   -- 每日早安
   `morning_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用早安问候功能',
+  `knowledge_categories` JSON COMMENT '绑定的知识库分类编码列表',
   KEY `idx_chat_room_id` (`chat_room_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
