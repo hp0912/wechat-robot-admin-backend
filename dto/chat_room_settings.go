@@ -44,6 +44,7 @@ type GetChatRoomSettingsResponse struct {
 	NewsEnabled               bool           `form:"news_enabled" json:"news_enabled"`
 	NewsType                  string         `form:"news_type" json:"news_type"`
 	MorningEnabled            bool           `form:"morning_enabled" json:"morning_enabled"`
+	KnowledgeCategories       []string       `form:"knowledge_categories" json:"knowledge_categories"`
 }
 
 type SaveChatRoomSettingsRequest struct {
@@ -87,4 +88,5 @@ type SaveChatRoomSettingsRequest struct {
 	NewsEnabled               bool           `form:"news_enabled" json:"news_enabled"`
 	NewsType                  string         `form:"news_type" json:"news_type"`
 	MorningEnabled            bool           `form:"morning_enabled" json:"morning_enabled"`
+	KnowledgeCategories       []string       `form:"knowledge_categories" json:"knowledge_categories"`
 }
