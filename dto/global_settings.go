@@ -46,6 +46,7 @@ type GetGlobalSettingsResponse struct {
 	MorningCron               string         `form:"morning_cron" json:"morning_cron"`
 	FriendSyncCron            string         `form:"friend_sync_cron" json:"friend_sync_cron"`
 	MemoryEnabled             bool           `form:"memory_enabled" json:"memory_enabled"`
+	TextEmbeddingDimension    int            `form:"text_embedding_dimension" json:"text_embedding_dimension"`
 	TextEmbeddingModel        string         `form:"text_embedding_model" json:"text_embedding_model"`
 	ImageEmbeddingModel       string         `form:"image_embedding_model" json:"image_embedding_model"`
 	ImageEmbeddingBaseURL     string         `form:"image_embedding_base_url" json:"image_embedding_base_url"`
@@ -96,6 +97,7 @@ type SaveGlobalSettingsRequest struct {
 	FriendSyncCron            string         `form:"friend_sync_cron" json:"friend_sync_cron"`
 	MemoryEnabled             bool           `form:"memory_enabled" json:"memory_enabled"`
 	TextEmbeddingModel        string         `form:"text_embedding_model" json:"text_embedding_model"`
+	TextEmbeddingDimension    int            `form:"text_embedding_dimension" json:"text_embedding_dimension"`
 	ImageEmbeddingModel       string         `form:"image_embedding_model" json:"image_embedding_model"`
 	ImageEmbeddingBaseURL     string         `form:"image_embedding_base_url" json:"image_embedding_base_url"`
 	ImageEmbeddingAPIKey      string         `form:"image_embedding_api_key" json:"image_embedding_api_key"`
