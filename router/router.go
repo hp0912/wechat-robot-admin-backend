@@ -232,6 +232,12 @@ func RegisterRouter(r *gin.Engine) error {
 	}
 
 	{
+		vector := api.Group("/vector")
+		vector.Use(middleware.UserAuth())
+		vector.POST("/reindex-all", middleware.UserOwnerAuth(), knowledgeCtl.ReindexAllVectors)
+	}
+
+	{
 		moments := api.Group("/moments")
 		moments.Use(middleware.UserAuth())
 		moments.GET("/list", middleware.UserOwnerAuth(), momentsCtl.FriendCircleGetList)

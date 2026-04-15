@@ -318,3 +318,15 @@ func (s *KnowledgeService) ReindexAllImages(robot *model.Robot) (string, error) 
 	}
 	return result.Data, nil
 }
+
+func (s *KnowledgeService) ReindexAllVectors(robot *model.Robot) (string, error) {
+	var result dto.Response[string]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/vector/reindex-all")
+	if err = result.CheckError(err); err != nil {
+		return result.Data, err
+	}
+	return result.Data, nil
+}
