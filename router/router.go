@@ -160,7 +160,6 @@ func RegisterRouter(r *gin.Engine) error {
 		systemSettings.Use(middleware.UserAuth())
 		systemSettings.GET("", middleware.UserOwnerAuth(), systemSettingsCtl.GetSystemSettings)
 		systemSettings.POST("", middleware.UserOwnerAuth(), systemSettingsCtl.SaveSystemSettings)
-		systemSettings.POST("/test-notification", middleware.UserOwnerAuth(), systemSettingsCtl.TestNotification)
 	}
 
 	{
