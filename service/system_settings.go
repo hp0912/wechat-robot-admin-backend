@@ -80,12 +80,48 @@ func (s *SystemSettingService) SaveSystemSettings(req dto.SystemSettingsRequest,
 			NotificationType:           req.NotificationType,
 			PushPlusURL:                req.PushPlusURL,
 			PushPlusToken:              req.PushPlusToken,
+			WechatWorkCorpID:           req.WechatWorkCorpID,
+			WechatWorkAgentID:          req.WechatWorkAgentID,
+			WechatWorkSecret:           req.WechatWorkSecret,
+			WechatWorkProxyURL:         req.WechatWorkProxyURL,
+			WechatWorkToUser:           req.WechatWorkToUser,
 			AutoVerifyUser:             req.AutoVerifyUser,
 			VerifyUserDelay:            req.VerifyUserDelay,
 			AutoChatroomInvite:         req.AutoChatroomInvite,
 		}).
 		SetResult(&result).
 		Post(robot.GetBaseURL() + "/system-settings")
+	if err = result.CheckError(err); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *SystemSettingService) TestNotification(req dto.SystemSettingsRequest, user *model.User, robot *model.Robot) error {
+	_ = user
+	var result dto.Response[any]
+	_, err := resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(dto.SystemSettings{
+			ID:                         req.SystemSettingsID,
+			WebhookURL:                 req.WebhookURL,
+			WebhookHeaders:             req.WebhookHeaders,
+			APITokenEnabled:            req.APITokenEnabled,
+			OfflineNotificationEnabled: req.OfflineNotificationEnabled,
+			NotificationType:           req.NotificationType,
+			PushPlusURL:                req.PushPlusURL,
+			PushPlusToken:              req.PushPlusToken,
+			WechatWorkCorpID:           req.WechatWorkCorpID,
+			WechatWorkAgentID:          req.WechatWorkAgentID,
+			WechatWorkSecret:           req.WechatWorkSecret,
+			WechatWorkProxyURL:         req.WechatWorkProxyURL,
+			WechatWorkToUser:           req.WechatWorkToUser,
+			AutoVerifyUser:             req.AutoVerifyUser,
+			VerifyUserDelay:            req.VerifyUserDelay,
+			AutoChatroomInvite:         req.AutoChatroomInvite,
+		}).
+		SetResult(&result).
+		Post(robot.GetBaseURL() + "/system-settings/test-notification")
 	if err = result.CheckError(err); err != nil {
 		return err
 	}

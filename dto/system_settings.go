@@ -10,6 +10,11 @@ type SystemSettingsRequest struct {
 	NotificationType           string         `json:"notification_type"`
 	PushPlusURL                *string        `json:"push_plus_url"`
 	PushPlusToken              *string        `json:"push_plus_token"`
+	WechatWorkCorpID           *string        `json:"wechat_work_corp_id"`
+	WechatWorkAgentID          *string        `json:"wechat_work_agent_id"`
+	WechatWorkSecret           *string        `json:"wechat_work_secret"`
+	WechatWorkProxyURL         *string        `json:"wechat_work_proxy_url"`
+	WechatWorkToUser           *string        `json:"wechat_work_to_user"`
 	AutoVerifyUser             *bool          `json:"auto_verify_user"`
 	VerifyUserDelay            int            `json:"verify_user_delay"`
 	AutoChatroomInvite         *bool          `json:"auto_chatroom_invite"`
@@ -25,6 +30,11 @@ type SystemSettings struct {
 	NotificationType           string         `json:"notification_type"`
 	PushPlusURL                *string        `json:"push_plus_url"`
 	PushPlusToken              *string        `json:"push_plus_token"`
+	WechatWorkCorpID           *string        `json:"wechat_work_corp_id"`
+	WechatWorkAgentID          *string        `json:"wechat_work_agent_id"`
+	WechatWorkSecret           *string        `json:"wechat_work_secret"`
+	WechatWorkProxyURL         *string        `json:"wechat_work_proxy_url"`
+	WechatWorkToUser           *string        `json:"wechat_work_to_user"`
 	AutoVerifyUser             *bool          `json:"auto_verify_user"`
 	VerifyUserDelay            int            `json:"verify_user_delay"`
 	AutoChatroomInvite         *bool          `json:"auto_chatroom_invite"`

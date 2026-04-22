@@ -59,3 +59,27 @@ func (ct *SystemSettings) SaveSystemSettings(c *gin.Context) {
 	}
 	resp.ToResponse(nil)
 }
+func (ct *SystemSettings) TestNotification(c *gin.Context) {
+	var req dto.SystemSettingsRequest
+	resp := appx.NewResponse(c)
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	user, err := appx.GetLoginUser(c)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	err = service.NewSystemSettingService(c).TestNotification(req, user, robot)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
