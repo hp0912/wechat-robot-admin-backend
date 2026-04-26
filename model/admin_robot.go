@@ -45,6 +45,8 @@ type Robot struct {
 	Nickname      string         `gorm:"column:nickname;type:varchar(255)" json:"nickname"`                                                // 当前机器人登陆的微信昵称
 	Avatar        string         `gorm:"column:avatar;type:varchar(255)" json:"avatar"`                                                    // 当前机器人登陆的微信头像
 	Status        RobotStatus    `gorm:"column:status;type:enum('online','offline','error');not null;default:'offline'" json:"status"`     // 当前机器人登陆的状态
+	DBUsername    string         `gorm:"column:db_username;type:varchar(64);not null;default:'root'" json:"db_username"`                   // 当前机器人登陆的数据库用户名
+	DBPassword    string         `gorm:"column:db_password;type:varchar(255);not null;default:''" json:"db_password"`                      // 当前机器人登陆的数据库密码
 	RedisDB       uint64         `gorm:"column:redis_db;type:bigint unsigned;not null;default:1;uniqueIndex:idx_redis_db" json:"redis_db"` // 当前机器人登陆的Redis数据库
 	ErrorMessage  string         `gorm:"column:error_message;type:text" json:"error_message"`
 	Profile       datatypes.JSON `gorm:"column:profile;type:json" json:"profile"` // 当前机器人登陆的微信个人资料

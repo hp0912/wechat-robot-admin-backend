@@ -8,13 +8,6 @@ import (
 	"io"
 	"log"
 	"time"
-	"wechat-robot-admin-backend/dto"
-	"wechat-robot-admin-backend/model"
-	"wechat-robot-admin-backend/pkg/appx"
-	"wechat-robot-admin-backend/repository"
-	"wechat-robot-admin-backend/template"
-	"wechat-robot-admin-backend/utils"
-	"wechat-robot-admin-backend/vars"
 
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
@@ -26,10 +19,57 @@ import (
 	"github.com/go-resty/resty/v2"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+
+	"wechat-robot-admin-backend/dto"
+	"wechat-robot-admin-backend/model"
+	"wechat-robot-admin-backend/pkg/appx"
+	"wechat-robot-admin-backend/repository"
+	"wechat-robot-admin-backend/template"
+	"wechat-robot-admin-backend/utils"
+	"wechat-robot-admin-backend/vars"
 )
 
 type RobotManageService struct {
 	ctx context.Context
+}
+
+func (sv *RobotManageService) createRobotDatabaseUser(robot *model.Robot) error {
+	robot.DBUsername = fmt.Sprintf("robot_%s", robot.RobotCode)
+	robot.DBPassword = utils.GetRandomString(32)
+
+	dropUserSQL := fmt.Sprintf("DROP USER IF EXISTS %s@'%%';", utils.MySQLStringLiteral(robot.DBUsername))
+	if err := vars.DB.Exec(dropUserSQL).Error; err != nil {
+		return err
+	}
+
+	createUserSQL := fmt.Sprintf(
+		"CREATE USER %s@'%%' IDENTIFIED BY %s;",
+		utils.MySQLStringLiteral(robot.DBUsername),
+		utils.MySQLStringLiteral(robot.DBPassword),
+	)
+	if err := vars.DB.Exec(createUserSQL).Error; err != nil {
+		return err
+	}
+
+	grantSQL := fmt.Sprintf(
+		"GRANT ALL PRIVILEGES ON `%s`.* TO %s@'%%';",
+		robot.RobotCode,
+		utils.MySQLStringLiteral(robot.DBUsername),
+	)
+	if err := vars.DB.Exec(grantSQL).Error; err != nil {
+		return err
+	}
+
+	return repository.NewRobotRepo(sv.ctx, vars.DB).Update(robot)
+}
+
+func (sv *RobotManageService) dropRobotDatabaseUser(robot *model.Robot) error {
+	if robot.DBUsername == "" {
+		return nil
+	}
+
+	dropUserSQL := fmt.Sprintf("DROP USER IF EXISTS %s@'%%';", utils.MySQLStringLiteral(robot.DBUsername))
+	return vars.DB.Exec(dropUserSQL).Error
 }
 
 func NewRobotManageService(ctx context.Context) *RobotManageService {
@@ -73,6 +113,15 @@ func (sv *RobotManageService) getDockerClient() (*client.Client, error) {
 }
 
 func (sv *RobotManageService) DockerStartWeChatClient(ctx *gin.Context, robot *model.Robot) error {
+	mysqlUser := vars.MysqlSettings.User
+	if robot.DBUsername != "" {
+		mysqlUser = robot.DBUsername
+	}
+	mysqlPassword := vars.MysqlSettings.Password
+	if robot.DBPassword != "" {
+		mysqlPassword = robot.DBPassword
+	}
+
 	// 创建Docker客户端
 	dockerClient, err := sv.getDockerClient()
 	if err != nil {
@@ -100,8 +149,8 @@ func (sv *RobotManageService) DockerStartWeChatClient(ctx *gin.Context, robot *m
 			fmt.Sprintf("MYSQL_DRIVER=%s", vars.MysqlSettings.Driver),
 			fmt.Sprintf("MYSQL_HOST=%s", vars.MysqlSettings.Host),
 			fmt.Sprintf("MYSQL_PORT=%s", vars.MysqlSettings.Port),
-			fmt.Sprintf("MYSQL_USER=%s", vars.MysqlSettings.User),
-			fmt.Sprintf("MYSQL_PASSWORD=%s", vars.MysqlSettings.Password),
+			fmt.Sprintf("MYSQL_USER=%s", mysqlUser),
+			fmt.Sprintf("MYSQL_PASSWORD=%s", mysqlPassword),
 			fmt.Sprintf("MYSQL_ADMIN_DB=%s", vars.MysqlSettings.Db),
 			fmt.Sprintf("MYSQL_DB=%s", robot.RobotCode),
 			fmt.Sprintf("MYSQL_SCHEMA=%s", vars.MysqlSettings.Schema),
@@ -301,13 +350,15 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 		DeviceName:   utils.CreateDeviceName(),
 		WeChatID:     "", // 登陆后才会有
 		Nickname:     "",
+		DBUsername:   "",
+		DBPassword:   "",
+		RedisDB:      redisDb + 1,
 		Avatar:       vars.RobotDefaultAvatar,
 		Status:       model.RobotStatusOffline,
 		ErrorMessage: "",
 		LastLoginAt:  0,
 		CreatedAt:    time.Now().Unix(),
 		UpdatedAt:    time.Now().Unix(),
-		RedisDB:      redisDb + 1,
 	}
 	err = respo.Create(robot)
 	if err != nil {
@@ -315,6 +366,11 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 	}
 	// 创建机器人实例数据库
 	err = vars.DB.Exec(fmt.Sprintf("CREATE DATABASE IF NOT EXISTS `%s` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;", robot.RobotCode)).Error
+	if err != nil {
+		return err
+	}
+	// 创建只能访问该数据库的数据库用户，并授权
+	err = sv.createRobotDatabaseUser(robot)
 	if err != nil {
 		return err
 	}
@@ -481,6 +537,11 @@ func (sv *RobotManageService) RobotRemove(ctx *gin.Context, robotID int64) error
 
 	// 删除机器人实例数据
 	err = respo.Delete(robotID)
+	if err != nil {
+		return err
+	}
+
+	err = sv.dropRobotDatabaseUser(robot)
 	if err != nil {
 		return err
 	}
