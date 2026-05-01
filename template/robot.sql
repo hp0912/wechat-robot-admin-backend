@@ -15,7 +15,6 @@ CREATE TABLE IF NOT EXISTS `global_settings` (
   -- 文本转语音AI设置
   `tts_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI文本转语音功能',
   `tts_settings` JSON COMMENT '文本转语音AI配置项',
-  `ltts_settings` JSON COMMENT '长文本转语音AI配置项',
   -- 拍一拍
   `pat_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI拍一拍功能',
   `pat_type` ENUM('text', 'voice') NOT NULL DEFAULT 'text' COMMENT '拍一拍方式：text-文本，voice-语音',
@@ -69,7 +68,6 @@ CREATE TABLE IF NOT EXISTS `friend_settings` (
    -- 文本转语音AI设置
   `tts_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI文本转语音功能',
   `tts_settings` JSON COMMENT '文本转语音AI配置项',
-  `ltts_settings` JSON COMMENT '长文本转语音AI配置项',
   KEY `idx_wechat_id` (`wechat_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -91,7 +89,6 @@ CREATE TABLE IF NOT EXISTS `chat_room_settings` (
    -- 文本转语音AI设置
   `tts_enabled` BOOLEAN DEFAULT FALSE COMMENT '是否启用AI文本转语音功能',
   `tts_settings` JSON COMMENT '文本转语音AI配置项',
-  `ltts_settings` JSON COMMENT '长文本转语音AI配置项',
   -- 短视频解析
   `short_video_parsing_enabled` BOOLEAN DEFAULT TRUE COMMENT '是否启用短视频解析功能',
   -- 微信红包通知
@@ -232,7 +229,7 @@ CREATE TABLE IF NOT EXISTS `ai_task` (
   `contact_id` VARCHAR(64) NOT NULL COMMENT '联系人ID',
   `message_id` BIGINT NOT NULL COMMENT '消息ID，关联messages表的msg_id',
   `ai_provider_task_id` VARCHAR(64) DEFAULT NULL COMMENT 'AI服务商任务ID',
-  `ai_task_type` ENUM('tts', 'ltts') NOT NULL COMMENT 'ltts-长文本转语音',
+  `ai_task_type` ENUM('tts') NOT NULL COMMENT 'tts-文本转语音',
   `ai_task_status` ENUM('pending', 'processing', 'completed', 'failed') NOT NULL COMMENT '任务状态：pending-待处理，processing-处理中，completed-已完成，failed-已失败',
   `extra` JSON COMMENT '额外信息',
   `created_at` BIGINT NOT NULL COMMENT '创建时间',
