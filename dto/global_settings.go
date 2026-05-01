@@ -17,8 +17,8 @@ type GetGlobalSettingsResponse struct {
 	ImageAIEnabled            bool           `form:"image_ai_enabled" json:"image_ai_enabled"`
 	ImageAISettings           map[string]any `form:"image_ai_settings" json:"image_ai_settings"`
 	TTSEnabled                bool           `form:"tts_enabled" json:"tts_enabled"`
+	TTSModel                  string         `form:"tts_model" json:"tts_model"`
 	TTSSettings               map[string]any `form:"tts_settings" json:"tts_settings"`
-	LTTSSettings              map[string]any `form:"ltts_settings" json:"ltts_settings"`
 	WelcomeEnabled            bool           `form:"welcome_enabled" json:"welcome_enabled"`
 	WelcomeType               string         `form:"welcome_type" json:"welcome_type"`
 	WelcomeText               string         `form:"welcome_text" json:"welcome_text"`
@@ -67,8 +67,8 @@ type SaveGlobalSettingsRequest struct {
 	ImageAIEnabled            bool           `form:"image_ai_enabled" json:"image_ai_enabled"`
 	ImageAISettings           map[string]any `form:"image_ai_settings" json:"image_ai_settings"`
 	TTSEnabled                bool           `form:"tts_enabled" json:"tts_enabled"`
+	TTSModel                  string         `form:"tts_model" json:"tts_model"`
 	TTSSettings               map[string]any `form:"tts_settings" json:"tts_settings"`
-	LTTSSettings              map[string]any `form:"ltts_settings" json:"ltts_settings"`
 	WelcomeEnabled            bool           `form:"welcome_enabled" json:"welcome_enabled"`
 	WelcomeType               string         `form:"welcome_type" json:"welcome_type"`
 	WelcomeText               string         `form:"welcome_text" json:"welcome_text"`
