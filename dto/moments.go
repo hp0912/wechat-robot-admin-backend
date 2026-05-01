@@ -372,4 +372,5 @@ type MomentSettings struct {
 	CommentModel        string `json:"comment_model"`
 	CommentPrompt       string `json:"comment_prompt"`
 	MaxCompletionTokens int    `json:"max_completion_tokens"`
+	SyncInterval        int    `json:"sync_interval" binding:"min=10,max=86400"`
 }
