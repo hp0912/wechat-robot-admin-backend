@@ -1,4 +1,9 @@
-FROM golang:1.25.8 AS builder
+# syntax=docker/dockerfile:1.7
+
+FROM --platform=$BUILDPLATFORM golang:1.25.8 AS builder
+
+ARG TARGETOS
+ARG TARGETARCH
 
 ENV GO111MODULE=on \
   CGO_ENABLED=0 \
@@ -6,10 +11,14 @@ ENV GO111MODULE=on \
   GOPROXY=https://goproxy.cn,direct
 
 WORKDIR /app
-ADD go.mod go.sum ./
-RUN go mod download
+COPY go.mod go.sum ./
+RUN --mount=type=cache,target=/go/pkg/mod \
+  go mod download
 COPY . .
-RUN go build -ldflags="-s -w" -o wechat-robot-admin-backend
+RUN --mount=type=cache,target=/go/pkg/mod \
+  --mount=type=cache,target=/root/.cache/go-build \
+  GOOS=${TARGETOS} GOARCH=${TARGETARCH} \
+  go build -trimpath -ldflags="-s -w" -o wechat-robot-admin-backend
 
 
 FROM alpine:latest
@@ -26,4 +35,5 @@ COPY --from=builder /app/wechat-robot-admin-backend ./
 
 EXPOSE 9000
 
+ENTRYPOINT []
 CMD ["/app/wechat-robot-admin-backend"]

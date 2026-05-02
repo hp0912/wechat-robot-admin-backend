@@ -39,5 +39,5 @@ jobs:
             ${{ secrets.ACR_REGISTRY }}/houhou/wechat-robot-admin-backend:${{ github.event.release.tag_name }}
             ${{ secrets.ACR_REGISTRY }}/houhou/wechat-robot-admin-backend:latest
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=wechat-robot-admin-backend
+          cache-to: type=gha,mode=max,scope=wechat-robot-admin-backend
