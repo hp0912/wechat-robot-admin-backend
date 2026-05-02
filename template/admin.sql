@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS `robot` (
   `owner` VARCHAR(64) NOT NULL,
   `device_id` VARCHAR(255) DEFAULT NULL,
   `device_name` VARCHAR(255) DEFAULT NULL,
+  `proxy` JSON DEFAULT NULL COMMENT '代理配置',
   `wechat_id` VARCHAR(64) DEFAULT NULL,
   `alias` VARCHAR(64) DEFAULT NULL,
   `bind_mobile` VARCHAR(15) DEFAULT NULL,

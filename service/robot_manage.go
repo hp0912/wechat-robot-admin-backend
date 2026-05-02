@@ -17,6 +17,7 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/go-resty/resty/v2"
+	"gorm.io/datatypes"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 
@@ -70,6 +71,20 @@ func (sv *RobotManageService) dropRobotDatabaseUser(robot *model.Robot) error {
 
 	dropUserSQL := fmt.Sprintf("DROP USER IF EXISTS %s@'%%';", utils.MySQLStringLiteral(robot.DBUsername))
 	return vars.DB.Exec(dropUserSQL).Error
+}
+
+func buildProxyJSON(p *dto.ProxyInput) (datatypes.JSON, error) {
+	proxy := model.Proxy{}
+	if p != nil {
+		proxy.ProxyIp = p.ProxyIp
+		proxy.ProxyUser = p.ProxyUser
+		proxy.ProxyPassword = p.ProxyPassword
+	}
+	data, err := json.Marshal(proxy)
+	if err != nil {
+		return nil, err
+	}
+	return datatypes.JSON(data), nil
 }
 
 func NewRobotManageService(ctx context.Context) *RobotManageService {
@@ -344,9 +359,15 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 		return errors.New("一个账号最多创建2个机器人")
 	}
 
+	proxyData, err := buildProxyJSON(req.Proxy)
+	if err != nil {
+		return err
+	}
+
 	robot := &model.Robot{
 		RobotCode:    fmt.Sprintf("x%s", utils.GetRandomString(15)),
 		RobotName:    req.RobotName,
+		Proxy:        proxyData,
 		Owner:        wechatId.(string),
 		DeviceID:     utils.CreateDeviceID(""),
 		DeviceName:   utils.CreateDeviceName(),
@@ -423,6 +444,44 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 		return err
 	}
 
+	return nil
+}
+
+// RobotUpdate 更新机器人名称和代理配置
+func (sv *RobotManageService) RobotUpdate(req dto.RobotUpdateRequest, robot *model.Robot) error {
+	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
+	robot, err := respo.GetByID(robot.ID)
+	if err != nil {
+		return err
+	}
+	if robot == nil {
+		return errors.New("机器人不存在")
+	}
+	proxyData, err := buildProxyJSON(req.Proxy)
+	if err != nil {
+		return err
+	}
+	err = respo.UpdateNameAndProxy(robot.ID, req.RobotName, proxyData)
+	if err != nil {
+		return err
+	}
+	robot, err = respo.GetByID(robot.ID)
+	if err != nil {
+		return err
+	}
+	proxy := robot.GetProxy()
+	if proxy == nil {
+		proxy = &model.Proxy{}
+	}
+	var setProxyResp dto.Response[struct{}]
+	_, err = resty.New().R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(proxy).
+		SetResult(&setProxyResp).
+		Post(robot.GetBaseURL() + "/login/set-proxy")
+	if err = setProxyResp.CheckError(err); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -626,7 +685,7 @@ func (sv *RobotManageService) RobotDockerImagePull(ctx *gin.Context, progressCha
 func (sv *RobotManageService) parseDockerPullProgress(reader io.ReadCloser, image string, progressChan chan<- dto.PullProgress) error {
 	decoder := json.NewDecoder(reader)
 	for {
-		var progress map[string]interface{}
+		var progress map[string]any
 		if err := decoder.Decode(&progress); err != nil {
 			if err == io.EOF {
 				break
@@ -634,7 +693,7 @@ func (sv *RobotManageService) parseDockerPullProgress(reader io.ReadCloser, imag
 			return err
 		}
 		status, _ := progress["status"].(string)
-		progressDetail, _ := progress["progressDetail"].(map[string]interface{})
+		progressDetail, _ := progress["progressDetail"].(map[string]any)
 		var progressStr string
 		if progressDetail != nil {
 			current, _ := progressDetail["current"].(float64)

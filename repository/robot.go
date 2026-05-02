@@ -2,10 +2,12 @@ package repository
 
 import (
 	"context"
+	"time"
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/model"
 	"wechat-robot-admin-backend/pkg/appx"
 
+	"gorm.io/datatypes"
 	"gorm.io/gorm"
 )
 
@@ -83,6 +85,14 @@ func (r *Robot) Create(data *model.Robot) error {
 
 func (r *Robot) Update(data *model.Robot) error {
 	return r.DB.WithContext(r.Ctx).Where("id = ?", data.ID).Updates(data).Error
+}
+
+func (r *Robot) UpdateNameAndProxy(id int64, name string, proxy datatypes.JSON) error {
+	return r.DB.WithContext(r.Ctx).Model(&model.Robot{}).Where("id = ?", id).Updates(map[string]any{
+		"robot_name": name,
+		"proxy":      proxy,
+		"updated_at": time.Now().Unix(),
+	}).Error
 }
 
 func (r *Robot) Delete(id int64) error {

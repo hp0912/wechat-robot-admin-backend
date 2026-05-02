@@ -5,13 +5,14 @@ import (
 	"io"
 	"strings"
 	"time"
+
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-gonic/gin"
+
 	"wechat-robot-admin-backend/dto"
 	"wechat-robot-admin-backend/pkg/appx"
 	"wechat-robot-admin-backend/service"
 	"wechat-robot-admin-backend/vars"
-
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-gonic/gin"
 )
 
 type RobotManage struct {
@@ -19,6 +20,18 @@ type RobotManage struct {
 
 func NewRobotManageController() *RobotManage {
 	return &RobotManage{}
+}
+
+func (ct *RobotManage) validateProxy(p *dto.ProxyInput) error {
+	if p == nil {
+		return nil
+	}
+	allEmpty := p.ProxyIp == "" && p.ProxyUser == "" && p.ProxyPassword == ""
+	allFilled := p.ProxyIp != "" && p.ProxyUser != "" && p.ProxyPassword != ""
+	if !allEmpty && !allFilled {
+		return errors.New("代理配置要么全部为空，要么全部填写")
+	}
+	return nil
 }
 
 func (ct *RobotManage) RobotList(c *gin.Context) {
@@ -58,7 +71,43 @@ func (ct *RobotManage) RobotCreate(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("机器人名称长度不能超过255个字符"))
 		return
 	}
+	if err := ct.validateProxy(req.Proxy); err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
 	err := service.NewRobotManageService(c).RobotCreate(c, req)
+	if err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	resp.ToResponse(nil)
+}
+
+func (ct *RobotManage) RobotUpdate(c *gin.Context) {
+	var req dto.RobotUpdateRequest
+	resp := appx.NewResponse(c)
+	if ok, err := appx.BindAndValid(c, &req); !ok || err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	robot, err := appx.GetRobot(c)
+	if err != nil {
+		resp.ToErrorResponse(errors.New("参数错误"))
+		return
+	}
+	if strings.TrimSpace(req.RobotName) == "" {
+		resp.ToErrorResponse(errors.New("机器人名称不能为空"))
+		return
+	}
+	if len(req.RobotName) > 255 {
+		resp.ToErrorResponse(errors.New("机器人名称长度不能超过255个字符"))
+		return
+	}
+	if err := ct.validateProxy(req.Proxy); err != nil {
+		resp.ToErrorResponse(err)
+		return
+	}
+	err = service.NewRobotManageService(c).RobotUpdate(req, robot)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
