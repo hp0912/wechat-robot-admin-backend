@@ -6,8 +6,20 @@ type RobotListRequest struct {
 	Keyword string `form:"keyword" json:"keyword"`
 }
 
+type ProxyInput struct {
+	ProxyIp       string `form:"ProxyIp" json:"ProxyIp"`
+	ProxyUser     string `form:"ProxyUser" json:"ProxyUser"`
+	ProxyPassword string `form:"ProxyPassword" json:"ProxyPassword"`
+}
+
 type RobotCreateRequest struct {
-	RobotName string `form:"robot_name" json:"robot_name" binding:"required"`
+	RobotName string      `form:"robot_name" json:"robot_name" binding:"required"`
+	Proxy     *ProxyInput `form:"proxy" json:"proxy"`
+}
+
+type RobotUpdateRequest struct {
+	RobotName string      `form:"robot_name" json:"robot_name" binding:"required"`
+	Proxy     *ProxyInput `form:"proxy" json:"proxy"`
 }
 
 type RobotCommonRequest struct {
