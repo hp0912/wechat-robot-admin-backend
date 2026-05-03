@@ -41,6 +41,7 @@ type GetChatRoomSettingsResponse struct {
 	ChatRoomRankingEnabled    bool           `form:"chat_room_ranking_enabled" json:"chat_room_ranking_enabled"`
 	ChatRoomSummaryEnabled    bool           `form:"chat_room_summary_enabled" json:"chat_room_summary_enabled"`
 	ChatRoomSummaryModel      string         `form:"chat_room_summary_model" json:"chat_room_summary_model"`
+	ChatRoomSummaryMode       string         `form:"chat_room_summary_mode" json:"chat_room_summary_mode"`
 	NewsEnabled               bool           `form:"news_enabled" json:"news_enabled"`
 	NewsType                  string         `form:"news_type" json:"news_type"`
 	MorningEnabled            bool           `form:"morning_enabled" json:"morning_enabled"`
@@ -86,6 +87,7 @@ type SaveChatRoomSettingsRequest struct {
 	ChatRoomRankingEnabled    bool           `form:"chat_room_ranking_enabled" json:"chat_room_ranking_enabled"`
 	ChatRoomSummaryEnabled    bool           `form:"chat_room_summary_enabled" json:"chat_room_summary_enabled"`
 	ChatRoomSummaryModel      string         `form:"chat_room_summary_model" json:"chat_room_summary_model"`
+	ChatRoomSummaryMode       string         `form:"chat_room_summary_mode" json:"chat_room_summary_mode"`
 	NewsEnabled               bool           `form:"news_enabled" json:"news_enabled"`
 	NewsType                  string         `form:"news_type" json:"news_type"`
 	MorningEnabled            bool           `form:"morning_enabled" json:"morning_enabled"`
