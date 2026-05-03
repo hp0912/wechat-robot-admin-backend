@@ -38,6 +38,7 @@ type GetGlobalSettingsResponse struct {
 	ChatRoomRankingMonthCron  string         `form:"chat_room_ranking_month_cron" json:"chat_room_ranking_month_cron"`
 	ChatRoomSummaryEnabled    bool           `form:"chat_room_summary_enabled" json:"chat_room_summary_enabled"`
 	ChatRoomSummaryModel      string         `form:"chat_room_summary_model" json:"chat_room_summary_model"`
+	ChatRoomSummaryMode       string         `form:"chat_room_summary_mode" json:"chat_room_summary_mode"`
 	ChatRoomSummaryCron       string         `form:"chat_room_summary_cron" json:"chat_room_summary_cron"`
 	NewsEnabled               bool           `form:"news_enabled" json:"news_enabled"`
 	NewsType                  string         `form:"news_type" json:"news_type"`
@@ -88,6 +89,7 @@ type SaveGlobalSettingsRequest struct {
 	ChatRoomRankingMonthCron  string         `form:"chat_room_ranking_month_cron" json:"chat_room_ranking_month_cron"`
 	ChatRoomSummaryEnabled    bool           `form:"chat_room_summary_enabled" json:"chat_room_summary_enabled"`
 	ChatRoomSummaryModel      string         `form:"chat_room_summary_model" json:"chat_room_summary_model"`
+	ChatRoomSummaryMode       string         `form:"chat_room_summary_mode" json:"chat_room_summary_mode"`
 	ChatRoomSummaryCron       string         `form:"chat_room_summary_cron" json:"chat_room_summary_cron"`
 	NewsEnabled               bool           `form:"news_enabled" json:"news_enabled"`
 	NewsType                  string         `form:"news_type" json:"news_type"`
