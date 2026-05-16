@@ -328,6 +328,7 @@ func RegisterRouter(r *gin.Engine) error {
 		pprof := api.Group("/pprof")
 		pprof.Use(middleware.UserAuth())
 		pprof.GET("/*pprof_path", middleware.UserOwnerAuth(), pprofProxyCtl.ProxyPprof)
+		pprof.POST("/*pprof_path", middleware.UserOwnerAuth(), pprofProxyCtl.ProxyPprof)
 	}
 
 	return nil

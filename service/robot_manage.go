@@ -153,6 +153,7 @@ func (sv *RobotManageService) DockerStartWeChatClient(ctx *gin.Context, robot *m
 
 	// 客户端容器配置
 	clientContainerName := fmt.Sprintf("client_%s", robot.RobotCode)
+	serverContainerName := fmt.Sprintf("server_%s", robot.RobotCode)
 	clientConfig := &container.Config{
 		Image: clientImage,
 		Env: []string{
@@ -179,6 +180,7 @@ func (sv *RobotManageService) DockerStartWeChatClient(ctx *gin.Context, robot *m
 			fmt.Sprintf("QDRANT_PORT=%d", vars.QdrantSettings.Port),
 			fmt.Sprintf("QDRANT_API_KEY=%s", vars.QdrantSettings.ApiKey),
 			fmt.Sprintf("WORD_CLOUD_URL=%s", "http://word-cloud-server:9000/api/v1/word-cloud/gen"),
+			fmt.Sprintf("PPROF_PROXY_URL=http://%s:%d", serverContainerName, 9010),
 			fmt.Sprintf("THIRD_PARTY_API_KEY=%s", vars.ThirdPartyApiKey),
 			fmt.Sprintf("SLIDER_ACCESS_KEY=%s", vars.SliderAccessKey),
 		},
@@ -230,7 +232,7 @@ func (sv *RobotManageService) DockerStartWeChatClient(ctx *gin.Context, robot *m
 	return nil
 }
 
-func (sv *RobotManageService) DockerStartWeChatServer(ctx *gin.Context, robot *model.Robot, pprofEnable bool) error {
+func (sv *RobotManageService) DockerStartWeChatServer(ctx *gin.Context, robot *model.Robot) error {
 	// 创建Docker客户端
 	dockerClient, err := sv.getDockerClient()
 	if err != nil {
@@ -260,12 +262,6 @@ func (sv *RobotManageService) DockerStartWeChatServer(ctx *gin.Context, robot *m
 			fmt.Sprintf("UUID_URL=%s", vars.UUIDURL),
 		},
 	}
-	if pprofEnable {
-		serverConfig.Env = append(serverConfig.Env, "ENABLE_PPROF=true")
-		serverConfig.Env = append(serverConfig.Env, "PPROF_ADDR=0.0.0.0")
-		serverConfig.Env = append(serverConfig.Env, "PPROF_PORT=9010")
-	}
-
 	serverHostConfig := &container.HostConfig{
 		RestartPolicy: container.RestartPolicy{
 			Name: "always",
@@ -439,7 +435,7 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 		return err
 	}
 
-	err = sv.DockerStartWeChatServer(ctx, robot, false)
+	err = sv.DockerStartWeChatServer(ctx, robot)
 	if err != nil {
 		return err
 	}
@@ -571,7 +567,7 @@ func (sv *RobotManageService) RobotStartWeChatServer(ctx *gin.Context, req dto.R
 	if robot == nil {
 		return errors.New("机器人不存在")
 	}
-	err = sv.DockerStartWeChatServer(ctx, robot, req.PprofEnable)
+	err = sv.DockerStartWeChatServer(ctx, robot)
 	if err != nil {
 		return err
 	}

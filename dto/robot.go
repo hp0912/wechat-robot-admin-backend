@@ -27,8 +27,7 @@ type RobotCommonRequest struct {
 }
 
 type RobotStartServerRequest struct {
-	ID          int64 `form:"id" json:"id" binding:"required"`
-	PprofEnable bool  `form:"pprof_enable" json:"pprof_enable"`
+	ID int64 `form:"id" json:"id" binding:"required"`
 }
 
 type RobotLoginCheckRequest struct {
