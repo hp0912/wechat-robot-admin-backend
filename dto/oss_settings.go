@@ -22,6 +22,8 @@ type OSSSettingsRequest struct {
 	AutoUploadImageMode     AutoUploadMode `json:"auto_upload_image_mode"`
 	AutoUploadVideo         *bool          `json:"auto_upload_video"`
 	AutoUploadVideoMode     AutoUploadMode `json:"auto_upload_video_mode"`
+	AutoUploadVoice         *bool          `json:"auto_upload_voice"`
+	AutoUploadVoiceMode     AutoUploadMode `json:"auto_upload_voice_mode"`
 	AutoUploadFile          *bool          `json:"auto_upload_file"`
 	AutoUploadFileMode      AutoUploadMode `json:"auto_upload_file_mode"`
 	OSSProvider             OSSProvider    `json:"oss_provider"`
@@ -37,6 +39,8 @@ type OSSSettings struct {
 	AutoUploadImageMode     AutoUploadMode `json:"auto_upload_image_mode"`
 	AutoUploadVideo         *bool          `json:"auto_upload_video"`
 	AutoUploadVideoMode     AutoUploadMode `json:"auto_upload_video_mode"`
+	AutoUploadVoice         *bool          `json:"auto_upload_voice"`
+	AutoUploadVoiceMode     AutoUploadMode `json:"auto_upload_voice_mode"`
 	AutoUploadFile          *bool          `json:"auto_upload_file"`
 	AutoUploadFileMode      AutoUploadMode `json:"auto_upload_file_mode"`
 	OSSProvider             OSSProvider    `json:"oss_provider"`
