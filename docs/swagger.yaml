@@ -1,0 +1,7511 @@
+basePath: /api/v1
+definitions:
+  controller.SwaggerIDRequest:
+    properties:
+      id:
+        type: integer
+    required:
+    - id
+    type: object
+  controller.SwaggerImportRobotLoginDataRequest:
+    properties:
+      data:
+        type: string
+    required:
+    - data
+    type: object
+  controller.SwaggerLoginRequest:
+    properties:
+      token:
+        type: string
+    required:
+    - token
+    type: object
+  controller.SwaggerRobotLoginRequest:
+    properties:
+      is_pretender:
+        type: boolean
+      login_type:
+        type: string
+    required:
+    - is_pretender
+    - login_type
+    type: object
+  controller.SwaggerSuccess:
+    properties:
+      success:
+        type: boolean
+    type: object
+  controller.WeChatRequest:
+    properties:
+      code:
+        type: string
+    required:
+    - code
+    type: object
+  dto.AcctSectResp:
+    properties:
+      alias:
+        description: 自定义的微信号
+        type: string
+      bindMobile:
+        description: 绑定的手机号
+        type: string
+      fsurl:
+        description: 可能是头像地址
+        type: string
+      nickName:
+        description: 昵称
+        type: string
+      userName:
+        description: 原始微信Id
+        type: string
+    type: object
+  dto.ActionInfo:
+    properties:
+      AppMsg:
+        $ref: '#/definitions/dto.AppMsg'
+    type: object
+  dto.AddImageKnowledgeRequest:
+    properties:
+      category:
+        type: string
+      description:
+        type: string
+      image_url:
+        type: string
+      title:
+        type: string
+    required:
+    - image_url
+    - title
+    type: object
+  dto.AddKnowledgeDocumentRequest:
+    properties:
+      category:
+        type: string
+      content:
+        type: string
+      source:
+        type: string
+      title:
+        type: string
+    required:
+    - content
+    - title
+    type: object
+  dto.AppInfo:
+    properties:
+      AppName:
+        type: string
+      FromUrl:
+        type: string
+      ID:
+        type: string
+      InstallUrl:
+        type: string
+      IsForceUpdate:
+        type: integer
+      IsHidden:
+        type: integer
+      Version:
+        type: string
+    type: object
+  dto.AppMessageType:
+    enum:
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+    - 7
+    - 8
+    - 9
+    - 10
+    - 13
+    - 15
+    - 16
+    - 17
+    - 19
+    - 57
+    - 74
+    - 76
+    - 2000
+    - 2001
+    - 100001
+    type: integer
+    x-enum-comments:
+      AppMsgTypeAttach: 附件消息
+      AppMsgTypeAttachUploading: 附件上传中
+      AppMsgTypeAudio: 语音消息
+      AppMsgTypeCardTicket: 名片消息
+      AppMsgTypeChatHistory: ChatHistory
+      AppMsgTypeEmoji: 表情消息
+      AppMsgTypeEmotion: Emotion
+      AppMsgTypeGood: Good
+      AppMsgTypeImg: 图片消息
+      AppMsgTypeMusic: 音乐消息
+      AppMsgTypeOpen: Open
+      AppMsgTypeReaderType: 自定义的消息
+      AppMsgTypeRealtimeShareLocation: 地理位置消息
+      AppMsgTypeRedEnvelopes: 红包消息
+      AppMsgTypeScanGood: ScanGood
+      AppMsgTypeText: 文本消息
+      AppMsgTypeTransfers: 转账消息
+      AppMsgTypeUrl: 文章消息
+      AppMsgTypeVideo: 视频消息
+      AppMsgTypeVoiceRemind: VoiceRemind
+      AppMsgTypequote: 引用消息
+    x-enum-descriptions:
+    - 文本消息
+    - 图片消息
+    - 语音消息
+    - 视频消息
+    - 文章消息
+    - 附件消息
+    - Open
+    - 表情消息
+    - VoiceRemind
+    - ScanGood
+    - Good
+    - Emotion
+    - 名片消息
+    - 地理位置消息
+    - ChatHistory
+    - 引用消息
+    - 附件上传中
+    - 音乐消息
+    - 转账消息
+    - 红包消息
+    - 自定义的消息
+    x-enum-varnames:
+    - AppMsgTypeText
+    - AppMsgTypeImg
+    - AppMsgTypeAudio
+    - AppMsgTypeVideo
+    - AppMsgTypeUrl
+    - AppMsgTypeAttach
+    - AppMsgTypeOpen
+    - AppMsgTypeEmoji
+    - AppMsgTypeVoiceRemind
+    - AppMsgTypeScanGood
+    - AppMsgTypeGood
+    - AppMsgTypeEmotion
+    - AppMsgTypeCardTicket
+    - AppMsgTypeRealtimeShareLocation
+    - AppMsgTypeChatHistory
+    - AppMsgTypequote
+    - AppMsgTypeAttachUploading
+    - AppMsgTypeMusic
+    - AppMsgTypeTransfers
+    - AppMsgTypeRedEnvelopes
+    - AppMsgTypeReaderType
+  dto.AppMsg:
+    properties:
+      MediaTagName:
+        type: string
+      MessageAction:
+        type: string
+      MessageExt:
+        type: string
+    type: object
+  dto.AuthSectResp:
+    properties:
+      a2Key:
+        $ref: '#/definitions/dto.SKBuiltinBufferT'
+      applyBetaUrl:
+        type: string
+      authKey:
+        type: string
+      authResultFlag:
+        type: integer
+      authTicket:
+        type: string
+      autoAuthKey:
+        $ref: '#/definitions/dto.SKBuiltinBufferT'
+      cliDbencryptInfo:
+        $ref: '#/definitions/dto.SKBuiltinBufferT'
+      cliDbencryptKey:
+        $ref: '#/definitions/dto.SKBuiltinBufferT'
+      clientSessionKey:
+        $ref: '#/definitions/dto.SKBuiltinBufferT'
+      ecdhControlFlag:
+        type: integer
+      fsurl:
+        type: string
+      mmtlsControlBitFlag:
+        type: integer
+      newVersion:
+        type: integer
+      serverSessionKey:
+        $ref: '#/definitions/dto.SKBuiltinBufferT'
+      serverTime:
+        type: integer
+      sessionKey:
+        $ref: '#/definitions/dto.SKBuiltinBufferT'
+      showStyle:
+        $ref: '#/definitions/dto.ShowStyleKey'
+      svrPubEcdhkey:
+        $ref: '#/definitions/dto.ECDHKey'
+      uin:
+        type: integer
+      updateFlag:
+        type: integer
+      wtloginImgRespInfo:
+        $ref: '#/definitions/dto.WTLoginImgRespInfo'
+      wtloginRspBuff:
+        $ref: '#/definitions/dto.SKBuiltinBufferT'
+      wtloginRspBuffFlag:
+        type: integer
+      wxVerifyCodeRespInfo:
+        $ref: '#/definitions/dto.WxVerifyCodeRespInfo'
+    type: object
+  dto.AutoUploadMode:
+    enum:
+    - all
+    - ai_only
+    type: string
+    x-enum-comments:
+      AutoUploadModeAll: 全部上传
+    x-enum-descriptions:
+    - 全部上传
+    - ""
+    x-enum-varnames:
+    - AutoUploadModeAll
+    - AutoUploadModeAIOnly
+  dto.ChatHistory:
+    properties:
+      app_msg_type:
+        allOf:
+        - $ref: '#/definitions/dto.AppMessageType'
+        description: 消息类型
+      attachment_url:
+        description: 文件地址
+        type: string
+      client_msg_id:
+        description: 客户端消息Id
+        type: integer
+      content:
+        description: 内容
+        type: string
+      created_at:
+        type: integer
+      display_full_content:
+        description: 显示的完整内容
+        type: string
+      from_wxid:
+        description: 消息来源
+        type: string
+      id:
+        type: integer
+      is_atme:
+        description: '@所有人 好的'
+        type: boolean
+      is_chat_room:
+        type: boolean
+      is_recalled:
+        type: boolean
+      message_source:
+        type: string
+      msg_id:
+        description: 消息Id
+        type: integer
+      sender_avatar:
+        type: string
+      sender_nickname:
+        type: string
+      sender_wxid:
+        description: 消息发送者
+        type: string
+      to_wxid:
+        description: 接收者
+        type: string
+      type:
+        allOf:
+        - $ref: '#/definitions/dto.MessageType'
+        description: 消息类型
+      updated_at:
+        type: integer
+    type: object
+  dto.ChatRoomJoinRequest:
+    properties:
+      id:
+        type: integer
+      system_message_id:
+        type: integer
+    required:
+    - id
+    type: object
+  dto.ChatRoomMember:
+    properties:
+      alias:
+        description: 微信号
+        type: string
+      avatar:
+        description: 头像
+        type: string
+      chat_room_id:
+        description: 群ID
+        type: string
+      id:
+        description: 主键ID
+        type: integer
+      inviter_wechat_id:
+        description: 邀请人微信ID
+        type: string
+      is_admin:
+        description: 是否群管理员
+        type: boolean
+      is_blacklisted:
+        description: 是否在黑名单
+        type: boolean
+      is_leaved:
+        description: 是否已经离开群聊
+        type: boolean
+      joined_at:
+        description: 加入时间
+        type: integer
+      last_active_at:
+        description: 最近活跃时间
+        type: integer
+      leaved_at:
+        description: 离开时间
+        type: integer
+      nickname:
+        description: 昵称
+        type: string
+      remark:
+        description: 备注
+        type: string
+      score:
+        description: 积分
+        type: integer
+      temporary_score:
+        description: 临时积分
+        type: integer
+      temporary_score_expiry:
+        description: 临时积分有效期
+        type: integer
+      wechat_id:
+        description: 微信ID
+        type: string
+    type: object
+  dto.ChatRoomOperateRequest:
+    properties:
+      chat_room_id:
+        type: string
+      content:
+        type: string
+      id:
+        type: integer
+    required:
+    - chat_room_id
+    - content
+    - id
+    type: object
+  dto.ChatRoomRequestBase:
+    properties:
+      chat_room_id:
+        type: string
+      id:
+        type: integer
+    required:
+    - chat_room_id
+    - id
+    type: object
+  dto.ContactType:
+    enum:
+    - friend
+    - chat_room
+    - official_account
+    type: string
+    x-enum-varnames:
+    - ContactTypeFriend
+    - ContactTypeChatRoom
+    - ContactTypeOfficialAccount
+  dto.ContainerStats:
+    properties:
+      cpu_usage:
+        description: CPU使用情况
+        type: string
+      disk_read:
+        description: 磁盘读取
+        type: string
+      disk_write:
+        description: 磁盘写入
+        type: string
+      memory_usage:
+        allOf:
+        - $ref: '#/definitions/dto.MemoryUsage'
+        description: 内存使用情况
+      name:
+        description: 容器名称
+        type: string
+      status:
+        description: 容器状态
+        type: string
+    type: object
+  dto.ContentObject:
+    properties:
+      ContentStyle:
+        type: integer
+      ContentSubStyle:
+        type: integer
+      ContentUrl:
+        type: string
+      Description:
+        type: string
+      MediaList:
+        $ref: '#/definitions/dto.MediaList'
+      Title:
+        type: string
+    type: object
+  dto.CreateChatRoomRequest:
+    properties:
+      contact_ids:
+        items:
+          type: string
+        type: array
+      id:
+        type: integer
+    required:
+    - contact_ids
+    - id
+    type: object
+  dto.CreateKnowledgeCategoryRequest:
+    properties:
+      code:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+      type:
+        enum:
+        - text
+        - image
+        type: string
+    required:
+    - code
+    - name
+    - type
+    type: object
+  dto.CreateSystemPromptRequest:
+    properties:
+      content:
+        type: string
+      title:
+        type: string
+    required:
+    - content
+    - title
+    type: object
+  dto.DelChatRoomMemberRequest:
+    properties:
+      chat_room_id:
+        type: string
+      id:
+        type: integer
+      member_ids:
+        items:
+          type: string
+        type: array
+    required:
+    - chat_room_id
+    - id
+    - member_ids
+    type: object
+  dto.DeleteImageKnowledgeRequest:
+    properties:
+      id:
+        type: integer
+      title:
+        type: string
+    type: object
+  dto.DeleteKnowledgeCategoryRequest:
+    properties:
+      id:
+        type: integer
+    required:
+    - id
+    type: object
+  dto.DeleteKnowledgeRequest:
+    properties:
+      id:
+        type: integer
+      title:
+        type: string
+    type: object
+  dto.DeleteMemoryRequest:
+    properties:
+      id:
+        type: integer
+    required:
+    - id
+    type: object
+  dto.DeleteSystemPromptRequest:
+    properties:
+      id:
+        type: integer
+    required:
+    - id
+    type: object
+  dto.DoubaoTTSCallbackRequest:
+    properties:
+      audio_url:
+        type: string
+      code:
+        type: integer
+      message:
+        type: string
+      sentences:
+        items:
+          $ref: '#/definitions/dto.Sentence'
+        type: array
+      task_id:
+        type: string
+      task_status:
+        type: integer
+      text_length:
+        type: integer
+      url_expire_time:
+        type: integer
+    type: object
+  dto.ECDHKey:
+    properties:
+      key:
+        $ref: '#/definitions/dto.SKBuiltinBufferT'
+      nid:
+        type: integer
+    type: object
+  dto.EnvVar:
+    properties:
+      description:
+        type: string
+      key:
+        type: string
+      value:
+        type: string
+    type: object
+  dto.FriendCircleCommentRequest:
+    properties:
+      Content:
+        type: string
+      MomentId:
+        type: string
+      ReplyCommnetId:
+        type: integer
+      Type:
+        type: integer
+      id:
+        type: integer
+    required:
+    - MomentId
+    - Type
+    - id
+    type: object
+  dto.FriendCircleMedia:
+    properties:
+      BufferUrl:
+        $ref: '#/definitions/dto.SnsBufferUrl'
+      ClientId:
+        type: string
+      Id:
+        type: integer
+      IdStr:
+        type: string
+      Size:
+        $ref: '#/definitions/dto.Size'
+      ThumbUrlCount:
+        type: integer
+      ThumbUrls:
+        items:
+          $ref: '#/definitions/dto.SnsBufferUrl'
+        type: array
+      Type:
+        type: integer
+      VideoDuration:
+        type: number
+      VideoDurationStr:
+        type: string
+    type: object
+  dto.FriendDeleteRequest:
+    properties:
+      contact_id:
+        type: string
+      id:
+        type: integer
+    required:
+    - id
+    type: object
+  dto.FriendPassVerifyRequest:
+    properties:
+      id:
+        type: integer
+      system_message_id:
+        type: integer
+    required:
+    - id
+    type: object
+  dto.FriendSearchRequest:
+    properties:
+      from_scene:
+        type: integer
+      id:
+        type: integer
+      search_scene:
+        type: integer
+      to_username:
+        type: string
+    required:
+    - id
+    - to_username
+    type: object
+  dto.FriendSearchResponse:
+    properties:
+      antispam_ticket:
+        type: string
+      avatar:
+        type: string
+      nickname:
+        type: string
+      username:
+        type: string
+    type: object
+  dto.FriendSendRequestFromChatRoomRequest:
+    properties:
+      chat_room_member_id:
+        type: integer
+      id:
+        type: integer
+      verify_content:
+        type: string
+    required:
+    - chat_room_member_id
+    - id
+    type: object
+  dto.FriendSendRequestRequest:
+    properties:
+      Opcode:
+        type: integer
+      Scene:
+        type: integer
+      V1:
+        type: string
+      V2:
+        type: string
+      id:
+        type: integer
+      verify_content:
+        type: string
+    required:
+    - V1
+    - id
+    type: object
+  dto.FriendSetRemarksRequest:
+    properties:
+      id:
+        type: integer
+      remarks:
+        type: string
+      to_wxid:
+        type: string
+    required:
+    - id
+    - remarks
+    - to_wxid
+    type: object
+  dto.GetChatRoomSettingsResponse:
+    properties:
+      chat_ai_enabled:
+        type: boolean
+      chat_ai_trigger:
+        type: string
+      chat_api_key:
+        type: string
+      chat_base_url:
+        type: string
+      chat_model:
+        type: string
+      chat_prompt:
+        type: string
+      chat_room_ranking_enabled:
+        type: boolean
+      chat_room_summary_enabled:
+        type: boolean
+      chat_room_summary_mode:
+        type: string
+      chat_room_summary_model:
+        type: string
+      id:
+        type: integer
+      image_ai_enabled:
+        type: boolean
+      image_ai_settings:
+        additionalProperties: {}
+        type: object
+      image_recognition_model:
+        type: string
+      knowledge_categories:
+        items:
+          type: string
+        type: array
+      leave_chat_room_alert_enabled:
+        type: boolean
+      leave_chat_room_alert_text:
+        type: string
+      max_completion_tokens:
+        type: integer
+      memory_extraction_blacklist:
+        items:
+          type: string
+        type: array
+      morning_enabled:
+        type: boolean
+      news_enabled:
+        type: boolean
+      news_type:
+        type: string
+      pat_enabled:
+        type: boolean
+      pat_text:
+        type: string
+      pat_type:
+        type: string
+      pat_voice_timbre:
+        type: string
+      podcast_config:
+        additionalProperties: {}
+        type: object
+      podcast_enabled:
+        type: boolean
+      short_video_parsing_enabled:
+        type: boolean
+      tts_enabled:
+        type: boolean
+      tts_model:
+        type: string
+      tts_settings:
+        additionalProperties: {}
+        type: object
+      welcome_emoji_len:
+        type: integer
+      welcome_emoji_md5:
+        type: string
+      welcome_enabled:
+        type: boolean
+      welcome_image_url:
+        type: string
+      welcome_text:
+        type: string
+      welcome_type:
+        type: string
+      welcome_url:
+        type: string
+      wxhb_notify_enabled:
+        type: boolean
+      wxhb_notify_member_list:
+        type: string
+    type: object
+  dto.GetContactsResponse:
+    properties:
+      alias:
+        description: 微信号
+        type: string
+      avatar:
+        type: string
+      chat_room_owner:
+        description: 群主微信号
+        type: string
+      city:
+        description: 城市
+        type: string
+      country:
+        description: 国家
+        type: string
+      created_at:
+        type: integer
+      id:
+        type: integer
+      last_active_at:
+        description: 最近活跃时间
+        type: integer
+      nickname:
+        type: string
+      province:
+        description: 省份
+        type: string
+      pyinitial:
+        description: 昵称拼音首字母大写
+        type: string
+      quan_pin:
+        description: 昵称拼音全拼小写
+        type: string
+      remark:
+        type: string
+      sex:
+        description: 性别 0：未知 1：男 2：女
+        type: integer
+      signature:
+        description: 个性签名
+        type: string
+      sns_background:
+        description: 朋友圈背景图
+        type: string
+      type:
+        $ref: '#/definitions/dto.ContactType'
+      updated_at:
+        type: integer
+      wechat_id:
+        description: 添加索引长度
+        type: string
+    type: object
+  dto.GetFriendSettingsResponse:
+    properties:
+      chat_ai_enabled:
+        type: boolean
+      chat_api_key:
+        type: string
+      chat_base_url:
+        type: string
+      chat_model:
+        type: string
+      chat_prompt:
+        type: string
+      id:
+        type: integer
+      image_ai_enabled:
+        type: boolean
+      image_ai_settings:
+        additionalProperties: {}
+        type: object
+      image_recognition_model:
+        type: string
+      max_completion_tokens:
+        type: integer
+      tts_enabled:
+        type: boolean
+      tts_model:
+        type: string
+      tts_settings:
+        additionalProperties: {}
+        type: object
+    type: object
+  dto.GetGlobalSettingsResponse:
+    properties:
+      chat_ai_enabled:
+        type: boolean
+      chat_ai_trigger:
+        type: string
+      chat_api_key:
+        type: string
+      chat_base_url:
+        type: string
+      chat_model:
+        type: string
+      chat_prompt:
+        type: string
+      chat_room_ranking_daily_cron:
+        type: string
+      chat_room_ranking_enabled:
+        type: boolean
+      chat_room_ranking_month_cron:
+        type: string
+      chat_room_ranking_weekly_cron:
+        type: string
+      chat_room_summary_cron:
+        type: string
+      chat_room_summary_enabled:
+        type: boolean
+      chat_room_summary_mode:
+        type: string
+      chat_room_summary_model:
+        type: string
+      friend_sync_cron:
+        type: string
+      id:
+        type: integer
+      image_ai_enabled:
+        type: boolean
+      image_ai_settings:
+        additionalProperties: {}
+        type: object
+      image_embedding_api_key:
+        type: string
+      image_embedding_base_url:
+        type: string
+      image_embedding_dimension:
+        type: integer
+      image_embedding_model:
+        type: string
+      image_recognition_model:
+        type: string
+      leave_chat_room_alert_enabled:
+        type: boolean
+      leave_chat_room_alert_text:
+        type: string
+      max_completion_tokens:
+        type: integer
+      memory_enabled:
+        type: boolean
+      morning_cron:
+        type: string
+      morning_enabled:
+        type: boolean
+      news_cron:
+        type: string
+      news_enabled:
+        type: boolean
+      news_type:
+        type: string
+      pat_enabled:
+        type: boolean
+      pat_text:
+        type: string
+      pat_type:
+        type: string
+      pat_voice_timbre:
+        type: string
+      text_embedding_dimension:
+        type: integer
+      text_embedding_model:
+        type: string
+      tts_enabled:
+        type: boolean
+      tts_model:
+        type: string
+      tts_settings:
+        additionalProperties: {}
+        type: object
+      welcome_emoji_len:
+        type: integer
+      welcome_emoji_md5:
+        type: string
+      welcome_enabled:
+        type: boolean
+      welcome_image_url:
+        type: string
+      welcome_text:
+        type: string
+      welcome_type:
+        type: string
+      welcome_url:
+        type: string
+    type: object
+  dto.ImageKnowledgeDocument:
+    properties:
+      category:
+        type: string
+      created_at:
+        type: integer
+      description:
+        type: string
+      enabled:
+        type: boolean
+      id:
+        type: integer
+      image_url:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: integer
+      vector_id:
+        type: string
+    type: object
+  dto.InstallSkillRequest:
+    properties:
+      ref:
+        type: string
+      repo_url:
+        description: 或者分别指定
+        type: string
+      sub_path:
+        type: string
+      url:
+        description: GitHub URL（完整路径，如 https://github.com/anthropics/skills/tree/main/skills/pptx）
+        type: string
+    type: object
+  dto.InviteChatRoomMemberRequest:
+    properties:
+      chat_room_id:
+        type: string
+      contact_ids:
+        items:
+          type: string
+        type: array
+      id:
+        type: integer
+    required:
+    - chat_room_id
+    - contact_ids
+    - id
+    type: object
+  dto.KnowledgeCategory:
+    properties:
+      code:
+        type: string
+      created_at:
+        type: integer
+      description:
+        type: string
+      id:
+        type: integer
+      is_builtin:
+        type: boolean
+      name:
+        type: string
+      updated_at:
+        type: integer
+    type: object
+  dto.KnowledgeDocument:
+    properties:
+      category:
+        type: string
+      chunk_index:
+        type: integer
+      chunk_total:
+        type: integer
+      content:
+        type: string
+      created_at:
+        type: integer
+      enabled:
+        type: boolean
+      id:
+        type: integer
+      source:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: integer
+      vector_id:
+        type: string
+    type: object
+  dto.ListResponse-dto_ChatHistory:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/dto.ChatHistory'
+        type: array
+      total:
+        type: integer
+    type: object
+  dto.ListResponse-dto_ChatRoomMember:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/dto.ChatRoomMember'
+        type: array
+      total:
+        type: integer
+    type: object
+  dto.ListResponse-dto_GetContactsResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/dto.GetContactsResponse'
+        type: array
+      total:
+        type: integer
+    type: object
+  dto.ListResponse-dto_ImageKnowledgeDocument:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/dto.ImageKnowledgeDocument'
+        type: array
+      total:
+        type: integer
+    type: object
+  dto.ListResponse-dto_KnowledgeDocument:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/dto.KnowledgeDocument'
+        type: array
+      total:
+        type: integer
+    type: object
+  dto.ListResponse-dto_RobotResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/dto.RobotResponse'
+        type: array
+      total:
+        type: integer
+    type: object
+  dto.Location:
+    properties:
+      City:
+        type: string
+      PoiAddress:
+        type: string
+      PoiClassifyId:
+        type: string
+      PoiClassifyType:
+        type: integer
+      PoiName:
+        type: string
+    type: object
+  dto.LoginData62SMSAgainRequest:
+    properties:
+      Cookie:
+        type: string
+      Url:
+        type: string
+    type: object
+  dto.LoginData62SMSVerifyRequest:
+    properties:
+      Cookie:
+        type: string
+      Sms:
+        type: string
+      Url:
+        type: string
+    type: object
+  dto.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  dto.MCPAuthType:
+    enum:
+    - none
+    - bearer
+    - basic
+    - apikey
+    type: string
+    x-enum-comments:
+      MCPAuthTypeAPIKey: API Key认证
+      MCPAuthTypeBasic: Basic认证
+      MCPAuthTypeBearer: Bearer Token认证
+      MCPAuthTypeNone: 无认证
+    x-enum-descriptions:
+    - 无认证
+    - Bearer Token认证
+    - Basic认证
+    - API Key认证
+    x-enum-varnames:
+    - MCPAuthTypeNone
+    - MCPAuthTypeBearer
+    - MCPAuthTypeBasic
+    - MCPAuthTypeAPIKey
+  dto.MCPServer:
+    properties:
+      args:
+        description: '[]string'
+        items:
+          type: string
+        type: array
+      auth_password:
+        type: string
+      auth_token:
+        type: string
+      auth_type:
+        $ref: '#/definitions/dto.MCPAuthType'
+      auth_username:
+        type: string
+      capabilities:
+        additionalProperties:
+          type: string
+        description: 高级配置
+        type: object
+      command:
+        description: Stdio模式配置（命令行模式）
+        type: string
+      connect_timeout:
+        description: 超时和重连配置
+        type: integer
+      connection_count:
+        type: integer
+      created_at:
+        description: 时间戳
+        type: string
+      custom_config:
+        additionalProperties:
+          type: string
+        description: 其他自定义配置
+        type: object
+      deleted_at:
+        type: string
+      description:
+        type: string
+      enabled:
+        type: boolean
+      env:
+        additionalProperties:
+          type: string
+        description: map[string]string
+        type: object
+      error_count:
+        type: integer
+      headers:
+        additionalProperties:
+          type: string
+        description: map[string]string
+        type: object
+      heartbeat_enable:
+        type: boolean
+      heartbeat_interval:
+        type: integer
+      id:
+        type: integer
+      is_built_in:
+        type: boolean
+      last_connected_at:
+        description: 状态追踪
+        type: string
+      last_error:
+        type: string
+      max_retries:
+        type: integer
+      name:
+        type: string
+      priority:
+        type: integer
+      read_timeout:
+        type: integer
+      retry_interval:
+        type: integer
+      tags:
+        description: '[]string，用于分类和过滤'
+        items:
+          type: string
+        type: array
+      tls_skip_verify:
+        type: boolean
+      transport:
+        $ref: '#/definitions/dto.MCPTransportType'
+      updated_at:
+        type: string
+      url:
+        description: 网络模式配置（SSE/HTTP/WS共用）
+        type: string
+      working_dir:
+        type: string
+      write_timeout:
+        type: integer
+    type: object
+  dto.MCPServerTool:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+      title:
+        type: string
+    type: object
+  dto.MCPTransportType:
+    enum:
+    - stdio
+    - stream
+    type: string
+    x-enum-comments:
+      MCPTransportTypeSSE: 流模式
+      MCPTransportTypeStdio: 命令行模式（标准输入输出）
+    x-enum-descriptions:
+    - 命令行模式（标准输入输出）
+    - 流模式
+    x-enum-varnames:
+    - MCPTransportTypeStdio
+    - MCPTransportTypeSSE
+  dto.MarkAsReadBatchRequest:
+    properties:
+      id:
+        type: integer
+      system_message_ids:
+        items:
+          type: integer
+        type: array
+    required:
+    - id
+    - system_message_ids
+    type: object
+  dto.Media:
+    properties:
+      Description:
+        type: string
+      HD:
+        $ref: '#/definitions/dto.URL'
+      ID:
+        type: integer
+      IDStr:
+        type: string
+      Private:
+        type: integer
+      Size:
+        $ref: '#/definitions/dto.Size'
+      SubType:
+        type: integer
+      Thumb:
+        $ref: '#/definitions/dto.Thumb'
+      Title:
+        type: string
+      Type:
+        type: integer
+      UHD:
+        $ref: '#/definitions/dto.URL'
+      URL:
+        $ref: '#/definitions/dto.URL'
+      UserData:
+        type: string
+      VideoColdDLRule:
+        $ref: '#/definitions/dto.VideoColdDLRule'
+      VideoDuration:
+        type: number
+      VideoDurationStr:
+        type: string
+      VideoSize:
+        $ref: '#/definitions/dto.VideoSize'
+    type: object
+  dto.MediaList:
+    properties:
+      Media:
+        items:
+          $ref: '#/definitions/dto.Media'
+        type: array
+    type: object
+  dto.Memory:
+    properties:
+      access_count:
+        type: integer
+      chat_room_id:
+        type: string
+      contact_wxid:
+        type: string
+      content:
+        type: string
+      created_at:
+        type: integer
+      expire_at:
+        type: integer
+      id:
+        type: integer
+      importance:
+        type: integer
+      key:
+        type: string
+      last_access_at:
+        type: integer
+      source:
+        type: string
+      type:
+        type: string
+      updated_at:
+        type: integer
+    type: object
+  dto.MemoryUsage:
+    properties:
+      limit:
+        description: 内存限制
+        type: string
+      percent:
+        description: 内存使用百分比
+        type: string
+      usage:
+        description: 内存使用情况
+        type: string
+    type: object
+  dto.MessageRevokeRequest:
+    properties:
+      id:
+        type: integer
+      message_id:
+        type: integer
+    required:
+    - id
+    - message_id
+    type: object
+  dto.MessageType:
+    enum:
+    - 1
+    - 3
+    - 34
+    - 37
+    - 40
+    - 42
+    - 43
+    - 47
+    - 48
+    - 49
+    - 50
+    - 51
+    - 52
+    - 53
+    - 62
+    - 9999
+    - 10000
+    - 10002
+    type: integer
+    x-enum-comments:
+      MsgTypeApp: APP消息
+      MsgTypeEmoticon: 表情消息
+      MsgTypeImage: 图片消息
+      MsgTypeInit: 微信初始化消息
+      MsgTypeLocation: 地理位置消息
+      MsgTypeMicroVideo: 小视频消息
+      MsgTypePossibleFriend: 好友推荐消息
+      MsgTypeRecalled: 消息撤回
+      MsgTypeShareCard: 名片消息
+      MsgTypeSys: 系统消息
+      MsgTypeText: 文本消息
+      MsgTypeUnknow: 未知消息
+      MsgTypeVerify: 认证消息
+      MsgTypeVideo: 视频消息
+      MsgTypeVoice: 语音消息
+      MsgTypeVoip: VOIP消息
+      MsgTypeVoipInvite: VOIP邀请
+      MsgTypeVoipNotify: VOIP结束消息
+    x-enum-descriptions:
+    - 文本消息
+    - 图片消息
+    - 语音消息
+    - 认证消息
+    - 好友推荐消息
+    - 名片消息
+    - 视频消息
+    - 表情消息
+    - 地理位置消息
+    - APP消息
+    - VOIP消息
+    - 微信初始化消息
+    - VOIP结束消息
+    - VOIP邀请
+    - 小视频消息
+    - 未知消息
+    - 系统消息
+    - 消息撤回
+    x-enum-varnames:
+    - MsgTypeText
+    - MsgTypeImage
+    - MsgTypeVoice
+    - MsgTypeVerify
+    - MsgTypePossibleFriend
+    - MsgTypeShareCard
+    - MsgTypeVideo
+    - MsgTypeEmoticon
+    - MsgTypeLocation
+    - MsgTypeApp
+    - MsgTypeVoip
+    - MsgTypeInit
+    - MsgTypeVoipNotify
+    - MsgTypeVoipInvite
+    - MsgTypeMicroVideo
+    - MsgTypeUnknow
+    - MsgTypeSys
+    - MsgTypeRecalled
+  dto.MomentOpRequest:
+    properties:
+      CommentId:
+        type: integer
+      MomentID:
+        type: string
+      Type:
+        type: integer
+      id:
+        type: integer
+    required:
+    - MomentID
+    - Type
+    - id
+    type: object
+  dto.MomentOpResponse:
+    properties:
+      opCount:
+        type: integer
+      opRetList:
+        items:
+          type: integer
+        type: array
+    type: object
+  dto.MomentPostRequest:
+    properties:
+      content:
+        type: string
+      donot_share:
+        items:
+          type: string
+        type: array
+      id:
+        type: integer
+      media_list:
+        items:
+          $ref: '#/definitions/dto.FriendCircleMedia'
+        type: array
+      share_type:
+        type: string
+      share_with:
+        items:
+          type: string
+        type: array
+      with_user_list:
+        items:
+          type: string
+        type: array
+    required:
+    - id
+    - share_type
+    type: object
+  dto.MomentPostResponse:
+    properties:
+      SnsObject:
+        $ref: '#/definitions/dto.SnsObject'
+      SpamTips:
+        type: string
+    type: object
+  dto.MomentPrivacySettingsRequest:
+    properties:
+      Function:
+        type: integer
+      Value:
+        type: integer
+      id:
+        type: integer
+    required:
+    - id
+    type: object
+  dto.MomentPrivacySettingsResponse:
+    properties:
+      oplogRet:
+        $ref: '#/definitions/dto.OplogRet'
+      ret:
+        type: integer
+    type: object
+  dto.MomentSettings:
+    properties:
+      ai_api_key:
+        type: string
+      ai_base_url:
+        type: string
+      auto_comment:
+        type: boolean
+      auto_like:
+        type: boolean
+      blacklist:
+        type: string
+      comment_model:
+        type: string
+      comment_prompt:
+        type: string
+      id:
+        type: integer
+      max_completion_tokens:
+        type: integer
+      sync_interval:
+        maximum: 86400
+        minimum: 10
+        type: integer
+      whitelist:
+        type: string
+      workflow_model:
+        type: string
+    type: object
+  dto.MomentsGetListResponse:
+    properties:
+      AdvertiseCount:
+        type: integer
+      AdvertiseList:
+        type: string
+      ControlFlag:
+        type: integer
+      FirstPageMd5:
+        type: string
+      NewRequestTime:
+        type: integer
+      ObjectCount:
+        type: integer
+      ObjectCountForSameMd5:
+        type: integer
+      ObjectList:
+        items:
+          $ref: '#/definitions/dto.SnsObject'
+        type: array
+      RecCount:
+        type: integer
+      RecList:
+        type: integer
+      ServerConfig:
+        $ref: '#/definitions/dto.SnsServerConfig'
+      Session:
+        $ref: '#/definitions/dto.SKBuiltinString_S'
+    type: object
+  dto.OSSProvider:
+    enum:
+    - aliyun
+    - tencent_cloud
+    - volcengine
+    - cloudflare
+    type: string
+    x-enum-comments:
+      OSSProviderAliyun: 阿里云 OSS
+      OSSProviderCloudflare: Cloudflare R2
+      OSSProviderTencentCloud: 腾讯云 COS
+      OSSProviderVolcengine: 火山引擎 TOS
+    x-enum-descriptions:
+    - 阿里云 OSS
+    - 腾讯云 COS
+    - 火山引擎 TOS
+    - Cloudflare R2
+    x-enum-varnames:
+    - OSSProviderAliyun
+    - OSSProviderTencentCloud
+    - OSSProviderVolcengine
+    - OSSProviderCloudflare
+  dto.OSSSettings:
+    properties:
+      aliyun_oss_settings:
+        additionalProperties: {}
+        type: object
+      auto_upload_file:
+        type: boolean
+      auto_upload_file_mode:
+        $ref: '#/definitions/dto.AutoUploadMode'
+      auto_upload_image:
+        type: boolean
+      auto_upload_image_mode:
+        $ref: '#/definitions/dto.AutoUploadMode'
+      auto_upload_video:
+        type: boolean
+      auto_upload_video_mode:
+        $ref: '#/definitions/dto.AutoUploadMode'
+      auto_upload_voice:
+        type: boolean
+      auto_upload_voice_mode:
+        $ref: '#/definitions/dto.AutoUploadMode'
+      cloudflare_r2_settings:
+        additionalProperties: {}
+        type: object
+      created_at:
+        type: integer
+      id:
+        type: integer
+      oss_provider:
+        $ref: '#/definitions/dto.OSSProvider'
+      tencent_cloud_oss_settings:
+        additionalProperties: {}
+        type: object
+      updated_at:
+        type: integer
+      volcengine_tos_settings:
+        additionalProperties: {}
+        type: object
+    type: object
+  dto.OSSSettingsRequest:
+    properties:
+      aliyun_oss_settings:
+        additionalProperties: {}
+        type: object
+      auto_upload_file:
+        type: boolean
+      auto_upload_file_mode:
+        $ref: '#/definitions/dto.AutoUploadMode'
+      auto_upload_image:
+        type: boolean
+      auto_upload_image_mode:
+        $ref: '#/definitions/dto.AutoUploadMode'
+      auto_upload_video:
+        type: boolean
+      auto_upload_video_mode:
+        $ref: '#/definitions/dto.AutoUploadMode'
+      auto_upload_voice:
+        type: boolean
+      auto_upload_voice_mode:
+        $ref: '#/definitions/dto.AutoUploadMode'
+      cloudflare_r2_settings:
+        additionalProperties: {}
+        type: object
+      id:
+        type: integer
+      oss_provider:
+        $ref: '#/definitions/dto.OSSProvider'
+      tencent_cloud_oss_settings:
+        additionalProperties: {}
+        type: object
+      volcengine_tos_settings:
+        additionalProperties: {}
+        type: object
+    type: object
+  dto.OplogRet:
+    properties:
+      count:
+        type: integer
+      errMsg:
+        items:
+          type: integer
+        type: array
+      ret:
+        items:
+          type: integer
+        type: array
+    type: object
+  dto.Phoneme:
+    properties:
+      begin:
+        type: integer
+      end:
+        type: integer
+      ph:
+        type: string
+    type: object
+  dto.PreDownloadInfo:
+    properties:
+      NoPreDownloadRange:
+        type: string
+      PreDownloadNetType:
+        type: integer
+      PreDownloadPercent:
+        type: integer
+    type: object
+  dto.ProxyInput:
+    properties:
+      ProxyIp:
+        type: string
+      ProxyPassword:
+        type: string
+      ProxyUser:
+        type: string
+    type: object
+  dto.PullProgress:
+    properties:
+      error:
+        type: string
+      image:
+        type: string
+      progress:
+        type: string
+      status:
+        type: string
+    type: object
+  dto.Response-array_dto_ChatRoomMember:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        description: 数据
+        items:
+          $ref: '#/definitions/dto.ChatRoomMember'
+        type: array
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-array_dto_KnowledgeCategory:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        description: 数据
+        items:
+          $ref: '#/definitions/dto.KnowledgeCategory'
+        type: array
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-array_dto_MCPServer:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        description: 数据
+        items:
+          $ref: '#/definitions/dto.MCPServer'
+        type: array
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-array_dto_MCPServerTool:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        description: 数据
+        items:
+          $ref: '#/definitions/dto.MCPServerTool'
+        type: array
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-array_dto_Memory:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        description: 数据
+        items:
+          $ref: '#/definitions/dto.Memory'
+        type: array
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-array_dto_Skill:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        description: 数据
+        items:
+          $ref: '#/definitions/dto.Skill'
+        type: array
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-array_dto_SystemMessage:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        description: 数据
+        items:
+          $ref: '#/definitions/dto.SystemMessage'
+        type: array
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-array_dto_SystemPrompt:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        description: 数据
+        items:
+          $ref: '#/definitions/dto.SystemPrompt'
+        type: array
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-array_dto_VectorSearchResult:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        description: 数据
+        items:
+          $ref: '#/definitions/dto.VectorSearchResult'
+        type: array
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-array_string:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        description: 数据
+        items:
+          type: string
+        type: array
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_ChatRoomMember:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.ChatRoomMember'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_FriendCircleMedia:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.FriendCircleMedia'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_FriendSearchResponse:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.FriendSearchResponse'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_GetChatRoomSettingsResponse:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.GetChatRoomSettingsResponse'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_GetFriendSettingsResponse:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.GetFriendSettingsResponse'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_GetGlobalSettingsResponse:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.GetGlobalSettingsResponse'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_KnowledgeCategory:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.KnowledgeCategory'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_ListResponse-dto_ChatHistory:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.ListResponse-dto_ChatHistory'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_ListResponse-dto_ChatRoomMember:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.ListResponse-dto_ChatRoomMember'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_ListResponse-dto_GetContactsResponse:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.ListResponse-dto_GetContactsResponse'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_ListResponse-dto_ImageKnowledgeDocument:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.ListResponse-dto_ImageKnowledgeDocument'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_ListResponse-dto_KnowledgeDocument:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.ListResponse-dto_KnowledgeDocument'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_ListResponse-dto_RobotResponse:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.ListResponse-dto_RobotResponse'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_MCPServer:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.MCPServer'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_Memory:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.Memory'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_MomentOpResponse:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.MomentOpResponse'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_MomentPostResponse:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.MomentPostResponse'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_MomentPrivacySettingsResponse:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.MomentPrivacySettingsResponse'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_MomentSettings:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.MomentSettings'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_MomentsGetListResponse:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.MomentsGetListResponse'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_OSSSettings:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.OSSSettings'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_RobotContainerLogsResponse:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.RobotContainerLogsResponse'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_RobotContainerStatsResponse:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.RobotContainerStatsResponse'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_RobotLoginCheckResponse:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.RobotLoginCheckResponse'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_RobotLoginResponse:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.RobotLoginResponse'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_RobotResponse:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.RobotResponse'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_SnsObject:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.SnsObject'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_SnsObjectDetailResponse:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.SnsObjectDetailResponse'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_SnsUserPageResponse:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.SnsUserPageResponse'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_SwaggerEmpty:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.SwaggerEmpty'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_SwaggerSuccess:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.SwaggerSuccess'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_SystemPrompt:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.SystemPrompt'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_SystemSettings:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.SystemSettings'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-dto_UnifyAuthResponse:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.UnifyAuthResponse'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-model_User:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/model.User'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.Response-string:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        description: 数据
+        type: string
+      message:
+        description: 消息
+        type: string
+    type: object
+  dto.RobotCommonRequest:
+    properties:
+      id:
+        type: integer
+    required:
+    - id
+    type: object
+  dto.RobotContainerLogsResponse:
+    properties:
+      client:
+        description: 客户端容器日志
+        items:
+          type: string
+        type: array
+      server:
+        description: 服务端容器日志
+        items:
+          type: string
+        type: array
+    type: object
+  dto.RobotContainerStatsResponse:
+    properties:
+      client:
+        allOf:
+        - $ref: '#/definitions/dto.ContainerStats'
+        description: 客户端容器统计
+      server:
+        allOf:
+        - $ref: '#/definitions/dto.ContainerStats'
+        description: 服务端容器统计
+    type: object
+  dto.RobotCreateRequest:
+    properties:
+      proxy:
+        $ref: '#/definitions/dto.ProxyInput'
+      robot_name:
+        type: string
+    required:
+    - robot_name
+    type: object
+  dto.RobotLogin2FARequest:
+    properties:
+      code:
+        type: string
+      data62:
+        type: string
+      id:
+        type: integer
+      ticket:
+        type: string
+      uuid:
+        type: string
+    required:
+    - code
+    - data62
+    - id
+    - ticket
+    - uuid
+    type: object
+  dto.RobotLoginCheckRequest:
+    properties:
+      uuid:
+        type: string
+    required:
+    - uuid
+    type: object
+  dto.RobotLoginCheckResponse:
+    properties:
+      acctSectResp:
+        allOf:
+        - $ref: '#/definitions/dto.AcctSectResp'
+        description: 账号信息-登录成功之后才有
+      expiredTime:
+        description: 过期时间(秒)
+        type: integer
+      headImgUrl:
+        description: 头像
+        type: string
+      nickName:
+        description: 昵称
+        type: string
+      pushLoginUrlexpiredTime:
+        type: integer
+      status:
+        description: 状态
+        type: integer
+      ticket:
+        description: 登录票据
+        type: string
+      uuid:
+        type: string
+    type: object
+  dto.RobotLoginResponse:
+    properties:
+      auto_login:
+        description: 自动登陆
+        type: boolean
+      awken_login:
+        description: 微信登录凭证
+        type: boolean
+      data62:
+        type: string
+      uuid:
+        type: string
+    type: object
+  dto.RobotResponse:
+    properties:
+      alias:
+        description: 当前机器人登陆的自定义微信号
+        type: string
+      avatar:
+        description: 当前机器人登陆的微信头像
+        type: string
+      bind_mobile:
+        description: 当前机器人登陆的手机号
+        type: string
+      created_at:
+        type: integer
+      db_password:
+        description: 当前机器人登陆的数据库密码
+        type: string
+      db_username:
+        description: 当前机器人登陆的数据库用户名
+        type: string
+      device_id:
+        description: 当前机器人登陆的设备Id
+        type: string
+      device_name:
+        description: 当前机器人登陆的设备名称
+        type: string
+      device_type:
+        $ref: '#/definitions/model.DeviceType'
+      error_message:
+        type: string
+      id:
+        type: integer
+      last_login_at:
+        type: integer
+      nickname:
+        description: 当前机器人登陆的微信昵称
+        type: string
+      owner:
+        description: 当前机器人的拥有者
+        type: string
+      profile:
+        additionalProperties: {}
+        description: 当前机器人登陆的微信个人资料
+        type: object
+      profile_ext:
+        additionalProperties: {}
+        description: 当前机器人登陆的扩展资料
+        type: object
+      proxy:
+        allOf:
+        - $ref: '#/definitions/model.Proxy'
+        description: 当前机器人的代理配置
+      redis_db:
+        description: 当前机器人登陆的Redis数据库
+        type: integer
+      robot_code:
+        description: 当前机器人的唯一标识
+        type: string
+      robot_name:
+        description: 当前机器人的名称
+        type: string
+      status:
+        allOf:
+        - $ref: '#/definitions/model.RobotStatus'
+        description: 当前机器人登陆的状态
+      updated_at:
+        type: integer
+      wechat_id:
+        description: 当前机器人登陆的微信id
+        type: string
+      wechat_version:
+        type: string
+    type: object
+  dto.RobotSendAITTSMessageRequest:
+    properties:
+      content:
+        type: string
+      id:
+        type: integer
+      speaker:
+        type: string
+      to_wxid:
+        type: string
+    required:
+    - content
+    - id
+    - speaker
+    - to_wxid
+    type: object
+  dto.RobotStartServerRequest:
+    properties:
+      id:
+        type: integer
+    required:
+    - id
+    type: object
+  dto.RobotUpdateRequest:
+    properties:
+      proxy:
+        $ref: '#/definitions/dto.ProxyInput'
+      robot_name:
+        type: string
+    required:
+    - robot_name
+    type: object
+  dto.SKBuiltinBufferT:
+    properties:
+      buffer:
+        items:
+          type: integer
+        type: array
+      iLen:
+        type: integer
+    type: object
+  dto.SKBuiltinString_S:
+    properties:
+      buffer:
+        type: string
+      iLen:
+        type: integer
+    type: object
+  dto.SaveChatRoomSettingsRequest:
+    properties:
+      chat_ai_enabled:
+        type: boolean
+      chat_ai_trigger:
+        type: string
+      chat_api_key:
+        type: string
+      chat_base_url:
+        type: string
+      chat_model:
+        type: string
+      chat_prompt:
+        type: string
+      chat_room_id:
+        type: string
+      chat_room_ranking_enabled:
+        type: boolean
+      chat_room_summary_enabled:
+        type: boolean
+      chat_room_summary_mode:
+        type: string
+      chat_room_summary_model:
+        type: string
+      config_id:
+        type: integer
+      id:
+        type: integer
+      image_ai_enabled:
+        type: boolean
+      image_ai_settings:
+        additionalProperties: {}
+        type: object
+      image_recognition_model:
+        type: string
+      knowledge_categories:
+        items:
+          type: string
+        type: array
+      leave_chat_room_alert_enabled:
+        type: boolean
+      leave_chat_room_alert_text:
+        type: string
+      max_completion_tokens:
+        type: integer
+      memory_extraction_blacklist:
+        items:
+          type: string
+        type: array
+      morning_enabled:
+        type: boolean
+      news_enabled:
+        type: boolean
+      news_type:
+        type: string
+      pat_enabled:
+        type: boolean
+      pat_text:
+        type: string
+      pat_type:
+        type: string
+      pat_voice_timbre:
+        type: string
+      podcast_config:
+        additionalProperties: {}
+        type: object
+      podcast_enabled:
+        type: boolean
+      short_video_parsing_enabled:
+        type: boolean
+      tts_enabled:
+        type: boolean
+      tts_model:
+        type: string
+      tts_settings:
+        additionalProperties: {}
+        type: object
+      welcome_emoji_len:
+        type: integer
+      welcome_emoji_md5:
+        type: string
+      welcome_enabled:
+        type: boolean
+      welcome_image_url:
+        type: string
+      welcome_text:
+        type: string
+      welcome_type:
+        type: string
+      welcome_url:
+        type: string
+      wxhb_notify_enabled:
+        type: boolean
+      wxhb_notify_member_list:
+        type: string
+    required:
+    - id
+    type: object
+  dto.SaveFriendSettingsRequest:
+    properties:
+      chat_ai_enabled:
+        type: boolean
+      chat_api_key:
+        type: string
+      chat_base_url:
+        type: string
+      chat_model:
+        type: string
+      chat_prompt:
+        type: string
+      config_id:
+        type: integer
+      id:
+        type: integer
+      image_ai_enabled:
+        type: boolean
+      image_ai_settings:
+        additionalProperties: {}
+        type: object
+      image_recognition_model:
+        type: string
+      max_completion_tokens:
+        type: integer
+      tts_enabled:
+        type: boolean
+      tts_model:
+        type: string
+      tts_settings:
+        additionalProperties: {}
+        type: object
+      wechat_id:
+        type: string
+    required:
+    - id
+    - wechat_id
+    type: object
+  dto.SaveGlobalSettingsRequest:
+    properties:
+      chat_ai_enabled:
+        type: boolean
+      chat_ai_trigger:
+        type: string
+      chat_api_key:
+        type: string
+      chat_base_url:
+        type: string
+      chat_model:
+        type: string
+      chat_prompt:
+        type: string
+      chat_room_ranking_daily_cron:
+        type: string
+      chat_room_ranking_enabled:
+        type: boolean
+      chat_room_ranking_month_cron:
+        type: string
+      chat_room_ranking_weekly_cron:
+        type: string
+      chat_room_summary_cron:
+        type: string
+      chat_room_summary_enabled:
+        type: boolean
+      chat_room_summary_mode:
+        type: string
+      chat_room_summary_model:
+        type: string
+      friend_sync_cron:
+        type: string
+      id:
+        type: integer
+      image_ai_enabled:
+        type: boolean
+      image_ai_settings:
+        additionalProperties: {}
+        type: object
+      image_embedding_api_key:
+        type: string
+      image_embedding_base_url:
+        type: string
+      image_embedding_dimension:
+        type: integer
+      image_embedding_model:
+        type: string
+      image_recognition_model:
+        type: string
+      leave_chat_room_alert_enabled:
+        type: boolean
+      leave_chat_room_alert_text:
+        type: string
+      max_completion_tokens:
+        type: integer
+      memory_enabled:
+        type: boolean
+      morning_cron:
+        type: string
+      morning_enabled:
+        type: boolean
+      news_cron:
+        type: string
+      news_enabled:
+        type: boolean
+      news_type:
+        type: string
+      pat_enabled:
+        type: boolean
+      pat_text:
+        type: string
+      pat_type:
+        type: string
+      pat_voice_timbre:
+        type: string
+      text_embedding_dimension:
+        type: integer
+      text_embedding_model:
+        type: string
+      tts_enabled:
+        type: boolean
+      tts_model:
+        type: string
+      tts_settings:
+        additionalProperties: {}
+        type: object
+      welcome_emoji_len:
+        type: integer
+      welcome_emoji_md5:
+        type: string
+      welcome_enabled:
+        type: boolean
+      welcome_image_url:
+        type: string
+      welcome_text:
+        type: string
+      welcome_type:
+        type: string
+      welcome_url:
+        type: string
+    required:
+    - id
+    type: object
+  dto.SaveMemoryRequest:
+    properties:
+      chat_room_id:
+        type: string
+      contact_wxid:
+        type: string
+      content:
+        type: string
+      importance:
+        type: integer
+      key:
+        type: string
+      type:
+        type: string
+    required:
+    - contact_wxid
+    - content
+    - key
+    - type
+    type: object
+  dto.SearchImageKnowledgeByImageRequest:
+    properties:
+      category:
+        type: string
+      image_url:
+        type: string
+      limit:
+        type: integer
+    required:
+    - image_url
+    type: object
+  dto.SearchImageKnowledgeByTextRequest:
+    properties:
+      category:
+        type: string
+      limit:
+        type: integer
+      query:
+        type: string
+    required:
+    - query
+    type: object
+  dto.SearchKnowledgeRequest:
+    properties:
+      category:
+        type: string
+      limit:
+        type: integer
+      query:
+        type: string
+    required:
+    - query
+    type: object
+  dto.SearchMemoryRequest:
+    properties:
+      contact_wxid:
+        type: string
+      limit:
+        type: integer
+      query:
+        type: string
+    type: object
+  dto.SendLongTextMessageRequest:
+    properties:
+      content:
+        type: string
+      id:
+        type: integer
+      to_wxid:
+        type: string
+    required:
+    - content
+    - id
+    - to_wxid
+    type: object
+  dto.SendTextMessageRequest:
+    properties:
+      at:
+        items:
+          type: string
+        type: array
+      content:
+        type: string
+      id:
+        type: integer
+      to_wxid:
+        type: string
+    required:
+    - content
+    - id
+    - to_wxid
+    type: object
+  dto.Sentence:
+    properties:
+      begin_time:
+        type: integer
+      emotion:
+        type: string
+      end_time:
+        type: integer
+      origin_text:
+        type: string
+      paragraph_no:
+        type: integer
+      text:
+        type: string
+      words:
+        items:
+          $ref: '#/definitions/dto.Word'
+        type: array
+    type: object
+  dto.SetSkillEnvsRequest:
+    properties:
+      env_vars:
+        items:
+          $ref: '#/definitions/dto.EnvVar'
+        type: array
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  dto.ShowStyleKey:
+    properties:
+      keyCount:
+        type: integer
+    type: object
+  dto.Size:
+    properties:
+      Height:
+        type: string
+      TotalSize:
+        type: string
+      Width:
+        type: string
+    type: object
+  dto.Skill:
+    properties:
+      enabled:
+        description: 是否已启用
+        type: boolean
+      env_vars:
+        description: 环境变量列表
+        items:
+          $ref: '#/definitions/dto.EnvVar'
+        type: array
+      installed_at:
+        description: 安装时间
+        type: string
+      instructions:
+        description: 完整 SKILL.md body（markdown 指令部分）
+        type: string
+      metadata:
+        allOf:
+        - $ref: '#/definitions/dto.SkillMetadata'
+        description: 元数据（来自 SKILL.md frontmatter）
+      path:
+        description: Skill 在磁盘上的绝对路径
+        type: string
+      source:
+        allOf:
+        - $ref: '#/definitions/dto.SkillSource'
+        description: 来源信息
+    type: object
+  dto.SkillMetadata:
+    properties:
+      allowed_tools:
+        type: string
+      compatibility:
+        type: string
+      description:
+        type: string
+      license:
+        type: string
+      metadata:
+        additionalProperties:
+          type: string
+        type: object
+      name:
+        type: string
+    type: object
+  dto.SkillRequest:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  dto.SkillSource:
+    properties:
+      ref:
+        description: Git ref（branch/tag/commit）
+        type: string
+      repo_url:
+        description: Git 仓库 URL（如果通过 Git 安装）
+        type: string
+      sub_path:
+        description: 仓库中的子路径
+        type: string
+      type:
+        description: 类型：local / git
+        type: string
+    type: object
+  dto.SliderVerifyRequest:
+    properties:
+      client_version:
+        type: integer
+      data62:
+        type: string
+      device_type:
+        type: string
+      ticket:
+        type: string
+    required:
+    - data62
+    - ticket
+    type: object
+  dto.SnsBufferUrl:
+    properties:
+      Type:
+        type: integer
+      Url:
+        type: string
+    type: object
+  dto.SnsCommentInfo:
+    properties:
+      CommentFlag:
+        type: integer
+      CommentId:
+        type: integer
+      CommentId2:
+        type: integer
+      Content:
+        type: string
+      CreateTime:
+        type: integer
+      DeleteFlag:
+        type: integer
+      IsNotRichText:
+        type: integer
+      Nickname:
+        type: string
+      ReplyCommentId:
+        type: integer
+      ReplyCommentId2:
+        type: integer
+      ReplyUsername:
+        type: string
+      Source:
+        type: integer
+      Type:
+        type: integer
+      Username:
+        type: string
+    type: object
+  dto.SnsGroup:
+    properties:
+      GroupId:
+        type: integer
+    type: object
+  dto.SnsObject:
+    properties:
+      Avatar:
+        type: string
+      BlackList:
+        items:
+          $ref: '#/definitions/dto.SKBuiltinString_S'
+        type: array
+      BlackListCount:
+        type: integer
+      CommentCount:
+        type: integer
+      CommentUserList:
+        items:
+          $ref: '#/definitions/dto.SnsCommentInfo'
+        type: array
+      CommentUserListCount:
+        type: integer
+      CreateTime:
+        type: integer
+      DeleteFlag:
+        type: integer
+      ExtFlag:
+        type: integer
+      GroupCount:
+        type: integer
+      GroupList:
+        items:
+          $ref: '#/definitions/dto.SnsGroup'
+        type: array
+      GroupUser:
+        items:
+          $ref: '#/definitions/dto.SKBuiltinString_S'
+        type: array
+      GroupUserCount:
+        type: integer
+      Id:
+        type: integer
+      IdStr:
+        type: string
+      IsNotRichText:
+        type: integer
+      LikeCount:
+        type: integer
+      LikeFlag:
+        type: integer
+      LikeUserList:
+        items:
+          $ref: '#/definitions/dto.SnsCommentInfo'
+        type: array
+      LikeUserListCount:
+        type: integer
+      Nickname:
+        type: string
+      NoChange:
+        type: integer
+      ObjectDesc:
+        $ref: '#/definitions/dto.SKBuiltinString_S'
+      ObjectOperations:
+        items:
+          $ref: '#/definitions/dto.SKBuiltinString_S'
+        type: array
+      PreDownloadInfo:
+        $ref: '#/definitions/dto.PreDownloadInfo'
+      ReferId:
+        type: integer
+      ReferUsername:
+        type: string
+      SnsRedEnvelops:
+        $ref: '#/definitions/dto.SnsRedEnvelops'
+      TimelineObject:
+        $ref: '#/definitions/dto.TimelineObject'
+      Username:
+        type: string
+      WeAppInfo:
+        $ref: '#/definitions/dto.SnsWeAppInfo'
+      WithUserCount:
+        type: integer
+      WithUserList:
+        items:
+          $ref: '#/definitions/dto.SnsCommentInfo'
+        type: array
+      WithUserListCount:
+        type: integer
+    type: object
+  dto.SnsObjectDetailResponse:
+    properties:
+      object:
+        $ref: '#/definitions/dto.SnsObject'
+    type: object
+  dto.SnsRedEnvelops:
+    properties:
+      ReportId:
+        type: integer
+      ReportKey:
+        type: integer
+      ResourceId:
+        type: integer
+      RewardCount:
+        type: integer
+      RewardUserList:
+        type: string
+    type: object
+  dto.SnsServerConfig:
+    properties:
+      CopyAndPasteWordLimit:
+        type: integer
+      PostMentionLimit:
+        type: integer
+    type: object
+  dto.SnsUserInfo:
+    properties:
+      SnsBgimgId:
+        type: string
+      SnsBgobjectId:
+        type: integer
+      SnsFlag:
+        type: integer
+      SnsFlagEx:
+        type: integer
+    type: object
+  dto.SnsUserPageResponse:
+    properties:
+      ContinueId:
+        items:
+          type: integer
+        type: array
+      FristPageMd5:
+        type: string
+      LimitedId:
+        items:
+          type: integer
+        type: array
+      NewRequestTime:
+        items:
+          type: integer
+        type: array
+      ObjectCount:
+        type: integer
+      ObjectCountForSameMd5:
+        items:
+          type: integer
+        type: array
+      ObjectList:
+        items:
+          $ref: '#/definitions/dto.SnsObject'
+        type: array
+      ObjectTotalCount:
+        items:
+          type: integer
+        type: array
+      RetTips:
+        items:
+          type: string
+        type: array
+      ServerConfig:
+        items:
+          $ref: '#/definitions/dto.SnsServerConfig'
+        type: array
+      SnsUserInfo:
+        items:
+          $ref: '#/definitions/dto.SnsUserInfo'
+        type: array
+    type: object
+  dto.SnsWeAppInfo:
+    properties:
+      AppId:
+        type: integer
+      MapPoiId:
+        type: string
+      RScore:
+        type: integer
+      RedirectUrl:
+        type: string
+      ShowType:
+        type: integer
+      UserName:
+        type: string
+    type: object
+  dto.StreamVideo:
+    properties:
+      StreamVideoThumbUrl:
+        type: string
+      StreamVideoUrl:
+        type: string
+      StreamVideoWebUrl:
+        type: string
+    type: object
+  dto.SwaggerEmpty:
+    type: object
+  dto.SwaggerSuccess:
+    properties:
+      success:
+        type: boolean
+    type: object
+  dto.SyncContactsRequest:
+    properties:
+      id:
+        type: integer
+    type: object
+  dto.SystemMessage:
+    properties:
+      client_msg_id:
+        type: integer
+      content:
+        type: string
+      created_at:
+        type: integer
+      description:
+        type: string
+      from_wxid:
+        type: string
+      id:
+        type: integer
+      image_url:
+        type: string
+      is_read:
+        type: boolean
+      msg_id:
+        type: integer
+      status:
+        type: integer
+      to_wxid:
+        type: string
+      type:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  dto.SystemPrompt:
+    properties:
+      content:
+        type: string
+      created_at:
+        type: integer
+      id:
+        type: integer
+      title:
+        type: string
+      updated_at:
+        type: integer
+    type: object
+  dto.SystemSettings:
+    properties:
+      api_token:
+        type: string
+      api_token_enabled:
+        type: boolean
+      auto_chatroom_invite:
+        type: boolean
+      auto_verify_user:
+        type: boolean
+      created_at:
+        type: integer
+      id:
+        type: integer
+      notification_type:
+        type: string
+      offline_notification_enabled:
+        type: boolean
+      push_plus_token:
+        type: string
+      push_plus_url:
+        type: string
+      updated_at:
+        type: integer
+      verify_user_delay:
+        type: integer
+      webhook_headers:
+        additionalProperties: {}
+        type: object
+      webhook_url:
+        type: string
+      wecom_agent_id:
+        type: string
+      wecom_corp_id:
+        type: string
+      wecom_proxy_url:
+        type: string
+      wecom_secret:
+        type: string
+      wecom_to_user:
+        type: string
+    type: object
+  dto.SystemSettingsRequest:
+    properties:
+      api_token_enabled:
+        type: boolean
+      auto_chatroom_invite:
+        type: boolean
+      auto_verify_user:
+        type: boolean
+      id:
+        type: integer
+      notification_type:
+        type: string
+      offline_notification_enabled:
+        type: boolean
+      push_plus_token:
+        type: string
+      push_plus_url:
+        type: string
+      system_settings_id:
+        type: integer
+      verify_user_delay:
+        type: integer
+      webhook_headers:
+        additionalProperties: {}
+        type: object
+      webhook_url:
+        type: string
+      wecom_agent_id:
+        type: string
+      wecom_corp_id:
+        type: string
+      wecom_proxy_url:
+        type: string
+      wecom_secret:
+        type: string
+      wecom_to_user:
+        type: string
+    type: object
+  dto.Thumb:
+    properties:
+      Type:
+        type: string
+      Value:
+        type: string
+    type: object
+  dto.TimelineObject:
+    properties:
+      ActionInfo:
+        $ref: '#/definitions/dto.ActionInfo'
+      AppInfo:
+        $ref: '#/definitions/dto.AppInfo'
+      CanvasInfoXML:
+        type: string
+      ContentAttr:
+        type: string
+      ContentDesc:
+        type: string
+      ContentDescScene:
+        type: integer
+      ContentDescShowType:
+        type: integer
+      ContentObject:
+        $ref: '#/definitions/dto.ContentObject'
+      CreateTime:
+        type: integer
+      ID:
+        type: integer
+      Location:
+        $ref: '#/definitions/dto.Location'
+      Private:
+        type: integer
+      PublicBrandContactType:
+        type: integer
+      PublicUserName:
+        type: string
+      ShowFlag:
+        type: integer
+      SightFolded:
+        type: integer
+      SourceNickName:
+        type: string
+      SourceUserName:
+        type: string
+      StatExtStr:
+        type: string
+      StatisticsData:
+        type: string
+      StreamVideo:
+        $ref: '#/definitions/dto.StreamVideo'
+      Username:
+        type: string
+      WeappInfo:
+        $ref: '#/definitions/dto.WeappInfo'
+    type: object
+  dto.URL:
+    properties:
+      MD5:
+        type: string
+      Type:
+        type: string
+      Value:
+        type: string
+      VideoMD5:
+        type: string
+    type: object
+  dto.UnifyAuthResponse:
+    properties:
+      AgainUrl:
+        type: string
+      Cookie:
+        type: string
+      authSectResp:
+        $ref: '#/definitions/dto.AuthSectResp'
+      checkUrl:
+        type: string
+      unifyAuthSectFlag:
+        type: integer
+    type: object
+  dto.UpdateChatRoomMemberRequest:
+    properties:
+      batch:
+        type: boolean
+      chat_room_id:
+        type: string
+      is_admin:
+        type: boolean
+      is_blacklisted:
+        type: boolean
+      score:
+        type: integer
+      score_action:
+        type: string
+      temporary_score:
+        type: integer
+      temporary_score_action:
+        type: string
+      wechat_id:
+        type: string
+    required:
+    - chat_room_id
+    - wechat_id
+    type: object
+  dto.UpdateKnowledgeCategoryRequest:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    required:
+    - id
+    - name
+    type: object
+  dto.UpdateKnowledgeDocumentRequest:
+    properties:
+      content:
+        type: string
+      id:
+        type: integer
+      source:
+        type: string
+      title:
+        type: string
+    required:
+    - content
+    - id
+    - title
+    type: object
+  dto.UpdateSystemPromptRequest:
+    properties:
+      content:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+    required:
+    - content
+    - id
+    - title
+    type: object
+  dto.VectorSearchResult:
+    properties:
+      ID:
+        type: string
+      Payload:
+        additionalProperties:
+          type: string
+        type: object
+      Score:
+        type: number
+    type: object
+  dto.VideoColdDLRule:
+    properties:
+      All:
+        type: string
+    type: object
+  dto.VideoSize:
+    properties:
+      Height:
+        type: string
+      Width:
+        type: string
+    type: object
+  dto.WTLoginImgRespInfo:
+    properties:
+      imgBuf:
+        $ref: '#/definitions/dto.SKBuiltinBufferT'
+      imgEncryptKey:
+        type: string
+      imgSid:
+        type: string
+      ksid:
+        $ref: '#/definitions/dto.SKBuiltinBufferT'
+    type: object
+  dto.WeappInfo:
+    properties:
+      AppUserName:
+        type: string
+      DebugMode:
+        type: string
+      IsGame:
+        type: string
+      IsHidden:
+        type: integer
+      MessageExtraData:
+        type: string
+      PagePath:
+        type: string
+      PreloadResources:
+        type: string
+      ShareActionId:
+        type: string
+      SubType:
+        type: string
+      Version:
+        type: string
+    type: object
+  dto.Word:
+    properties:
+      begin:
+        type: integer
+      end:
+        type: integer
+      phonemes:
+        items:
+          $ref: '#/definitions/dto.Phoneme'
+        type: array
+      text:
+        type: string
+    type: object
+  dto.WxVerifyCodeRespInfo:
+    properties:
+      verifyBuff:
+        $ref: '#/definitions/dto.SKBuiltinBufferT'
+      verifySignature:
+        type: string
+    type: object
+  model.DeviceType:
+    enum:
+    - iPad
+    - iPhone
+    - Android
+    - Pad-Android
+    - Windows
+    - Mac
+    - Car
+    - Unknown
+    type: string
+    x-enum-varnames:
+    - DeviceTypeiPad
+    - DeviceTypeiPhone
+    - DeviceTypeAndroid
+    - DeviceTypePadAndroid
+    - DeviceTypeWin
+    - DeviceTypeMac
+    - DeviceTypeCar
+    - DeviceTypeUnknown
+  model.LoginMethod:
+    enum:
+    - scan
+    - token
+    type: string
+    x-enum-varnames:
+    - LoginMethodScan
+    - LoginMethodToken
+  model.Proxy:
+    properties:
+      ProxyIp:
+        type: string
+      ProxyPassword:
+        type: string
+      ProxyUser:
+        type: string
+    type: object
+  model.RobotStatus:
+    enum:
+    - online
+    - offline
+    - error
+    type: string
+    x-enum-varnames:
+    - RobotStatusOnline
+    - RobotStatusOffline
+    - RobotStatusError
+  model.User:
+    properties:
+      api_token:
+        type: string
+      avatar_url:
+        type: string
+      created_at:
+        type: integer
+      display_name:
+        maxLength: 20
+        type: string
+      id:
+        type: integer
+      last_login_at:
+        type: integer
+      login_method:
+        $ref: '#/definitions/model.LoginMethod'
+      role:
+        description: admin, common
+        type: integer
+      status:
+        description: enabled, disabled
+        type: integer
+      wechat_id:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: wechat-robot-admin-backend 服务接口文档
+  title: WeChat Robot Backend API
+  version: "1.0"
+paths:
+  /ai-callback/voice/doubao-tts:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: robot_id
+        required: true
+        type: integer
+      - description: 回调参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.DoubaoTTSCallbackRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      summary: 豆包 TTS 回调
+      tags:
+      - AICallback
+  /chat-room-settings:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 群业务ID
+        in: query
+        name: chat_room_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_GetChatRoomSettingsResponse'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取群设置
+      tags:
+      - ChatRoomSettings
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 群设置
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SaveChatRoomSettingsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 保存群设置
+      tags:
+      - ChatRoomSettings
+  /chat-room/announcement:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 群公告参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ChatRoomOperateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 设置群公告
+      tags:
+      - ChatRoom
+  /chat-room/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 建群参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateChatRoomRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 创建群聊
+      tags:
+      - ChatRoom
+  /chat-room/invite:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 邀请参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.InviteChatRoomMemberRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 邀请群成员
+      tags:
+      - ChatRoom
+  /chat-room/join:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 入群参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ChatRoomJoinRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 同意入群邀请
+      tags:
+      - ChatRoom
+  /chat-room/member:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 群ID
+        in: query
+        name: chat_room_id
+        required: true
+        type: string
+      - description: 成员微信ID
+        in: query
+        name: wechat_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_ChatRoomMember'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取群成员详情
+      tags:
+      - ChatRoom
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 群成员配置
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateChatRoomMemberRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 更新群成员配置
+      tags:
+      - ChatRoom
+  /chat-room/members:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 删除参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.DelChatRoomMemberRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 删除群成员
+      tags:
+      - ChatRoom
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 群ID
+        in: query
+        name: chat_room_id
+        required: true
+        type: string
+      - description: 关键词
+        in: query
+        name: keyword
+        type: string
+      - description: 页码
+        in: query
+        name: page_index
+        type: integer
+      - description: 每页数量
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_ListResponse-dto_ChatRoomMember'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取群成员列表
+      tags:
+      - ChatRoom
+  /chat-room/members/sync:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 同步参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ChatRoomRequestBase'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 同步群成员
+      tags:
+      - ChatRoom
+  /chat-room/name:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 群名称参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ChatRoomOperateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 设置群名称
+      tags:
+      - ChatRoom
+  /chat-room/not-left-members:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 群ID
+        in: query
+        name: chat_room_id
+        required: true
+        type: string
+      - description: 关键词
+        in: query
+        name: keyword
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-array_dto_ChatRoomMember'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取未退群成员列表
+      tags:
+      - ChatRoom
+  /chat-room/quit:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 退群参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ChatRoomRequestBase'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 退出群聊
+      tags:
+      - ChatRoom
+  /chat-room/remark:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 群备注参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ChatRoomOperateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 设置群备注
+      tags:
+      - ChatRoom
+  /chat/file/download:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 消息ID
+        in: query
+        name: message_id
+        required: true
+        type: integer
+      - description: 附件地址
+        in: query
+        name: attach_url
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: file
+      security:
+      - ApiTokenAuth: []
+      summary: 下载聊天文件
+      tags:
+      - Chat
+  /chat/history:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 联系人ID
+        in: query
+        name: contact_id
+        required: true
+        type: string
+      - description: 关键词
+        in: query
+        name: keyword
+        type: string
+      - description: 群成员微信ID
+        in: query
+        name: chat_room_member
+        type: string
+      - description: 开始时间
+        in: query
+        name: time_start
+        type: integer
+      - description: 结束时间
+        in: query
+        name: time_end
+        type: integer
+      - description: 页码
+        in: query
+        name: page_index
+        type: integer
+      - description: 每页数量
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_ListResponse-dto_ChatHistory'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取聊天记录
+      tags:
+      - Chat
+  /chat/image/download:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 消息ID
+        in: query
+        name: message_id
+        required: true
+        type: integer
+      - description: 附件地址
+        in: query
+        name: attach_url
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: file
+      security:
+      - ApiTokenAuth: []
+      summary: 下载聊天图片
+      tags:
+      - Chat
+  /chat/video/download:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 消息ID
+        in: query
+        name: message_id
+        required: true
+        type: integer
+      - description: 附件地址
+        in: query
+        name: attach_url
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: file
+      security:
+      - ApiTokenAuth: []
+      summary: 下载聊天视频
+      tags:
+      - Chat
+  /chat/voice/download:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 消息ID
+        in: query
+        name: message_id
+        required: true
+        type: integer
+      - description: 附件地址
+        in: query
+        name: attach_url
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: file
+      security:
+      - ApiTokenAuth: []
+      summary: 下载聊天语音
+      tags:
+      - Chat
+  /contact/friend:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 删除参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FriendDeleteRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 删除好友
+      tags:
+      - Contact
+  /contact/friend/add:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 好友申请参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FriendSendRequestRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 发送好友申请
+      tags:
+      - Contact
+  /contact/friend/add-from-chat-room:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 好友申请参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FriendSendRequestFromChatRoomRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 从群成员发送好友申请
+      tags:
+      - Contact
+  /contact/friend/pass-verify:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 验证参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FriendPassVerifyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 通过好友验证
+      tags:
+      - Contact
+  /contact/friend/remark:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 备注参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FriendSetRemarksRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 设置好友备注
+      tags:
+      - Contact
+  /contact/friend/search:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 搜索参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FriendSearchRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_FriendSearchResponse'
+      security:
+      - ApiTokenAuth: []
+      summary: 搜索好友
+      tags:
+      - Contact
+  /contact/list:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - collectionFormat: multi
+        description: 联系人ID列表
+        in: query
+        items:
+          type: string
+        name: contact_ids
+        type: array
+      - description: 联系人类型
+        in: query
+        name: type
+        type: string
+      - description: 关键词
+        in: query
+        name: keyword
+        type: string
+      - description: 页码
+        in: query
+        name: page_index
+        type: integer
+      - description: 每页数量
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_ListResponse-dto_GetContactsResponse'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取联系人列表
+      tags:
+      - Contact
+  /contact/sync:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 同步参数
+        in: body
+        name: request
+        schema:
+          $ref: '#/definitions/dto.SyncContactsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 同步联系人
+      tags:
+      - Contact
+  /friend-settings:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 联系人业务ID
+        in: query
+        name: contact_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_GetFriendSettingsResponse'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取好友设置
+      tags:
+      - FriendSettings
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 好友设置
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SaveFriendSettingsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 保存好友设置
+      tags:
+      - FriendSettings
+  /global-settings:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_GetGlobalSettingsResponse'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取全局设置
+      tags:
+      - GlobalSettings
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 全局设置
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SaveGlobalSettingsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 保存全局设置
+      tags:
+      - GlobalSettings
+  /image-knowledge/categories:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-array_dto_KnowledgeCategory'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取图片知识分类
+      tags:
+      - ImageKnowledge
+  /image-knowledge/document:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 删除参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.DeleteImageKnowledgeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 删除图片知识文档
+      tags:
+      - ImageKnowledge
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 图片知识文档
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AddImageKnowledgeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 新增图片知识文档
+      tags:
+      - ImageKnowledge
+  /image-knowledge/documents:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 分类
+        in: query
+        name: category
+        required: true
+        type: string
+      - description: 页码
+        in: query
+        name: page_index
+        type: integer
+      - description: 每页数量
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_ListResponse-dto_ImageKnowledgeDocument'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取图片知识文档列表
+      tags:
+      - ImageKnowledge
+  /image-knowledge/reindex:
+    post:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 重建图片知识库索引
+      tags:
+      - ImageKnowledge
+  /image-knowledge/search/image:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 搜索参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SearchImageKnowledgeByImageRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-array_dto_VectorSearchResult'
+      security:
+      - ApiTokenAuth: []
+      summary: 按图片搜索图片知识
+      tags:
+      - ImageKnowledge
+  /image-knowledge/search/text:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 搜索参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SearchImageKnowledgeByTextRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-array_dto_VectorSearchResult'
+      security:
+      - ApiTokenAuth: []
+      summary: 按文本搜索图片知识
+      tags:
+      - ImageKnowledge
+  /knowledge/categories:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 分类类型 text/image
+        in: query
+        name: type
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-array_dto_KnowledgeCategory'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取知识分类
+      tags:
+      - Knowledge
+  /knowledge/category:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 删除参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.DeleteKnowledgeCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 删除知识分类
+      tags:
+      - Knowledge
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 知识分类
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateKnowledgeCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_KnowledgeCategory'
+      security:
+      - ApiTokenAuth: []
+      summary: 创建知识分类
+      tags:
+      - Knowledge
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 知识分类
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateKnowledgeCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 更新知识分类
+      tags:
+      - Knowledge
+  /knowledge/document:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 删除参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.DeleteKnowledgeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 删除知识文档
+      tags:
+      - Knowledge
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 知识文档
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AddKnowledgeDocumentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 新增知识文档
+      tags:
+      - Knowledge
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 知识文档
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateKnowledgeDocumentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 更新知识文档
+      tags:
+      - Knowledge
+  /knowledge/document/disable:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 知识文档业务ID
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controller.SwaggerIDRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 禁用知识文档
+      tags:
+      - Knowledge
+  /knowledge/document/enable:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 知识文档业务ID
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controller.SwaggerIDRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 启用知识文档
+      tags:
+      - Knowledge
+  /knowledge/documents:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 分类
+        in: query
+        name: category
+        required: true
+        type: string
+      - description: 页码
+        in: query
+        name: page_index
+        type: integer
+      - description: 每页数量
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_ListResponse-dto_KnowledgeDocument'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取知识文档列表
+      tags:
+      - Knowledge
+  /knowledge/reindex:
+    post:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 重建文本知识库索引
+      tags:
+      - Knowledge
+  /knowledge/search:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 搜索参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SearchKnowledgeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-array_dto_VectorSearchResult'
+      security:
+      - ApiTokenAuth: []
+      summary: 搜索知识库
+      tags:
+      - Knowledge
+  /login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 登录参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controller.SwaggerLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerSuccess'
+      summary: 管理后台登录
+      tags:
+      - User
+  /mcp-server:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: MCP 服务
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.MCPServer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 删除 MCP 服务
+      tags:
+      - MCPServer
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: MCP 服务ID
+        in: query
+        name: mcp_server_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_MCPServer'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取 MCP 服务详情
+      tags:
+      - MCPServer
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: MCP 服务
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.MCPServer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 创建 MCP 服务
+      tags:
+      - MCPServer
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: MCP 服务
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.MCPServer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 更新 MCP 服务
+      tags:
+      - MCPServer
+  /mcp-server/disable:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: MCP 服务业务ID
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controller.SwaggerIDRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 禁用 MCP 服务
+      tags:
+      - MCPServer
+  /mcp-server/enable:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: MCP 服务业务ID
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controller.SwaggerIDRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 启用 MCP 服务
+      tags:
+      - MCPServer
+  /mcp-server/list:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-array_dto_MCPServer'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取 MCP 服务列表
+      tags:
+      - MCPServer
+  /mcp-server/tools:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: MCP 服务ID
+        in: query
+        name: mcp_server_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-array_dto_MCPServerTool'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取 MCP 服务工具列表
+      tags:
+      - MCPServer
+  /memory:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 删除参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.DeleteMemoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 删除记忆
+      tags:
+      - Memory
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 记忆
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SaveMemoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_Memory'
+      security:
+      - ApiTokenAuth: []
+      summary: 保存记忆
+      tags:
+      - Memory
+  /memory/search:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 搜索参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SearchMemoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-array_dto_Memory'
+      security:
+      - ApiTokenAuth: []
+      summary: 搜索记忆
+      tags:
+      - Memory
+  /message/revoke:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 撤回参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.MessageRevokeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 撤回消息
+      tags:
+      - Message
+  /message/send/ai/tts:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: AI 语音消息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RobotSendAITTSMessageRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 发送 AI 语音消息
+      tags:
+      - Message
+  /message/send/file:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 接收方微信ID
+        in: formData
+        name: to_wxid
+        required: true
+        type: string
+      - description: 客户端文件ID
+        in: formData
+        name: client_app_data_id
+        required: true
+        type: string
+      - description: 文件名
+        in: formData
+        name: filename
+        required: true
+        type: string
+      - description: 文件哈希
+        in: formData
+        name: file_hash
+        required: true
+        type: string
+      - description: 文件大小
+        in: formData
+        name: file_size
+        required: true
+        type: integer
+      - description: 分片序号
+        in: formData
+        name: chunk_index
+        type: integer
+      - description: 分片总数
+        in: formData
+        name: total_chunks
+        required: true
+        type: integer
+      - description: 文件分片
+        in: formData
+        name: chunk
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 发送文件分片
+      tags:
+      - Message
+  /message/send/image:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 接收方微信ID
+        in: formData
+        name: to_wxid
+        required: true
+        type: string
+      - description: 图片文件
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 发送图片消息
+      tags:
+      - Message
+  /message/send/longtext:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 长文本消息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SendLongTextMessageRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 发送长文本消息
+      tags:
+      - Message
+  /message/send/text:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 文本消息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SendTextMessageRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 发送文本消息
+      tags:
+      - Message
+  /message/send/video:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 接收方微信ID
+        in: formData
+        name: to_wxid
+        required: true
+        type: string
+      - description: 视频文件
+        in: formData
+        name: video
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 发送视频消息
+      tags:
+      - Message
+  /message/send/voice:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 接收方微信ID
+        in: formData
+        name: to_wxid
+        required: true
+        type: string
+      - description: 语音文件
+        in: formData
+        name: voice
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 发送语音消息
+      tags:
+      - Message
+  /message/timbre:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-array_string'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取语音音色列表
+      tags:
+      - Message
+  /moments/comment:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 评论参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FriendCircleCommentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SnsObject'
+      security:
+      - ApiTokenAuth: []
+      summary: 评论朋友圈
+      tags:
+      - Moments
+  /moments/down-media:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 媒体 URL
+        in: query
+        name: url
+        required: true
+        type: string
+      - description: 媒体 Key
+        in: query
+        name: key
+        type: string
+      produces:
+      - video/mp4
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: file
+      security:
+      - ApiTokenAuth: []
+      summary: 下载朋友圈媒体
+      tags:
+      - Moments
+  /moments/get-detail:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 目标微信ID
+        in: query
+        name: Towxid
+        required: true
+        type: string
+      - description: 首页 MD5
+        in: query
+        name: Fristpagemd5
+        type: string
+      - description: 最大朋友圈ID
+        in: query
+        name: Maxid
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SnsUserPageResponse'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取朋友圈用户页详情
+      tags:
+      - Moments
+  /moments/get-id-detail:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 目标微信ID
+        in: query
+        name: Towxid
+        required: true
+        type: string
+      - description: 朋友圈业务ID
+        in: query
+        name: MomentId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SnsObjectDetailResponse'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取朋友圈单条详情
+      tags:
+      - Moments
+  /moments/list:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 首页 MD5
+        in: query
+        name: frist_page_md5
+        type: string
+      - description: 最大朋友圈ID
+        in: query
+        name: max_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_MomentsGetListResponse'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取朋友圈列表
+      tags:
+      - Moments
+  /moments/operate:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 操作参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.MomentOpRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_MomentOpResponse'
+      security:
+      - ApiTokenAuth: []
+      summary: 操作朋友圈
+      tags:
+      - Moments
+  /moments/post:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 发布参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.MomentPostRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_MomentPostResponse'
+      security:
+      - ApiTokenAuth: []
+      summary: 发布朋友圈
+      tags:
+      - Moments
+  /moments/privacy-settings:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 隐私设置
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.MomentPrivacySettingsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_MomentPrivacySettingsResponse'
+      security:
+      - ApiTokenAuth: []
+      summary: 设置朋友圈隐私
+      tags:
+      - Moments
+  /moments/settings:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_MomentSettings'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取朋友圈设置
+      tags:
+      - Moments
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 朋友圈设置
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.MomentSettings'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 保存朋友圈设置
+      tags:
+      - Moments
+  /moments/upload-media:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 图片或视频文件
+        in: formData
+        name: media
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_FriendCircleMedia'
+      security:
+      - ApiTokenAuth: []
+      summary: 上传朋友圈媒体
+      tags:
+      - Moments
+  /oauth/official-account/url:
+    get:
+      produces:
+      - image/png
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: file
+      summary: 获取微信公众号授权二维码
+      tags:
+      - OAuth
+  /oauth/wechat:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 授权 code
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controller.WeChatRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerSuccess'
+      summary: 微信 OAuth 登录
+      tags:
+      - OAuth
+  /oss-settings:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_OSSSettings'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取 OSS 设置
+      tags:
+      - OSSSettings
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: OSS 设置
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OSSSettingsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 保存 OSS 设置
+      tags:
+      - OSSSettings
+  /pprof/{pprof_path}:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: pprof 路径
+        in: path
+        name: pprof_path
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      security:
+      - ApiTokenAuth: []
+      summary: 代理机器人 pprof GET
+      tags:
+      - Pprof
+    post:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: pprof 路径
+        in: path
+        name: pprof_path
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      security:
+      - ApiTokenAuth: []
+      summary: 代理机器人 pprof POST
+      tags:
+      - Pprof
+  /probe:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.SwaggerSuccess'
+      summary: 健康检查
+      tags:
+      - Probe
+  /robot/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RobotCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 创建机器人
+      tags:
+      - Robot
+  /robot/docker/container/client/remove:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 机器人
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RobotCommonRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 删除机器人客户端容器
+      tags:
+      - Robot
+  /robot/docker/container/client/start:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 机器人
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RobotCommonRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 启动机器人客户端容器
+      tags:
+      - Robot
+  /robot/docker/container/server/remove:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 机器人
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RobotCommonRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 删除机器人服务端容器
+      tags:
+      - Robot
+  /robot/docker/container/server/start:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 机器人
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RobotStartServerRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 启动机器人服务端容器
+      tags:
+      - Robot
+  /robot/docker/image/pull:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - text/event-stream
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.PullProgress'
+      security:
+      - ApiTokenAuth: []
+      summary: 拉取机器人 Docker 镜像
+      tags:
+      - Robot
+  /robot/export-login-data:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-string'
+      security:
+      - ApiTokenAuth: []
+      summary: 导出机器人登录数据
+      tags:
+      - Robot
+  /robot/import-login-data:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 登录数据
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controller.SwaggerImportRobotLoginDataRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 导入机器人登录数据
+      tags:
+      - Robot
+  /robot/list:
+    get:
+      parameters:
+      - description: 拥有者
+        in: query
+        name: owner
+        type: string
+      - description: 状态
+        in: query
+        name: status
+        type: string
+      - description: 关键词
+        in: query
+        name: keyword
+        type: string
+      - description: 页码
+        in: query
+        name: page_index
+        type: integer
+      - description: 每页数量
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_ListResponse-dto_RobotResponse'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取机器人列表
+      tags:
+      - Robot
+  /robot/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 登录参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controller.SwaggerRobotLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_RobotLoginResponse'
+      security:
+      - ApiTokenAuth: []
+      summary: 机器人登录
+      tags:
+      - RobotLogin
+  /robot/login-check:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 登录检查参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RobotLoginCheckRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_RobotLoginCheckResponse'
+      security:
+      - ApiTokenAuth: []
+      summary: 检查机器人登录状态
+      tags:
+      - RobotLogin
+  /robot/login/2fa:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 二次验证参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RobotLogin2FARequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 提交机器人二次验证
+      tags:
+      - RobotLogin
+  /robot/login/a16:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 账号密码
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_UnifyAuthResponse'
+      security:
+      - ApiTokenAuth: []
+      summary: 使用 A16 登录
+      tags:
+      - RobotLogin
+  /robot/login/data62:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 账号密码
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_UnifyAuthResponse'
+      security:
+      - ApiTokenAuth: []
+      summary: 使用 data62 登录
+      tags:
+      - RobotLogin
+  /robot/login/data62-sms-again:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 短信参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginData62SMSAgainRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_UnifyAuthResponse'
+      security:
+      - ApiTokenAuth: []
+      summary: data62 登录重发短信
+      tags:
+      - RobotLogin
+  /robot/login/data62-sms-verify:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 短信验证码参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginData62SMSVerifyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_UnifyAuthResponse'
+      security:
+      - ApiTokenAuth: []
+      summary: data62 登录短信验证
+      tags:
+      - RobotLogin
+  /robot/login/slider:
+    get:
+      parameters:
+      - description: data62
+        in: query
+        name: data62
+        required: true
+        type: string
+      - description: ticket
+        in: query
+        name: ticket
+        required: true
+        type: string
+      - description: 设备类型
+        in: query
+        name: device_type
+        type: string
+      - description: 客户端版本
+        in: query
+        name: client_version
+        type: integer
+      produces:
+      - text/html
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: 获取滑块验证页面
+      tags:
+      - RobotLogin
+  /robot/login/slider-auto:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 滑块参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SliderVerifyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      summary: 自动提交滑块验证
+      tags:
+      - RobotLogin
+  /robot/login/slider-verify-submit:
+    get:
+      parameters:
+      - description: 滑块数据
+        in: query
+        name: data
+        required: true
+        type: string
+      - description: 验证ID
+        in: query
+        name: verifyid
+        required: true
+        type: string
+      - description: 安全票据
+        in: query
+        name: secticket
+        required: true
+        type: string
+      - description: 随机串
+        in: query
+        name: randstr
+        required: true
+        type: string
+      - description: 登录票据
+        in: query
+        name: ticket
+        required: true
+        type: string
+      - description: 客户端版本
+        in: query
+        name: client_version
+        type: integer
+      - description: 设备类型
+        in: query
+        name: device_type
+        type: string
+      - description: 返回码
+        in: query
+        name: ret
+        type: integer
+      - description: 错误码
+        in: query
+        name: errorCode
+        type: integer
+      - description: 错误信息
+        in: query
+        name: errorMessage
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      summary: 提交滑块验证结果
+      tags:
+      - RobotLogin
+  /robot/logout:
+    delete:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 机器人登出
+      tags:
+      - RobotLogin
+  /robot/remove:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 机器人
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RobotCommonRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 删除机器人
+      tags:
+      - Robot
+  /robot/restart-client:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 机器人
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RobotCommonRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 重启机器人客户端
+      tags:
+      - Robot
+  /robot/restart-server:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 机器人
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RobotCommonRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 重启机器人服务端
+      tags:
+      - Robot
+  /robot/state:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 检查机器人状态
+      tags:
+      - RobotLogin
+  /robot/update:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 机器人
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RobotUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 更新机器人
+      tags:
+      - Robot
+  /robot/view:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_RobotResponse'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取机器人详情
+      tags:
+      - Robot
+  /skills:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-array_dto_Skill'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取技能列表
+      tags:
+      - Skills
+  /skills/disable:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 技能参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SkillRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 禁用技能
+      tags:
+      - Skills
+  /skills/enable:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 技能参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SkillRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 启用技能
+      tags:
+      - Skills
+  /skills/envs:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 环境变量
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SetSkillEnvsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 设置技能环境变量
+      tags:
+      - Skills
+  /skills/install:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 安装参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.InstallSkillRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 安装技能
+      tags:
+      - Skills
+  /skills/uninstall:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 技能参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SkillRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 卸载技能
+      tags:
+      - Skills
+  /skills/update:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 技能参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SkillRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 更新技能
+      tags:
+      - Skills
+  /system-messages:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-array_dto_SystemMessage'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取近一个月系统消息
+      tags:
+      - SystemMessage
+  /system-messages/mark-as-read:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 系统消息ID列表
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.MarkAsReadBatchRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 批量标记系统消息已读
+      tags:
+      - SystemMessage
+  /system-prompts:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 删除参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.DeleteSystemPromptRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 删除系统提示词
+      tags:
+      - SystemPrompt
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 关键词
+        in: query
+        name: keyword
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-array_dto_SystemPrompt'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取系统提示词列表
+      tags:
+      - SystemPrompt
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 系统提示词
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateSystemPromptRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SystemPrompt'
+      security:
+      - ApiTokenAuth: []
+      summary: 创建系统提示词
+      tags:
+      - SystemPrompt
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 系统提示词
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateSystemPromptRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 更新系统提示词
+      tags:
+      - SystemPrompt
+  /system-prompts/detail:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 系统提示词业务ID
+        in: query
+        name: prompt_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SystemPrompt'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取系统提示词详情
+      tags:
+      - SystemPrompt
+  /system-settings:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SystemSettings'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取系统设置
+      tags:
+      - SystemSettings
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 系统设置
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SystemSettingsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 保存系统设置
+      tags:
+      - SystemSettings
+  /system/robot-container-logs:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_RobotContainerLogsResponse'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取机器人容器日志
+      tags:
+      - System
+  /system/robot-container-stats:
+    get:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_RobotContainerStatsResponse'
+      security:
+      - ApiTokenAuth: []
+      summary: 获取机器人容器资源统计
+      tags:
+      - System
+  /user/api-token/refresh:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-string'
+      security:
+      - ApiTokenAuth: []
+      summary: 刷新当前用户 API Token
+      tags:
+      - User
+  /user/logout:
+    delete:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-model_User'
+      summary: 退出登录
+      tags:
+      - User
+  /user/self:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-model_User'
+      summary: 获取当前登录用户
+      tags:
+      - User
+  /vector/reindex-all:
+    post:
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 重建全部向量索引
+      tags:
+      - Vector
+  /wxapp/qrcode-auth-login:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: 机器人实例ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 二维码图片
+        in: formData
+        name: qrcode
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+      security:
+      - ApiTokenAuth: []
+      summary: 小程序二维码授权登录
+      tags:
+      - WXApp
+securityDefinitions:
+  ApiTokenAuth:
+    in: header
+    name: X-API-Token
+    type: apiKey
+swagger: "2.0"

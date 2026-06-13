@@ -4,10 +4,8 @@ package dto
 type MCPTransportType string
 
 const (
-	MCPTransportTypeStdio MCPTransportType = "stdio" // 命令行模式（标准输入输出）
-	MCPTransportTypeSSE   MCPTransportType = "sse"   // Server-Sent Events模式
-	MCPTransportTypeHTTP  MCPTransportType = "http"  // HTTP模式
-	MCPTransportTypeWS    MCPTransportType = "ws"    // WebSocket模式
+	MCPTransportTypeStdio MCPTransportType = "stdio"  // 命令行模式（标准输入输出）
+	MCPTransportTypeSSE   MCPTransportType = "stream" // 流模式
 )
 
 // MCPAuthType MCP认证类型
