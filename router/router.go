@@ -30,6 +30,7 @@ var knowledgeCtl *controller.Knowledge
 var wxAppCtl *controller.WXApp
 var aiCallbackCtl *controller.AICallback
 var pprofProxyCtl *controller.PprofProxy
+var systemPromptCtl *controller.SystemPrompt
 
 func initController() {
 	probeCtl = controller.NewProbeController()
@@ -54,6 +55,7 @@ func initController() {
 	knowledgeCtl = controller.NewKnowledgeController()
 	wxAppCtl = controller.NewWXAppController()
 	pprofProxyCtl = controller.NewPprofProxyController()
+	systemPromptCtl = controller.NewSystemPromptController()
 }
 
 func RegisterRouter(r *gin.Engine) error {
@@ -192,6 +194,16 @@ func RegisterRouter(r *gin.Engine) error {
 		mcpServer.PUT("/update", middleware.UserOwnerAuth(), skillsCtl.UpdateSkill)
 		mcpServer.DELETE("/uninstall", middleware.UserOwnerAuth(), skillsCtl.UninstallSkill)
 		mcpServer.POST("/envs", middleware.UserOwnerAuth(), skillsCtl.SetSkillEnvs)
+	}
+
+	{
+		systemPrompts := api.Group("/system-prompts")
+		systemPrompts.Use(middleware.UserAuth())
+		systemPrompts.GET("", middleware.UserOwnerAuth(), systemPromptCtl.ListSystemPrompts)
+		systemPrompts.GET("/detail", middleware.UserOwnerAuth(), systemPromptCtl.GetSystemPrompt)
+		systemPrompts.POST("", middleware.UserOwnerAuth(), systemPromptCtl.CreateSystemPrompt)
+		systemPrompts.PUT("", middleware.UserOwnerAuth(), systemPromptCtl.UpdateSystemPrompt)
+		systemPrompts.DELETE("", middleware.UserOwnerAuth(), systemPromptCtl.DeleteSystemPrompt)
 	}
 
 	{
