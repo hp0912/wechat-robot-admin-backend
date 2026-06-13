@@ -1,139 +1,136 @@
 package dto
 
-import "encoding/xml"
-
 type TimelineObject struct {
-	XMLName                xml.Name      `xml:"TimelineObject"`
-	ID                     uint64        `xml:"id"`
-	Username               string        `xml:"username"`
-	CreateTime             uint32        `xml:"createTime"`
-	ContentDesc            string        `xml:"contentDesc"`
-	ContentDescShowType    uint32        `xml:"contentDescShowType"`
-	ContentDescScene       uint32        `xml:"contentDescScene"`
-	Private                uint32        `xml:"private"`
-	SightFolded            uint32        `xml:"sightFolded,omitempty"`
-	ShowFlag               uint32        `xml:"showFlag,omitempty"`
-	ContentAttr            string        `xml:"contentattr,omitempty"`
-	SourceUserName         string        `xml:"sourceUserName"`
-	SourceNickName         string        `xml:"sourceNickName"`
-	PublicUserName         string        `xml:"publicUserName"`
-	PublicBrandContactType uint32        `xml:"publicBrandContactType,omitempty"`
-	StatisticsData         string        `xml:"statisticsData"`
-	StatExtStr             string        `xml:"statExtStr,omitempty"`
-	CanvasInfoXML          string        `xml:"canvasInfoXml,omitempty"`
-	AppInfo                AppInfo       `xml:"appInfo"`
-	WeappInfo              WeappInfo     `xml:"weappInfo,omitempty"`
-	ContentObject          ContentObject `xml:"ContentObject"`
-	ActionInfo             ActionInfo    `xml:"actionInfo"`
-	Location               Location      `xml:"location"`
-	StreamVideo            StreamVideo   `xml:"streamvideo"`
+	ID                     uint64        `json:"ID"`
+	Username               string        `json:"Username"`
+	CreateTime             uint32        `json:"CreateTime"`
+	ContentDesc            string        `json:"ContentDesc"`
+	ContentDescShowType    uint32        `json:"ContentDescShowType"`
+	ContentDescScene       uint32        `json:"ContentDescScene"`
+	Private                uint32        `json:"Private"`
+	SightFolded            uint32        `json:"SightFolded,omitempty"`
+	ShowFlag               uint32        `json:"ShowFlag,omitempty"`
+	ContentAttr            string        `json:"ContentAttr,omitempty"`
+	SourceUserName         string        `json:"SourceUserName"`
+	SourceNickName         string        `json:"SourceNickName"`
+	PublicUserName         string        `json:"PublicUserName"`
+	PublicBrandContactType uint32        `json:"PublicBrandContactType,omitempty"`
+	StatisticsData         string        `json:"StatisticsData"`
+	StatExtStr             string        `json:"StatExtStr,omitempty"`
+	CanvasInfoXML          string        `json:"CanvasInfoXML,omitempty"`
+	AppInfo                AppInfo       `json:"AppInfo"`
+	WeappInfo              WeappInfo     `json:"WeappInfo,omitempty"`
+	ContentObject          ContentObject `json:"ContentObject"`
+	ActionInfo             ActionInfo    `json:"ActionInfo"`
+	Location               Location      `json:"Location"`
+	StreamVideo            StreamVideo   `json:"StreamVideo"`
 }
 
 type AppInfo struct {
-	ID            string `xml:"id"`
-	Version       string `xml:"version,omitempty"`
-	AppName       string `xml:"appName,omitempty"`
-	InstallUrl    string `xml:"installUrl,omitempty"`
-	FromUrl       string `xml:"fromUrl,omitempty"`
-	IsForceUpdate uint32 `xml:"isForceUpdate,omitempty"`
-	IsHidden      uint32 `xml:"isHidden,omitempty"`
+	ID            string `json:"ID"`
+	Version       string `json:"Version,omitempty"`
+	AppName       string `json:"AppName,omitempty"`
+	InstallUrl    string `json:"InstallUrl,omitempty"`
+	FromUrl       string `json:"FromUrl,omitempty"`
+	IsForceUpdate uint32 `json:"IsForceUpdate,omitempty"`
+	IsHidden      uint32 `json:"IsHidden,omitempty"`
 }
 
 type WeappInfo struct {
-	AppUserName      string `xml:"appUserName"`
-	PagePath         string `xml:"pagePath"`
-	Version          string `xml:"version"`
-	IsHidden         uint32 `xml:"isHidden"`
-	DebugMode        string `xml:"debugMode"`
-	ShareActionId    string `xml:"shareActionId"`
-	IsGame           string `xml:"isGame"`
-	MessageExtraData string `xml:"messageExtraData"`
-	SubType          string `xml:"subType"`
-	PreloadResources string `xml:"preloadResources"`
+	AppUserName      string `json:"AppUserName"`
+	PagePath         string `json:"PagePath"`
+	Version          string `json:"Version"`
+	IsHidden         uint32 `json:"IsHidden"`
+	DebugMode        string `json:"DebugMode"`
+	ShareActionId    string `json:"ShareActionId"`
+	IsGame           string `json:"IsGame"`
+	MessageExtraData string `json:"MessageExtraData"`
+	SubType          string `json:"SubType"`
+	PreloadResources string `json:"PreloadResources"`
 }
 
 type ContentObject struct {
-	ContentStyle    uint32    `xml:"contentStyle"`
-	ContentSubStyle uint32    `xml:"contentSubStyle,omitempty"`
-	Title           string    `xml:"title"`
-	Description     string    `xml:"description"`
-	ContentUrl      string    `xml:"contentUrl"`
-	MediaList       MediaList `xml:"mediaList"`
+	ContentStyle    uint32    `json:"ContentStyle"`
+	ContentSubStyle uint32    `json:"ContentSubStyle,omitempty"`
+	Title           string    `json:"Title"`
+	Description     string    `json:"Description"`
+	ContentUrl      string    `json:"ContentUrl"`
+	MediaList       MediaList `json:"MediaList"`
 }
 
 type MediaList struct {
-	Media []Media `xml:"media"`
+	Media []Media `json:"Media"`
 }
 
 type Media struct {
-	ID               uint64          `xml:"id"`
-	IDStr            string          `xml:"idStr,omitempty"`
-	Type             uint32          `xml:"type"`
-	Title            string          `xml:"title"`
-	Description      string          `xml:"description"`
-	Private          uint32          `xml:"private"`
-	UserData         string          `xml:"userData,omitempty"`
-	SubType          uint32          `xml:"subType,omitempty"`
-	VideoSize        *VideoSize      `xml:"videoSize,omitempty"`
-	HD               *URL            `xml:"hd,omitempty"`
-	UHD              *URL            `xml:"uhd,omitempty"`
-	URL              URL             `xml:"url"`
-	Thumb            Thumb           `xml:"thumb"`
-	Size             Size            `xml:"size"`
-	VideoDuration    float64         `xml:"videoDuration,omitempty"`
-	VideoDurationStr string          `xml:"videoDurationStr,omitempty"`
-	VideoColdDLRule  VideoColdDLRule `xml:"VideoColdDLRule,omitempty"`
+	ID               uint64          `json:"ID"`
+	IDStr            string          `json:"IDStr,omitempty"`
+	Type             uint32          `json:"Type"`
+	Title            string          `json:"Title"`
+	Description      string          `json:"Description"`
+	Private          uint32          `json:"Private"`
+	UserData         string          `json:"UserData,omitempty"`
+	SubType          uint32          `json:"SubType,omitempty"`
+	VideoSize        *VideoSize      `json:"VideoSize,omitempty"`
+	HD               *URL            `json:"HD,omitempty"`
+	UHD              *URL            `json:"UHD,omitempty"`
+	URL              URL             `json:"URL"`
+	Thumb            Thumb           `json:"Thumb"`
+	Size             Size            `json:"Size"`
+	VideoDuration    float64         `json:"VideoDuration,omitempty"`
+	VideoDurationStr string          `json:"VideoDurationStr,omitempty"`
+	VideoColdDLRule  VideoColdDLRule `json:"VideoColdDLRule,omitempty"`
 }
 
 type VideoSize struct {
-	Width  string `xml:"width,attr"`
-	Height string `xml:"height,attr"`
+	Width  string `json:"Width"`
+	Height string `json:"Height"`
 }
 
 type URL struct {
-	Type     string `xml:"type,attr"`
-	MD5      string `xml:"md5,attr"`
-	VideoMD5 string `xml:"videomd5,attr"`
-	Value    string `xml:",chardata"`
+	Type     string `json:"Type"`
+	MD5      string `json:"MD5"`
+	VideoMD5 string `json:"VideoMD5"`
+	Value    string `json:"Value"`
 }
 
 type Thumb struct {
-	Type  string `xml:"type,attr"`
-	Value string `xml:",chardata"`
+	Type  string `json:"Type"`
+	Value string `json:"Value"`
 }
 
 type Size struct {
-	Width     string `xml:"width,attr"`
-	Height    string `xml:"height,attr"`
-	TotalSize string `xml:"totalSize,attr"`
+	Width     string `json:"Width"`
+	Height    string `json:"Height"`
+	TotalSize string `json:"TotalSize"`
 }
 
 type VideoColdDLRule struct {
-	All string `xml:"All"`
+	All string `json:"All"`
 }
 
 type ActionInfo struct {
-	AppMsg AppMsg `xml:"appMsg"`
+	AppMsg AppMsg `json:"AppMsg"`
 }
 
 type AppMsg struct {
-	MediaTagName  string `xml:"mediaTagName,omitempty"`
-	MessageExt    string `xml:"messageExt,omitempty"`
-	MessageAction string `xml:"messageAction"`
+	MediaTagName  string `json:"MediaTagName,omitempty"`
+	MessageExt    string `json:"MessageExt,omitempty"`
+	MessageAction string `json:"MessageAction"`
 }
 
 type Location struct {
-	PoiClassifyId   string `xml:"poiClassifyId,attr"`
-	PoiName         string `xml:"poiName,attr"`
-	PoiAddress      string `xml:"poiAddress,attr"`
-	PoiClassifyType uint32 `xml:"poiClassifyType,attr"`
-	City            string `xml:"city,attr"`
+	PoiClassifyId   string `json:"PoiClassifyId"`
+	PoiName         string `json:"PoiName"`
+	PoiAddress      string `json:"PoiAddress"`
+	PoiClassifyType uint32 `json:"PoiClassifyType"`
+	City            string `json:"City"`
 }
 
 type StreamVideo struct {
-	StreamVideoUrl      string `xml:"streamvideourl"`
-	StreamVideoThumbUrl string `xml:"streamvideothumburl"`
-	StreamVideoWebUrl   string `xml:"streamvideoweburl"`
+	StreamVideoUrl      string `json:"StreamVideoUrl"`
+	StreamVideoThumbUrl string `json:"StreamVideoThumbUrl"`
+	StreamVideoWebUrl   string `json:"StreamVideoWebUrl"`
 }
 
 type MomentsGetListRequest struct {
@@ -162,6 +159,7 @@ type SnsObject struct {
 	IdStr                string               `json:"IdStr,omitempty"`
 	Username             *string              `json:"Username,omitempty"`
 	Nickname             *string              `json:"Nickname,omitempty"`
+	Avatar               *string              `json:"Avatar,omitempty"`
 	CreateTime           *uint32              `json:"CreateTime,omitempty"`
 	ObjectDesc           *SKBuiltinString_S   `json:"ObjectDesc,omitempty"`
 	TimelineObject       *TimelineObject      `json:"TimelineObject,omitempty"`

@@ -12,6 +12,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @title WeChat Robot Backend API
+// @version 1.0
+// @description wechat-robot-admin-backend 服务接口文档
+// @BasePath /api/v1
+// @query.collection.format multi
+// @securityDefinitions.apikey ApiTokenAuth
+// @in header
+// @name X-API-Token
+
 func main() {
 	// 加载配置
 	if err := startup.LoadConfig(); err != nil {

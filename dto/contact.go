@@ -3,8 +3,9 @@ package dto
 type ContactType string
 
 const (
-	ContactTypeFriend   ContactType = "friend"
-	ContactTypeChatRoom ContactType = "chat_room"
+	ContactTypeFriend          ContactType = "friend"
+	ContactTypeChatRoom        ContactType = "chat_room"
+	ContactTypeOfficialAccount ContactType = "official_account"
 )
 
 type SyncContactsRequest struct {
@@ -56,8 +57,8 @@ type FriendSearchResponse struct {
 
 type FriendSendRequestRequest struct {
 	ID            int64  `form:"id" json:"id" binding:"required"`
-	V1            string `form:"v1" json:"V1" binding:"required"`
-	V2            string `form:"v2" json:"V2"`
+	V1            string `form:"V1" json:"V1" binding:"required"`
+	V2            string `form:"V2" json:"V2"`
 	Opcode        int    `form:"opcode" json:"Opcode"`
 	Scene         int    `form:"scene" json:"Scene"`
 	VerifyContent string `form:"verify_content" json:"verify_content"`

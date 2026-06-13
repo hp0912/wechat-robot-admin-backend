@@ -164,12 +164,12 @@ type WxVerifyCodeRespInfo struct {
 }
 
 type LoginData62SMSAgainRequest struct {
-	Url    string
-	Cookie string
+	Url    string `json:"Url,omitempty"`
+	Cookie string `json:"Cookie,omitempty"`
 }
 
 type LoginData62SMSVerifyRequest struct {
-	Url    string
-	Cookie string
-	Sms    string
+	Url    string `json:"Url,omitempty"`
+	Cookie string `json:"Cookie,omitempty"`
+	Sms    string `json:"Sms,omitempty"`
 }
