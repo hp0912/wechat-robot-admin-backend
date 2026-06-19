@@ -2429,6 +2429,8 @@ definitions:
         $ref: '#/definitions/dto.ProxyInput'
       robot_name:
         type: string
+      version:
+        type: string
     required:
     - robot_name
     type: object
