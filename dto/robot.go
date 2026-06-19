@@ -15,6 +15,7 @@ type ProxyInput struct {
 type RobotCreateRequest struct {
 	RobotName string      `form:"robot_name" json:"robot_name" binding:"required"`
 	Proxy     *ProxyInput `form:"proxy" json:"proxy"`
+	Version   string      `form:"version" json:"version"`
 }
 
 type RobotUpdateRequest struct {
