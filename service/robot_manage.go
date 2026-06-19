@@ -241,7 +241,7 @@ func (sv *RobotManageService) DockerStartWeChatServer(ctx *gin.Context, robot *m
 	defer dockerClient.Close()
 
 	// 需要的镜像
-	serverImage := "registry.cn-shenzhen.aliyuncs.com/houhou/wechat-ipad:latest"
+	serverImage := robot.DockerImage
 	// 确保镜像存在，不存在则先拉取
 	if err := sv.ensureImage(sv.ctx, dockerClient, serverImage); err != nil {
 		return fmt.Errorf("准备服务端镜像失败: %v", err)
@@ -355,15 +355,28 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 		return errors.New("一个账号最多创建2个机器人")
 	}
 
+	// 代理登录配置
 	proxyData, err := buildProxyJSON(req.Proxy)
 	if err != nil {
 		return err
+	}
+
+	// 协议版本
+	var dockerImage string
+	switch req.Version {
+	case "8.0.59":
+		dockerImage = "registry.cn-shenzhen.aliyuncs.com/houhou/wechat-ipad:latest"
+	case "8.0.74":
+		dockerImage = "registry.cn-shenzhen.aliyuncs.com/houhou/wechat-ipad-8074:latest"
+	default:
+		return errors.New("不支持的协议版本")
 	}
 
 	robot := &model.Robot{
 		RobotCode:    fmt.Sprintf("x%s", utils.GetRandomString(15)),
 		RobotName:    req.RobotName,
 		Proxy:        proxyData,
+		DockerImage:  dockerImage,
 		Owner:        wechatId.(string),
 		DeviceID:     utils.CreateDeviceID(""),
 		DeviceName:   utils.CreateDeviceName(),
@@ -637,6 +650,7 @@ func (sv *RobotManageService) RobotDockerImagePull(ctx *gin.Context, progressCha
 	// 定义需要拉取的镜像列表
 	images := []string{
 		"registry.cn-shenzhen.aliyuncs.com/houhou/wechat-ipad:latest",
+		"registry.cn-shenzhen.aliyuncs.com/houhou/wechat-ipad-8074:latest",
 		"registry.cn-shenzhen.aliyuncs.com/houhou/wechat-robot-client:latest",
 	}
 	// 逐个拉取镜像

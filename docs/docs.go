@@ -9628,6 +9628,9 @@ const docTemplate = `{
                 },
                 "robot_name": {
                     "type": "string"
+                },
+                "version": {
+                    "type": "string"
                 }
             }
         },
