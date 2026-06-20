@@ -7263,6 +7263,9 @@ const docTemplate = `{
                     "description": "朋友圈背景图",
                     "type": "string"
                 },
+                "status": {
+                    "type": "integer"
+                },
                 "type": {
                     "$ref": "#/definitions/dto.ContactType"
                 },
