@@ -853,6 +853,8 @@ definitions:
       sns_background:
         description: 朋友圈背景图
         type: string
+      status:
+        type: integer
       type:
         $ref: '#/definitions/dto.ContactType'
       updated_at:

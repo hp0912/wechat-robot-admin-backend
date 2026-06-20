@@ -1,10 +1,14 @@
 package router
 
 import (
+	"net/http"
+
 	"wechat-robot-admin-backend/controller"
+	_ "wechat-robot-admin-backend/docs"
 	"wechat-robot-admin-backend/middleware"
 
 	"github.com/gin-gonic/gin"
+	"github.com/swaggo/swag"
 )
 
 var probeCtl *controller.Probe
@@ -65,6 +69,18 @@ func RegisterRouter(r *gin.Engine) error {
 	initController()
 
 	api := r.Group("/api/v1")
+	{
+		api.GET("/swagger/doc.json", func(c *gin.Context) {
+			doc, err := swag.ReadDoc()
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+				return
+			}
+
+			c.Data(http.StatusOK, "application/json; charset=utf-8", []byte(doc))
+		})
+	}
+
 	{
 		probe := api.Group("/probe")
 		probe.GET("", probeCtl.Probe)
