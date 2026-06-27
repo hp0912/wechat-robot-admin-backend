@@ -359,16 +359,18 @@ type SnsObjectDetailResponse struct {
 }
 
 type MomentSettings struct {
-	ID                  int64  `json:"id"`
-	AutoLike            bool   `json:"auto_like"`
-	AutoComment         bool   `json:"auto_comment"`
-	Whitelist           string `json:"whitelist"`
-	Blacklist           string `json:"blacklist"`
-	AIBaseURL           string `json:"ai_base_url"`
-	AIAPIKey            string `json:"ai_api_key"`
-	WorkflowModel       string `json:"workflow_model"`
-	CommentModel        string `json:"comment_model"`
-	CommentPrompt       string `json:"comment_prompt"`
-	MaxCompletionTokens int    `json:"max_completion_tokens"`
-	SyncInterval        int    `json:"sync_interval" binding:"min=10,max=86400"`
+	ID                      int64  `json:"id"`
+	AutoLike                bool   `json:"auto_like"`
+	AutoComment             bool   `json:"auto_comment"`
+	Whitelist               string `json:"whitelist"`
+	Blacklist               string `json:"blacklist"`
+	AIBaseURL               string `json:"ai_base_url"`
+	AIAPIKey                string `json:"ai_api_key"`
+	WorkflowModel           string `json:"workflow_model"`
+	CommentModel            string `json:"comment_model"`
+	ImageUnderstandingModel string `json:"image_understanding_model"`
+	VideoUnderstandingModel string `json:"video_understanding_model"`
+	CommentPrompt           string `json:"comment_prompt"`
+	MaxCompletionTokens     int    `json:"max_completion_tokens"`
+	SyncInterval            int    `json:"sync_interval" binding:"min=10,max=86400"`
 }

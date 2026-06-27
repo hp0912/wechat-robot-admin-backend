@@ -8343,6 +8343,9 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
+                "image_understanding_model": {
+                    "type": "string"
+                },
                 "max_completion_tokens": {
                     "type": "integer"
                 },
@@ -8350,6 +8353,9 @@ const docTemplate = `{
                     "type": "integer",
                     "maximum": 86400,
                     "minimum": 10
+                },
+                "video_understanding_model": {
+                    "type": "string"
                 },
                 "whitelist": {
                     "type": "string"
