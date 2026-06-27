@@ -1600,12 +1600,16 @@ definitions:
         type: string
       id:
         type: integer
+      image_understanding_model:
+        type: string
       max_completion_tokens:
         type: integer
       sync_interval:
         maximum: 86400
         minimum: 10
         type: integer
+      video_understanding_model:
+        type: string
       whitelist:
         type: string
       workflow_model:
