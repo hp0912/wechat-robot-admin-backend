@@ -75,12 +75,12 @@ func (ct *RobotManage) RobotCreate(c *gin.Context) {
 		resp.ToErrorResponse(err)
 		return
 	}
-	err := service.NewRobotManageService(c).RobotCreate(c, req)
+	data, err := service.NewRobotManageService(c.Request.Context()).RobotCreate(c, req)
 	if err != nil {
-		resp.ToErrorResponse(err)
+		resp.ToErrorResponseWithData(data, err)
 		return
 	}
-	resp.ToResponse(nil)
+	resp.ToResponse(data)
 }
 
 func (ct *RobotManage) RobotUpdate(c *gin.Context) {
@@ -156,7 +156,7 @@ func (ct *RobotManage) RobotRestartClient(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	err := service.NewRobotManageService(c).RobotRestartClient(req.ID)
+	err := service.NewRobotManageService(c.Request.Context()).RobotRestartClient(req.ID)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return
@@ -263,7 +263,7 @@ func (ct *RobotManage) RobotStartClient(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	err := service.NewRobotManageService(c).RobotStartWeChatClient(c, req.ID)
+	err := service.NewRobotManageService(c.Request.Context()).RobotStartWeChatClient(c, req.ID)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return

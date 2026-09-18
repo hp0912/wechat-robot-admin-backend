@@ -1345,12 +1345,13 @@ func RobotListDoc() {}
 
 // RobotCreateDoc godoc
 // @Summary 创建机器人
+// @Description 创建失败时 code 为 500；若实例已创建，data.id 仍返回该实例 ID，可用于查询容器日志。
 // @Tags Robot
 // @Security ApiTokenAuth
 // @Accept json
 // @Produce json
 // @Param request body dto.RobotCreateRequest true "机器人"
-// @Success 200 {object} dto.Response[dto.SwaggerEmpty]
+// @Success 200 {object} dto.Response[dto.RobotCreateResponse]
 // @Router /robot/create [post]
 func RobotCreateDoc() {}
 

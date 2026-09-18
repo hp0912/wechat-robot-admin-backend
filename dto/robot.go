@@ -18,6 +18,10 @@ type RobotCreateRequest struct {
 	Version   string      `form:"version" json:"version"`
 }
 
+type RobotCreateResponse struct {
+	ID int64 `json:"id"` // 已创建的机器人实例 ID，后续初始化失败时仍返回，可用于查询容器日志
+}
+
 type RobotUpdateRequest struct {
 	RobotName string      `form:"robot_name" json:"robot_name" binding:"required"`
 	Proxy     *ProxyInput `form:"proxy" json:"proxy"`

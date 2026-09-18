@@ -37,7 +37,7 @@ func (ct *DockerController) GetRobotContainerLogs(c *gin.Context) {
 		resp.ToErrorResponse(errors.New("参数错误"))
 		return
 	}
-	logs, err := service.NewDockerService(c).GetRobotContainerLogs(robot)
+	logs, err := service.NewDockerService(c.Request.Context()).GetRobotContainerLogs(robot)
 	if err != nil {
 		resp.ToErrorResponse(err)
 		return

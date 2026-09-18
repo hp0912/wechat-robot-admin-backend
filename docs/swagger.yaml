@@ -2230,6 +2230,19 @@ definitions:
         description: 消息
         type: string
     type: object
+  dto.Response-dto_RobotCreateResponse:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.RobotCreateResponse'
+        description: 数据
+      message:
+        description: 消息
+        type: string
+    type: object
   dto.Response-dto_RobotLoginCheckResponse:
     properties:
       code:
@@ -2412,11 +2425,17 @@ definitions:
         items:
           type: string
         type: array
+      client_error:
+        description: 客户端容器日志读取失败原因
+        type: string
       server:
         description: 服务端容器日志
         items:
           type: string
         type: array
+      server_error:
+        description: 服务端容器日志读取失败原因
+        type: string
     type: object
   dto.RobotContainerStatsResponse:
     properties:
@@ -2439,6 +2458,12 @@ definitions:
         type: string
     required:
     - robot_name
+    type: object
+  dto.RobotCreateResponse:
+    properties:
+      id:
+        description: 已创建的机器人实例 ID，后续初始化失败时仍返回，可用于查询容器日志
+        type: integer
     type: object
   dto.RobotLogin2FARequest:
     properties:
@@ -6261,6 +6286,7 @@ paths:
     post:
       consumes:
       - application/json
+      description: 创建失败时 code 为 500；若实例已创建，data.id 仍返回该实例 ID，可用于查询容器日志。
       parameters:
       - description: 机器人
         in: body
@@ -6274,7 +6300,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.Response-dto_SwaggerEmpty'
+            $ref: '#/definitions/dto.Response-dto_RobotCreateResponse'
       security:
       - ApiTokenAuth: []
       summary: 创建机器人

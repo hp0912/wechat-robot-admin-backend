@@ -43,7 +43,11 @@ func (r *Response) ToResponseList(list any, totalRows int64) {
 }
 
 func (r *Response) ToErrorResponse(err error) {
-	response := gin.H{"code": 500, "message": err.Error(), "data": nil}
+	r.ToErrorResponseWithData(nil, err)
+}
+
+func (r *Response) ToErrorResponseWithData(data any, err error) {
+	response := gin.H{"code": 500, "message": err.Error(), "data": data}
 	r.Ctx.JSON(http.StatusOK, response)
 }
 

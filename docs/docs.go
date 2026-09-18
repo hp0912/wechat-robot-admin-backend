@@ -4026,6 +4026,7 @@ const docTemplate = `{
                         "ApiTokenAuth": []
                     }
                 ],
+                "description": "创建失败时 code 为 500；若实例已创建，data.id 仍返回该实例 ID，可用于查询容器日志。",
                 "consumes": [
                     "application/json"
                 ],
@@ -4051,7 +4052,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.Response-dto_SwaggerEmpty"
+                            "$ref": "#/definitions/dto.Response-dto_RobotCreateResponse"
                         }
                     }
                 }
@@ -9306,6 +9307,27 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.Response-dto_RobotCreateResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "状态码",
+                    "type": "integer"
+                },
+                "data": {
+                    "description": "数据",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/dto.RobotCreateResponse"
+                        }
+                    ]
+                },
+                "message": {
+                    "description": "消息",
+                    "type": "string"
+                }
+            }
+        },
         "dto.Response-dto_RobotLoginCheckResponse": {
             "type": "object",
             "properties": {
@@ -9596,12 +9618,20 @@ const docTemplate = `{
                         "type": "string"
                     }
                 },
+                "client_error": {
+                    "description": "客户端容器日志读取失败原因",
+                    "type": "string"
+                },
                 "server": {
                     "description": "服务端容器日志",
                     "type": "array",
                     "items": {
                         "type": "string"
                     }
+                },
+                "server_error": {
+                    "description": "服务端容器日志读取失败原因",
+                    "type": "string"
                 }
             }
         },
@@ -9640,6 +9670,15 @@ const docTemplate = `{
                 },
                 "version": {
                     "type": "string"
+                }
+            }
+        },
+        "dto.RobotCreateResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "已创建的机器人实例 ID，后续初始化失败时仍返回，可用于查询容器日志",
+                    "type": "integer"
                 }
             }
         },

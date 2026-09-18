@@ -24,6 +24,8 @@ type RobotContainerStatsResponse struct {
 
 // RobotContainerLogsResponse 包含机器人客户端和服务端容器的日志
 type RobotContainerLogsResponse struct {
-	Client []string `json:"client"` // 客户端容器日志
-	Server []string `json:"server"` // 服务端容器日志
+	Client      []string `json:"client"`                 // 客户端容器日志
+	Server      []string `json:"server"`                 // 服务端容器日志
+	ClientError string   `json:"client_error,omitempty"` // 客户端容器日志读取失败原因
+	ServerError string   `json:"server_error,omitempty"` // 服务端容器日志读取失败原因
 }

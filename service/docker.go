@@ -156,22 +156,23 @@ func (sv *DockerService) GetRobotContainerLogs(robot *model.Robot) (dto.RobotCon
 
 	// 获取客户端容器的日志
 	clientContainerName := fmt.Sprintf("client_%s", robot.RobotCode)
-	clientLogs, err := sv.getContainerLogs(dockerClient, clientContainerName, 500)
-	if err != nil {
-		return dto.RobotContainerLogsResponse{}, fmt.Errorf("获取客户端容器日志失败: %v", err)
-	}
+	clientLogs, clientErr := sv.getContainerLogs(dockerClient, clientContainerName, 500)
 
 	// 获取服务端容器的日志
 	serverContainerName := fmt.Sprintf("server_%s", robot.RobotCode)
-	serverLogs, err := sv.getContainerLogs(dockerClient, serverContainerName, 500)
-	if err != nil {
-		return dto.RobotContainerLogsResponse{}, fmt.Errorf("获取服务端容器日志失败: %v", err)
-	}
+	serverLogs, serverErr := sv.getContainerLogs(dockerClient, serverContainerName, 500)
 
-	return dto.RobotContainerLogsResponse{
+	logs := dto.RobotContainerLogsResponse{
 		Client: clientLogs,
 		Server: serverLogs,
-	}, nil
+	}
+	if clientErr != nil {
+		logs.ClientError = fmt.Sprintf("获取客户端容器日志失败: %v", clientErr)
+	}
+	if serverErr != nil {
+		logs.ServerError = fmt.Sprintf("获取服务端容器日志失败: %v", serverErr)
+	}
+	return logs, nil
 }
 
 // getContainerLogs 获取指定容器的最后 n 行日志

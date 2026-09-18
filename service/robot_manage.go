@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"net/http"
 	"time"
 
 	"github.com/docker/docker/api/types/container"
@@ -337,28 +338,28 @@ func (sv *RobotManageService) DockerStopAndRemoveWeChatServer(ctx *gin.Context, 
 	return nil
 }
 
-func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest) error {
+func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateRequest) (*dto.RobotCreateResponse, error) {
 	session := sessions.Default(ctx)
 	wechatId := session.Get("wechat_id")
 	role := session.Get("role")
 	respo := repository.NewRobotRepo(sv.ctx, vars.DB)
 	redisDb, err := respo.GetMaxRedisDB()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	// 一个账号最多创建2个机器人
 	robots, err := respo.GetByOwner(wechatId.(string), true)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if len(robots) >= 2 && role.(int) != vars.RoleRootUser {
-		return errors.New("一个账号最多创建2个机器人")
+		return nil, errors.New("一个账号最多创建2个机器人")
 	}
 
 	// 代理登录配置
 	proxyData, err := buildProxyJSON(req.Proxy)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// 协议版本
@@ -369,7 +370,7 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 	case "8.0.74":
 		dockerImage = "registry.cn-shenzhen.aliyuncs.com/houhou/wechat-ipad-8074:latest"
 	default:
-		return errors.New("不支持的协议版本")
+		return nil, errors.New("不支持的协议版本")
 	}
 
 	robot := &model.Robot{
@@ -394,17 +395,18 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 	}
 	err = respo.Create(robot)
 	if err != nil {
-		return err
+		return nil, err
 	}
+	result := &dto.RobotCreateResponse{ID: robot.ID}
 	// 创建机器人实例数据库
 	err = vars.DB.Exec(fmt.Sprintf("CREATE DATABASE IF NOT EXISTS `%s` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;", robot.RobotCode)).Error
 	if err != nil {
-		return err
+		return result, err
 	}
 	// 创建只能访问该数据库的数据库用户，并授权
 	err = sv.createRobotDatabaseUser(robot)
 	if err != nil {
-		return err
+		return result, err
 	}
 	// 创建机器人实例表
 	newDsn := fmt.Sprintf("%s:%s@tcp(%s:%v)/%s?charset=utf8mb4&parseTime=True&loc=Local&multiStatements=true",
@@ -416,44 +418,45 @@ func (sv *RobotManageService) RobotCreate(ctx *gin.Context, req dto.RobotCreateR
 	gormConfig := gorm.Config{}
 	newDB, err := gorm.Open(mysql.New(mysqlConfig), &gormConfig)
 	if err != nil {
-		return err
+		return result, err
 	}
 	db, err := newDB.DB()
 	if err != nil {
-		return err
+		return result, err
 	}
 	defer db.Close()
 	// 开始建表
 	err = newDB.Exec(fmt.Sprintf("USE `%s`;\n%s", robot.RobotCode, template.RobotSqlTemplate)).Error
 	if err != nil {
-		return err
+		return result, err
 	}
 	// 插入一条公共配置记录
 	commonConf := fmt.Sprintf("INSERT INTO `%s`.`%s` (`chat_ai_enabled`, `chat_base_url`, `chat_api_key`, `chat_model`, `image_recognition_model`, `chat_prompt`, `friend_sync_cron`) VALUES (0, '%s', '%s', 'gpt-4o-mini', 'gpt-4o-mini', '%s', '55 * * * *');",
 		robot.RobotCode, "global_settings", "https://new-api.houhoukang.com/", vars.OpenAIApiKey, "你是一个聊天机器人。")
 	err = newDB.Exec(commonConf).Error
 	if err != nil {
-		return err
+		return result, err
 	}
 
 	// 插入一条官方 MCP 服务配置
 	mcpServerConf := fmt.Sprintf("INSERT INTO `%s`.mcp_servers (name, is_built_in, description, transport, enabled, priority, command, args, working_dir, env, url, client_name, auth_type, auth_token, auth_username, auth_password, headers, tls_skip_verify, connect_timeout, read_timeout, write_timeout, max_retries, retry_interval, heartbeat_enable, heartbeat_interval, capabilities, custom_config, tags, last_connected_at, last_error, connection_count, error_count, created_at, updated_at, deleted_at) VALUES ('BuiltInPlugin', 1, '官方内置 MCP 服务', 'stream', 1, 100, '', 'null', '', '{}', 'http://wechat-robot-mcp-server:9000/mcp', '', 'none', '', '', '', '{}', 0, 30, 60, 60, 3, 5, 1, 60, 'null', 'null', '[\"官方\", \"群聊总结\"]', null, '', 0, 0, '2025-11-14 21:28:26', '2025-11-14 21:28:26', null);", robot.RobotCode)
 	err = newDB.Exec(mcpServerConf).Error
 	if err != nil {
-		return err
+		return result, err
 	}
 
 	err = sv.DockerStartWeChatClient(ctx, robot)
 	if err != nil {
-		return err
+		return result, err
 	}
 
 	err = sv.DockerStartWeChatServer(ctx, robot)
 	if err != nil {
-		return err
+		return result, err
 	}
 
-	return nil
+	// 客户端启动依赖服务端，两个容器启动后再等待客户端就绪。
+	return result, sv.waitRobotClientReady(robot)
 }
 
 // RobotUpdate 更新机器人名称和代理配置
@@ -567,7 +570,7 @@ func (sv *RobotManageService) RobotStartWeChatClient(ctx *gin.Context, robotID i
 	if err != nil {
 		return err
 	}
-	return nil
+	return sv.waitRobotClientReady(robot)
 }
 
 // RobotStartWeChatServer 启动机器人服务端容器
@@ -812,7 +815,46 @@ func (sv *RobotManageService) RobotRestart(robotID int64, restartType string) er
 }
 
 func (sv *RobotManageService) RobotRestartClient(robotID int64) error {
-	return sv.RobotRestart(robotID, "client")
+	err := sv.RobotRestart(robotID, "client")
+	if err != nil {
+		return err
+	}
+	robot, err := repository.NewRobotRepo(sv.ctx, vars.DB).GetByID(robotID)
+	if err != nil {
+		return err
+	}
+	if robot == nil {
+		return errors.New("机器人不存在")
+	}
+	return sv.waitRobotClientReady(robot)
+}
+
+func (sv *RobotManageService) waitRobotClientReady(robot *model.Robot) error {
+	ctx, cancel := context.WithTimeout(sv.ctx, 30*time.Second)
+	defer cancel()
+
+	client := resty.New().SetTransport(http.DefaultTransport).SetTimeout(2 * time.Second)
+	ticker := time.NewTicker(time.Second)
+	defer ticker.Stop()
+
+	for {
+		var probe struct {
+			Success bool `json:"success"`
+		}
+		resp, err := client.R().SetContext(ctx).SetResult(&probe).Post(robot.GetBaseURL() + "/probe")
+		if err == nil && resp.IsSuccess() && probe.Success {
+			return nil
+		}
+
+		select {
+		case <-ctx.Done():
+			if errors.Is(ctx.Err(), context.DeadlineExceeded) {
+				return fmt.Errorf("客户端 30 秒未就绪，请查看客户端容器日志: %w", ctx.Err())
+			}
+			return fmt.Errorf("客户端启动失败，请查看客户端容器日志: %w", ctx.Err())
+		case <-ticker.C:
+		}
+	}
 }
 
 func (sv *RobotManageService) RobotRestartServer(robotID int64) error {
