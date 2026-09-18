@@ -12,33 +12,28 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func abortUnauthorized(c *gin.Context, message string) {
+	c.AbortWithStatusJSON(http.StatusOK, gin.H{
+		"code":    401,
+		"message": message,
+		"data": gin.H{
+			"login_method": vars.LoginMethod,
+		},
+	})
+}
+
 func authHelper(c *gin.Context, minRole int) {
 	user, ok := resolveUserFromSessionOrToken(c)
 	if !ok || user == nil {
-		c.JSON(http.StatusOK, gin.H{
-			"code":    401,
-			"message": "请先登陆或提供有效API Token",
-			"data":    nil,
-		})
-		c.Abort()
+		abortUnauthorized(c, "请先登陆或提供有效API Token")
 		return
 	}
 	if user.Status == vars.UserStatusDisabled {
-		c.JSON(http.StatusOK, gin.H{
-			"code":    401,
-			"message": "用户已被封禁",
-			"data":    nil,
-		})
-		c.Abort()
+		abortUnauthorized(c, "用户已被封禁")
 		return
 	}
 	if user.Role < minRole {
-		c.JSON(http.StatusOK, gin.H{
-			"code":    401,
-			"message": "无权进行此操作，权限不足",
-			"data":    nil,
-		})
-		c.Abort()
+		abortUnauthorized(c, "无权进行此操作，权限不足")
 		return
 	}
 	c.Next()
@@ -118,12 +113,7 @@ func UserOwnerAuth() func(c *gin.Context) {
 	return func(c *gin.Context) {
 		user, ok := resolveUserFromSessionOrToken(c)
 		if !ok || user == nil {
-			c.JSON(http.StatusOK, gin.H{
-				"code":    401,
-				"message": "请先登陆或提供有效API Token",
-				"data":    nil,
-			})
-			c.Abort()
+			abortUnauthorized(c, "请先登陆或提供有效API Token")
 			return
 		}
 		idStr := c.Query("id") // 获取字符串

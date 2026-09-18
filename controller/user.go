@@ -57,6 +57,7 @@ func (ct *User) LoginUser(c *gin.Context) {
 			resp.ToErrorResponse(errors.New("用户不存在"))
 			return
 		}
+		user.LoginMethod = model.LoginMethod(vars.LoginMethod)
 		resp.ToResponse(user)
 		return
 	} else {
