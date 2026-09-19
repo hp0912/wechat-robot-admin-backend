@@ -2,4 +2,5 @@
 .vscode
 .github
 .env
+__debug_docker
 wechat-robot-admin-backend
